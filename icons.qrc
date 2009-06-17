@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file>icons/yes.png</file>
+        <file>icons/back.png</file>
+        <file>icons/copy.png</file>
+        <file>icons/csearch.png</file>
+        <file>icons/edit.png</file>
+        <file>icons/folder.png</file>
+        <file>icons/help.png</file>
+        <file>icons/history.png</file>
+        <file>icons/home.png</file>
+        <file>icons/hotlist.png</file>
+        <file>icons/hotlists.png</file>
+        <file>icons/manager.png</file>
+        <file>icons/newmsg.png</file>
+        <file>icons/news.png</file>
+        <file>icons/next.png</file>
+        <file>icons/open-folder.png</file>
+        <file>icons/open.png</file>
+        <file>icons/preview.png</file>
+        <file>icons/print.png</file>
+        <file>icons/process-stop.png</file>
+        <file>icons/refresh.png</file>
+        <file>icons/save.png</file>
+        <file>icons/search.png</file>
+        <file>icons/view-history.png</file>
+        <file>icons/view-refresh.png</file>
+    </qresource>
+</RCC>
