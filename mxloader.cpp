@@ -1,6 +1,7 @@
 #include "mxloader.h"
 #include "config.h"
 #include "mainwindow.h"
+#include <QtDebug>
 MXLoader::MXLoader()
 {
 ;
@@ -130,15 +131,9 @@ void MXLoader::createConfig() {
     //build hotlink DEFAULT1.HOT  (wich is from Mosaic 3.0 description file default1.ini
     QSettings *df = new QSettings (conf_dir + "/hotlinks/default1.ini", QSettings::IniFormat, this);
     df->beginGroup("Info");
+    df->setValue("FileName", conf_dir + "/hotlinks/DEFAULT1.HOT");
     df->setValue("MenuItems", 7);
-    df->setValue("Menu0", 10);
-    df->setValue("Menu1", 20);
-    df->setValue("Menu2", 10);
-    df->setValue("Menu3", 14);
-    df->setValue("Menu4", 6);
-    df->setValue("Menu5", 1);
-    df->setValue("Menu6", 1);
-    df->setValue("Menu7", 1);
+
 df->endGroup();
 df->sync();
 
@@ -196,6 +191,8 @@ out << tr("mosaix: reading main.ini config\n");
   opt.tbConfig = stg->value("ToolBarConfig", conf_dir + "/toolbars.ini").toString();
   opt.aConfig = stg->value("AudioConfig", conf_dir + "/audio.ini").toString();
   opt.miscConfig = stg->value("MiscConfig", conf_dir + "/misc.ini").toString();
+  opt.hotlinkList = stg->value("HotlinkList", conf_dir + "/hotlinks/default1.ini").toString();
+
   opt.hotBarConfig = stg->value("HotlinkBarConfig", conf_dir+ "/hotlinkbar.ini").toString();
   stg->endGroup();
 delete stg;

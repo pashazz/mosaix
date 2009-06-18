@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "MXSettings.h"
+#include "mxcoremethods.h"
 #include <QtGui>
 
 namespace Ui
@@ -20,24 +21,25 @@ public:
      void openUrl (QString url);
 
 private slots:
+void on_actButText_triggered(bool checked);
+void on_actExit_triggered();
 void onCustomMenuClicked ();
 private:
-
-
 //creators
     Ui::MainWindow *ui;
     void createMenus();
     void createToolbars();
-
+//core
+    MXCoreMethods *core;
 //options variables
     MXOptions op;
     //Hotlinks variables and functions
 
     void hotListParser();
     void makeHotlistsMenu();
-    void makeGroup(const MXBookmarkList &list, const QString &parent = "");
+    void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
     MXBookmark getItemByName (const QString &name);
-    QAction getActionByName (const QString &name);
+
     int topMenu;
     QString hlink;
     QStringList menuNames;

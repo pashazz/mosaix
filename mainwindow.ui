@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>606</width>
-    <height>406</height>
+    <width>608</width>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MosaiX 0.1-dev - by NCSA Mosaic 3.0</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="icons.qrc">
     <normaloff>:/icons/icons/logo.png</normaloff>:/icons/icons/logo.png</iconset>
   </property>
   <property name="whatsThis">
@@ -26,7 +26,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>606</width>
+     <width>608</width>
      <height>19</height>
     </rect>
    </property>
@@ -78,56 +78,55 @@
      <property name="title">
       <string>&amp;Options</string>
      </property>
-     <addaction name="action_Preferences"/>
+     <addaction name="actSettings"/>
      <addaction name="separator"/>
-     <addaction name="action_Configure_Toolbars"/>
+     <addaction name="actToolConf"/>
      <addaction name="separator"/>
-     <addaction name="action_History_Manager"/>
+     <addaction name="actHistory"/>
     </widget>
-    <addaction name="actionMosaic_Toolbar"/>
-    <addaction name="action_Web_Toolbar"/>
+    <addaction name="actMosaicTb"/>
+    <addaction name="actWebTb"/>
     <addaction name="actManager"/>
-    <addaction name="action_Location_Bar"/>
-    <addaction name="actionNCSA_Globe"/>
+    <addaction name="actLocTb"/>
+    <addaction name="actNcsa"/>
     <addaction name="separator"/>
-    <addaction name="action_Hotlink_Bar"/>
-    <addaction name="action_Status_Bar"/>
+    <addaction name="actHotlinkTb"/>
+    <addaction name="actStatus"/>
     <addaction name="separator"/>
-    <addaction name="actionManager_View_Configuration"/>
-    <addaction name="actionHotlink_Bar_Configuration"/>
+    <addaction name="actManagerConf"/>
+    <addaction name="actHBarConf"/>
     <addaction name="separator"/>
-    <addaction name="actionPresentation_Mode"/>
-    <addaction name="action_Button_Text"/>
+    <addaction name="actPresent"/>
+    <addaction name="actButText"/>
     <addaction name="separator"/>
-    <addaction name="action_Default_Laout"/>
+    <addaction name="actDefaultLayout"/>
     <addaction name="separator"/>
-    <addaction name="action_Refresh"/>
+    <addaction name="actRedraw"/>
     <addaction name="menu_Options"/>
    </widget>
    <widget class="QMenu" name="menu_Navigate">
     <property name="title">
      <string>&amp;Navigate</string>
     </property>
-    <addaction name="action_Back"/>
-    <addaction name="action_Forward"/>
+    <addaction name="actBack"/>
+    <addaction name="actForward"/>
     <addaction name="separator"/>
-    <addaction name="action_Reload"/>
-    <addaction name="actionReload_Text_Only"/>
-    <addaction name="action_Home"/>
+    <addaction name="actReload"/>
+    <addaction name="actReloadText"/>
+    <addaction name="actHome"/>
     <addaction name="separator"/>
-    <addaction name="action_Stop_Transfer"/>
+    <addaction name="actStopTransf"/>
     <addaction name="separator"/>
-    <addaction name="action_Add_Current_to_Hotlist"/>
+    <addaction name="actAdd2hot"/>
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
      <string>&amp;Tools</string>
     </property>
-    <addaction name="actionBuild_Site_Map"/>
-    <addaction name="actionMosaiX_AutoSurf"/>
+    <addaction name="actCrawler"/>
     <addaction name="separator"/>
-    <addaction name="action_Newsgroups"/>
-    <addaction name="actionSend_Email"/>
+    <addaction name="actNews"/>
+    <addaction name="actMail"/>
    </widget>
    <widget class="QMenu" name="menuHotlists">
     <property name="title">
@@ -138,7 +137,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_About_MosaiX"/>
+    <addaction name="actAbout"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
@@ -149,7 +148,10 @@
    <addaction name="menuHotlists"/>
    <addaction name="menu_Help"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
+  <widget class="QToolBar" name="tbMosaic">
+   <property name="windowTitle">
+    <string>Mosaic Toolbar</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -158,24 +160,27 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="tbWeb">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Web Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
   </widget>
   <action name="actOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/open.png</normaloff>:/icons/icons/open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open Document...</string>
+   </property>
+   <property name="statusTip">
+    <string>Open a document via a Uniform Resource Locator</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -188,17 +193,23 @@
    <property name="text">
     <string>Open &amp;Local File</string>
    </property>
+   <property name="statusTip">
+    <string>Open document from local drive</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;As...</string>
+   </property>
+   <property name="statusTip">
+    <string>Save current document to disk</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -208,14 +219,20 @@
    <property name="text">
     <string>Save As &amp;Text</string>
    </property>
+   <property name="statusTip">
+    <string>Save the current document as text file</string>
+   </property>
   </action>
   <action name="actPrint">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/print.png</normaloff>:/icons/icons/print.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Print...</string>
+   </property>
+   <property name="statusTip">
+    <string>Print the active document</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
@@ -223,16 +240,22 @@
   </action>
   <action name="actPrintPr">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/preview.png</normaloff>:/icons/icons/preview.png</iconset>
    </property>
    <property name="text">
     <string>Print Pr&amp;eview</string>
    </property>
+   <property name="statusTip">
+    <string>Display a print preview of the current document</string>
+   </property>
   </action>
   <action name="actPrSet">
    <property name="text">
     <string>Pr&amp;int Setup</string>
+   </property>
+   <property name="statusTip">
+    <string>Change the printer and printer options</string>
    </property>
   </action>
   <action name="actExit">
@@ -250,11 +273,14 @@
   </action>
   <action name="actCopy">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy Currently Selected Source to Clipboard</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -262,11 +288,14 @@
   </action>
   <action name="actPaste">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/edit.png</normaloff>:/icons/icons/edit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Рaste</string>
+   </property>
+   <property name="statusTip">
+    <string>Paste from clipboard</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -274,11 +303,14 @@
   </action>
   <action name="actFind">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/search.png</normaloff>:/icons/icons/search.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Find...</string>
+   </property>
+   <property name="statusTip">
+    <string>Find the specified text in the current document</string>
    </property>
    <property name="shortcut">
     <string extracomment="Not as in Mosaic (On KDE Alt+F3 is window menu)">Ctrl+F</string>
@@ -288,6 +320,9 @@
    <property name="text">
     <string>Find &amp;Next</string>
    </property>
+   <property name="statusTip">
+    <string>Find the next ocurrence of the query string</string>
+   </property>
    <property name="shortcut">
     <string>F3</string>
    </property>
@@ -295,6 +330,9 @@
   <action name="actSelectAll">
    <property name="text">
     <string>&amp;Select All</string>
+   </property>
+   <property name="statusTip">
+    <string>Select all text.</string>
    </property>
   </action>
   <action name="actExpandAll">
@@ -304,6 +342,9 @@
    <property name="text">
     <string>&amp;Expand All</string>
    </property>
+   <property name="statusTip">
+    <string>Open all Items</string>
+   </property>
   </action>
   <action name="actCloseAll">
    <property name="enabled">
@@ -311,6 +352,9 @@
    </property>
    <property name="text">
     <string>&amp;Close All</string>
+   </property>
+   <property name="statusTip">
+    <string>Close all Items</string>
    </property>
   </action>
   <action name="actLoadSession">
@@ -327,8 +371,11 @@
    <property name="text">
     <string>&amp;Preferences</string>
    </property>
+   <property name="statusTip">
+    <string>History Preferences</string>
+   </property>
   </action>
-  <action name="actionMosaic_Toolbar">
+  <action name="actMosaicTb">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -338,16 +385,22 @@
    <property name="text">
     <string>Mosaic &amp;Toolbar</string>
    </property>
+   <property name="statusTip">
+    <string>Show or hide the toolbar</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="action_Web_Toolbar">
+  <action name="actWebTb">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Web Toolbar</string>
+   </property>
+   <property name="statusTip">
+    <string>Show or hide the toolbar</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
@@ -358,28 +411,37 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/manager.png</normaloff>:/icons/icons/manager.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Manager Views</string>
    </property>
+   <property name="iconText">
+    <string>Man. Views</string>
+   </property>
+   <property name="statusTip">
+    <string>Show or hide the Manager View</string>
+   </property>
    <property name="shortcut">
     <string>Alt+M</string>
    </property>
   </action>
-  <action name="action_Location_Bar">
+  <action name="actLocTb">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Location Bar</string>
    </property>
+   <property name="statusTip">
+    <string>Show or hide the location bar</string>
+   </property>
    <property name="shortcut">
     <string>Alt+L</string>
    </property>
   </action>
-  <action name="actionNCSA_Globe">
+  <action name="actNcsa">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -393,118 +455,181 @@
     <string>Ctrl+G</string>
    </property>
   </action>
-  <action name="action_Hotlink_Bar">
+  <action name="actHotlinkTb">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Hotlink Bar</string>
    </property>
+   <property name="statusTip">
+    <string>Show or hide the Hotlink Bar</string>
+   </property>
    <property name="shortcut">
     <string>Alt+K</string>
    </property>
   </action>
-  <action name="action_Status_Bar">
+  <action name="actStatus">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Status Bar</string>
    </property>
+   <property name="whatsThis">
+    <string>Show or hide the status bar</string>
+   </property>
    <property name="shortcut">
     <string>Alt+S</string>
    </property>
   </action>
-  <action name="actionManager_View_Configuration">
+  <action name="actManagerConf">
    <property name="text">
     <string>Manager &amp;View Configuration</string>
    </property>
+   <property name="statusTip">
+    <string>Configure the Manager View</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
   </action>
-  <action name="actionHotlink_Bar_Configuration">
+  <action name="actHBarConf">
    <property name="text">
     <string>Hotlink Bar &amp;Configuration</string>
    </property>
+   <property name="statusTip">
+    <string>Configure the Hotlink Bar</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
   </action>
-  <action name="action_Button_Text">
+  <action name="actButText">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Button Text</string>
    </property>
+   <property name="statusTip">
+    <string>Show or hide text labels for toolbar buttons</string>
+   </property>
   </action>
-  <action name="actionPresentation_Mode">
+  <action name="actPresent">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Presentation Mode</string>
    </property>
+   <property name="statusTip">
+    <string>Show Mosaix in Presentation Mode</string>
+   </property>
    <property name="shortcut">
     <string>Alt+P</string>
    </property>
   </action>
-  <action name="action_Default_Laout">
+  <action name="actDefaultLayout">
    <property name="text">
     <string>&amp;Default Layout</string>
    </property>
+   <property name="statusTip">
+    <string>Move control windows to default positions</string>
+   </property>
   </action>
-  <action name="action_Refresh">
+  <action name="actRedraw">
    <property name="text">
     <string>&amp;Refresh</string>
+   </property>
+   <property name="statusTip">
+    <string>Redraw the view</string>
    </property>
    <property name="shortcut">
     <string notr="true" extracomment="Not as in Mosaic because Yakuake, Guake and Beagle uses F12">F5</string>
    </property>
   </action>
-  <action name="action_Preferences">
+  <action name="actSettings">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+   <property name="statusTip">
+    <string>Edit user preferences</string>
    </property>
    <property name="shortcut">
     <string>Alt+Enter</string>
    </property>
   </action>
-  <action name="action_Configure_Toolbars">
+  <action name="actToolConf">
    <property name="text">
     <string>&amp;Configure Toolbars..,</string>
    </property>
+   <property name="statusTip">
+    <string>Configure the toolbar buttons</string>
+   </property>
   </action>
-  <action name="action_History_Manager">
+  <action name="actHistory">
    <property name="text">
     <string>&amp;History Manager...</string>
+   </property>
+   <property name="statusTip">
+    <string>Preferences for the History Manager</string>
    </property>
    <property name="shortcut">
     <string>Alt+R</string>
    </property>
   </action>
-  <action name="action_Back">
+  <action name="actBack">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/back.png</normaloff>:/icons/icons/back.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Back</string>
+   </property>
+   <property name="statusTip">
+    <string>Jump back to the last document</string>
    </property>
    <property name="shortcut">
     <string>B</string>
    </property>
   </action>
-  <action name="action_Forward">
+  <action name="actForward">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/next.png</normaloff>:/icons/icons/next.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Forward</string>
+   </property>
+   <property name="statusTip">
+    <string>Jump forward to the next document</string>
    </property>
    <property name="shortcut">
     <string>F</string>
    </property>
   </action>
-  <action name="action_Reload">
+  <action name="actReload">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/view-refresh.png</normaloff>:/icons/icons/view-refresh.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Reload</string>
+   </property>
+   <property name="statusTip">
+    <string>Reload the current document</string>
    </property>
    <property name="shortcut">
     <string>R</string>
    </property>
   </action>
-  <action name="actionReload_Text_Only">
+  <action name="actReloadText">
    <property name="text">
     <string>Reload Text Only</string>
+   </property>
+   <property name="statusTip">
+    <string>When reloading page,get images from local cache</string>
    </property>
   </action>
   <action name="actionBuild_Site_Map">
@@ -512,19 +637,48 @@
     <string>Build Site &amp;Map</string>
    </property>
   </action>
-  <action name="actionMosaiX_AutoSurf">
+  <action name="actCrawler">
    <property name="text">
     <string>MosaiX &amp;AutoSurf</string>
    </property>
-  </action>
-  <action name="action_Newsgroups">
-   <property name="text">
-    <string>&amp;Newsgroups</string>
+   <property name="statusTip">
+    <string>Start a Web Crawler</string>
    </property>
   </action>
-  <action name="actionSend_Email">
+  <action name="actNews">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Newsgroups...</string>
+   </property>
+   <property name="iconText">
+    <string>News</string>
+   </property>
+   <property name="toolTip">
+    <string>Read Newsgroups</string>
+   </property>
+   <property name="statusTip">
+    <string>Read Newsgroups</string>
+   </property>
+  </action>
+  <action name="actMail">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/newmsg.png</normaloff>:/icons/icons/newmsg.png</iconset>
+   </property>
    <property name="text">
     <string>Send &amp;Email...</string>
+   </property>
+   <property name="iconText">
+    <string>Mail</string>
+   </property>
+   <property name="toolTip">
+    <string>Send Internet Email</string>
+   </property>
+   <property name="statusTip">
+    <string>Send Internet email.</string>
    </property>
   </action>
   <action name="actionAbout_MosaiX">
@@ -532,37 +686,61 @@
     <string>&amp;About MosaiX...</string>
    </property>
   </action>
-  <action name="action_Home">
+  <action name="actHome">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/home.png</normaloff>:/icons/icons/home.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Home</string>
+   </property>
+   <property name="statusTip">
+    <string>Load the Home Page</string>
    </property>
    <property name="shortcut">
     <string>H</string>
    </property>
   </action>
-  <action name="action_Stop_Transfer">
+  <action name="actStopTransf">
    <property name="text">
     <string>&amp;Stop Transfer</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop the current transfer</string>
    </property>
    <property name="shortcut">
     <string>S</string>
    </property>
   </action>
-  <action name="action_Add_Current_to_Hotlist">
+  <action name="actAdd2hot">
    <property name="text">
     <string>&amp;Add Current To Hotlist</string>
+   </property>
+   <property name="iconText">
+    <string>Add2Hot</string>
+   </property>
+   <property name="toolTip">
+    <string>Add to Hotlist Folder</string>
+   </property>
+   <property name="statusTip">
+    <string>Add the current document to the selected folder</string>
    </property>
    <property name="shortcut">
     <string>A</string>
    </property>
   </action>
-  <action name="action_About_MosaiX">
+  <action name="actAbout">
    <property name="text">
     <string>&amp;About MosaiX</string>
+   </property>
+   <property name="statusTip">
+    <string>Display program infomation, version and copyrights</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
