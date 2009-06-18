@@ -6,13 +6,14 @@
 #include <QSize>
 #include <QDate>
 #include <QDateTime>
-typedef QPair <QString, QString> MXBookmark; // <Name, URL>
-typedef QList<MXBookmark> MXBookmarkList;
-struct MXHotlink {
+
+struct MXBookmark {
 QString name;
 QString url;
 QDateTime time;
 };
+typedef QList<MXBookmark> MXBookmarkList;
+typedef QList <MXBookmarkList> MXMenu;
 
  struct MXOptions {
 public:
@@ -23,7 +24,8 @@ QString downloadDir;
 QString historyFile;
 //window
 bool globalHistory;
-bool seesionHistory;
+bool sessionHistory;
+bool cacheManager;
 bool showDate;
 bool showTime;
 QPoint position;
@@ -47,7 +49,7 @@ int mailPort;
 //ADD to EVERY FIELD QDir::homePath, or YOU will KILLED!!!!!!!
 QString tbConfig;
 QString aConfig;
-QString hotlistConfig;
+//QString hotlistConfig;
 QString miscConfig;
 QString hotlinkList;
 QString hotBarConfig;
@@ -56,6 +58,7 @@ QString hotBarConfig;
 bool openFile;
 bool saveFile;
 bool print;
+bool printPreview;
 bool copy;
 bool paste;
 bool find;
@@ -77,8 +80,7 @@ bool curhotlist;
 int numberButtons;
 //options
 bool buttontext;
-//hotbar
-MXBookmarkList bookmarks;
+
 
 //
 };

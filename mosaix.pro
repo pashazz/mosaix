@@ -6,10 +6,12 @@ TARGET = mosaix
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    mxloader.cpp
+    mxloader.cpp \
+    mxcoremethods.cpp
 HEADERS += mainwindow.h \
     mxloader.h \
     config.h \
-    MXSettings.h
+    MXSettings.h \
+    mxcoremethods.h
 FORMS += mainwindow.ui
 RESOURCES += icons.qrc

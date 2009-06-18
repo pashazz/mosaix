@@ -1,10 +1,9 @@
-#include <QtGui/QApplication>
-#include "mainwindow.h"
-
+#include "mxloader.h"
+#include <QApplication>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //MainWindow w;
-   // w.show();
+    MXLoader *mx = new MXLoader ();
+    mx->start();
     return a.exec();
 }
