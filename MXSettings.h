@@ -27,6 +27,7 @@ bool globalHistory;
 bool sessionHistory;
 bool cacheManager;
 bool showDate;
+bool showDay;
 bool showTime;
 QPoint position;
 QSize size;

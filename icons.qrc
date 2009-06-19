@@ -26,5 +26,6 @@
         <file>icons/view-history.png</file>
         <file>icons/view-refresh.png</file>
         <file>icons/logo.png</file>
+        <file>icons/minilogo.png</file>
     </qresource>
 </RCC>

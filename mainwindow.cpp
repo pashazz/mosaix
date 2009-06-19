@@ -3,15 +3,15 @@
 #include <QSettings>
 #include "config.h"
 
-MainWindow::MainWindow(MXOptions &opt,QString &hotlink,  QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods), op(opt), hlink(hotlink)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
-    //filling vars
-
+    load();
     ui->setupUi(this);
+
+    createWindow();
     createMenus();
     createToolbars();
-
 
 }
 
@@ -21,6 +21,8 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::createMenus(){
+    //connects
+
     hotListParser();
     //tuning
     ui->actExit->setMenuRole(QAction::QuitRole);
@@ -90,6 +92,32 @@ void MainWindow::createMenus(){
 ui->actExit->setStatusTip(tr("Quit Mosaix for %1").arg(wv);
 #endif
 
+//create context menus
+//toolbars context menu
+ cmToolbars = new QMenu (this);
+
+cmToolbars->addAction(ui->actMosaicTb);
+cmToolbars->addAction(ui->actWebTb);
+cmToolbars->addAction(ui->actManager);
+cmToolbars->addAction(ui->actLocTb);
+cmToolbars->addAction(ui->actNcsa);
+cmToolbars->addSeparator();
+cmToolbars->addAction(ui->actHotlinkTb);
+cmToolbars->addAction(ui->actStatus);
+cmToolbars->addSeparator();
+cmToolbars->addAction(ui->actManagerConf);
+cmToolbars->addAction(ui->actHBarConf);
+cmToolbars->addSeparator();
+cmToolbars->addAction(ui->actToolConf);
+cmToolbars->addAction(ui->actButText);
+
+cmToolbars->addAction(ui->actDefaultLayout);
+
+connect (ui->statusBar, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
+connect (ui->tbMosaic, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
+connect(ui->tbWeb, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
+connect (ui->tbLocation, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
+//connect (ui->tbGlobe, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 
 
 
@@ -135,6 +163,9 @@ ui->tbMosaic->addSeparator();
 */
 //code to check separators
 
+ui->tbMosaic->setVisible(op.mosaic);
+
+
 //then, Web Toolbar
 if (op.back)
     ui->tbWeb->addAction(ui->actBack);
@@ -145,8 +176,7 @@ if (op.noimages) {
     //copy of "reload text only"
     QAction *act = new QAction ("Rel Img", this); //Find icon, idiot!
     act->setToolTip(tr("Don`t Reload Images"));
-    act->setStatusTip(tr("When reloading page,get images from local cache"));
-
+    act->setStatusTip(tr("When reloading page,get images from local cache"));  
 
 }
 if (op.reload)
@@ -163,59 +193,83 @@ if (op.email)
     ui->tbWeb->addAction(ui->actMail);
 if (op.curhotlist)
     ui->tbWeb->addAction(ui->actAdd2hot);
+ui->tbWeb->setVisible(op.web);
+
+//then Location toolbar
+//first, layout
+yes = new QPushButton (QIcon(":/icons/icons/yes.png"),"", this);
+//connect
+yes->setFlat(true);
+yes->setToolTip(tr("Load URL"));
+ui->tbLocation->addWidget(yes);
+stop = new QPushButton (QIcon(":/icons/icons/process-stop.png"), "", this);
+//connect
+stop->setFlat(true);
+stop->setToolTip(tr("Cancel Load"));
+ui->tbLocation->addWidget(stop);
+addr = new QComboBox (this);
+addr->setEditable(true);
+addr->setToolTip(tr("URL"));
+addr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+//connect
+ui->tbLocation->addWidget(addr);
+//visiblity
+ui->tbLocation->setVisible(op.location);
+ui->actLocTb->setChecked(op.location);
+//then NCSA Globe
+//QLabel *globe = new QLabel (this);
+///globe->setCursor(Qt::OpenHandCursor);
+///globe->setPixmap(QPixmap(":/icons/icons/minilogo.png"));
+//ui->tbGlobe->addWidget(globe);
+
 //style
 if (op.buttontext){
       ui->tbMosaic->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     ui->tbWeb->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     }
+//set buttons checked or no (toolbars)
+ui->actButText->setChecked(op.buttontext);
+ui->actMosaicTb->setChecked(op.mosaic);
+ui->actWebTb->setChecked(op.web);
+ui->actHotlinkTb->setChecked(op.hotlinkbar);
+ui->actStatus->setChecked(op.statusbar);
+
+//set statusBar
+ui->statusBar->setVisible(op.statusbar);
+time = new QLabel (ui->statusBar);
+
+ui->statusBar->addPermanentWidget(time);
+    //timer
+timer = new QTimer (this);
+connect (timer, SIGNAL (timeout()), this, SLOT (updateTimer()));
+timer->start(1000);
+
+
 
 
 }
 void MainWindow::hotListParser() {
+if (!QFile::exists(hlink)) {
+    qDebug() << "mosaix: error reading hotlinks: file does not exists, hotlinks will be disabled!";
+}
 
-    QSettings *stg = new QSettings (hlink,QSettings::IniFormat, this);
-    stg->beginGroup("Info");
-    QString fnValue = stg->value("FileName").toString();
+    QSettings *sets = new QSettings (hlink, QSettings::IniFormat, this);
+QStringList groups = sets->childGroups();
 
-    QFileInfo f (fnValue);
-    QString fileName = f.absoluteFilePath();
-    if (!QFile::exists(fileName)) {
+QString group;
 
-    }
-    QSettings *sets = new QSettings (fileName, QSettings::IniFormat, this);
-
-
-    int i = stg->value("MenuItems", -1).toInt();
-    stg->endGroup();
-    int x;
-    if (i == -1) {
-        return;}
-    for (x = 0; x <= i; ++x) {
+  foreach(group, groups) {
         /*
           There is code to parse .HOT file
 
           */
-       MXBookmarkList userMenu;
-
-
-        QString myName, myLevel;
-
-
-        //x from 0 to 7 in tests
-    //get number of items of THIS menu from stg
-    //array of items of this Menu
-
-    QString keyName = "Menu" + x;
-    int items = stg->value(keyName).toInt();
-    //get menu name
-    QString group = "User Menu" + QVariant(x).toString();
-     sets->beginGroup(group);
-
-
+      MXBookmarkList userMenu;
+      QString myName, myLevel;
+      //array of items of this Menu
+      sets->beginGroup(group);
      QStringList keys = sets->allKeys();
-
      QString key;
-
      foreach (key, keys) {
 
          if (key == "Menu_Name") {
@@ -246,8 +300,7 @@ void MainWindow::hotListParser() {
 
      }
      if (myLevel == "TOPLEVEL")
-         topMenu = x;
-
+topMenu = groups.indexOf(group);
      //Done with menu
     menu.append(userMenu);
     menuNames.append(myName);
@@ -362,6 +415,195 @@ void MainWindow::on_actButText_triggered(bool checked)
     else {
           ui->tbMosaic->setToolButtonStyle(Qt::ToolButtonIconOnly);
     ui->tbWeb->setToolButtonStyle(Qt::ToolButtonIconOnly);}
-core->writeSetting("ButtonText", "Options", checked, op.tbConfig);
+core->writeSetting("ButtonText", "opions", checked, op.tbConfig);
+
+}
+
+void MainWindow::updateTimer() {
+    //checking settings
+    QString msg;
+    if (op.showDay)
+        msg.append(QDateTime::currentDateTime().toString("ddd"));
+    if (op.showDate)
+        msg.append(QDateTime::currentDateTime().toString(" dd.MM.yyyy"));
+    if (op.showTime)
+        msg.append(QDateTime::currentDateTime().toString(" h:mm:ss"));
+    time->setText(msg.trimmed());
+    time->update();
+}
+
+void MainWindow::closeEvent(QCloseEvent *e) {
+    //saving settings
+    //toolbars
+    core->writeSetting("Mosaic", "Toolbars",  ui->tbMosaic->isVisible(), QDir::homePath() + CONFFILE);
+    core->writeSetting("Web", "Toolbars", ui->tbWeb->isVisible(), QDir::homePath() + CONFFILE);
+    core->writeSetting("Location", "Toolbars", ui->tbLocation->isVisible(), QDir::homePath() + CONFFILE);
+    //other coming soon
+
+   e->accept();
+
+}
+
+
+
+void MainWindow::on_actHome_triggered()
+{
+    openUrl(op.homePage);
+}
+
+void MainWindow::on_actMosaicTb_triggered(bool checked)
+{
+    ui->tbMosaic->setVisible(checked);
+}
+
+
+
+void MainWindow::on_actWebTb_triggered(bool checked)
+{
+    ui->tbWeb->setVisible(checked);
+}
+
+void MainWindow::on_actLocTb_triggered(bool checked)
+{
+    ui->tbLocation->setVisible(checked);
+}
+
+void MainWindow::onToolbarMenu(QPoint p) {
+   QWidget* w = static_cast<QWidget*>(QObject::sender());
+   cmToolbars->exec(w->mapToGlobal(p));
+}
+
+void MainWindow::readSettings() {
+    //clean all toolbars and hostlists;
+    //call mxloader to reread settings
+    ui->menuHotlists->clear();
+    ui->tbLocation->clear();
+    ui->tbMosaic->clear();
+    ui->tbWeb->clear();
+    load();
+    createWindow();
+    createMenus();
+    createToolbars();
+
+}
+
+void MainWindow::createWindow() {
+    //reading size and location settings
+   resize(op.size);
+   move(op.position);
+    }
+
+void MainWindow::on_actToolConf_triggered()
+{
+MXButtonConf *frm = new MXButtonConf(this, op.tbConfig);
+frm->show();
+if (frm->result() == QDialog::Accepted)
+    readSettings();
+}
+
+void MainWindow::load() {
+   QString conf_file = QDir::homePath() + CONFFILE;
+   QString conf_dir = QDir::homePath() + CONFDIR;
+    QTextStream out (stdout);
+   QSettings *stg;
+   stg = new QSettings (conf_file, QSettings::IniFormat, this);
+out << tr("mosaix: reading main.ini config\n");
+   stg->beginGroup("Application");
+   op.homePage = stg->value("MainPage", "http://google.com").toString();
+   stg->endGroup();
+   stg->beginGroup("Directories");
+   op.downloadDir = stg->value("DownloadDir", QDir::tempPath()).toString();
+   op.historyFile = stg->value("HstoryFile", "").toString();
+   stg->endGroup();
+   stg->beginGroup("Window");
+   op.globalHistory = stg->value("GlobalHistory", true).toBool();
+   op.sessionHistory = stg->value("SessionHistory", true).toBool();
+   op.cacheManager = stg->value("CacheManager", true).toBool();
+   op.showDate = stg->value("ShowDate", true).toBool();
+   op.showDay = stg->value("ShowDay", true).toBool();
+   op.showTime = stg->value("ShowTime", true).toBool();
+   op.position = stg->value("Position", QPoint (0,0)).toPoint();
+   op.size = stg->value("Size", QSize (640, 480)).toSize();
+   stg->endGroup();
+   //toolbars
+   stg->beginGroup("Toolbars");
+   op.mosaic = stg->value("Mosaic", true).toBool();
+   op.web = stg->value("Web", true).toBool();
+   op.managerviews = stg->value("ManagerViews",true).toBool();
+   op.location = stg->value("Location", true).toBool();
+   op.hotlinkbar = stg->value("Hotlink", true).toBool();
+   op.statusbar = stg->value("StatusBar", true).toBool();
+   stg->endGroup();
+   stg->beginGroup("Proxy");
+   op.httpProxy = stg->value("HhttpProxy").toString();
+   stg->endGroup();
+   stg->beginGroup("Mail");
+  op.mailName = stg->value("Name").toString();
+  op.mailPassword = stg->value("Password").toString();
+  op.mailHost = stg->value("Host").toString();
+  op.mailAddress = stg->value("Address").toString();
+  op.mailPort = stg->value("Port").toInt();
+  stg->endGroup();
+  stg->beginGroup("Files");
+  op.tbConfig = stg->value("ToolBarConfig", conf_dir + "/toolbars.ini").toString();
+  op.aConfig = stg->value("AudioConfig", conf_dir + "/audio.ini").toString();
+  op.miscConfig = stg->value("MiscConfig", conf_dir + "/misc.ini").toString();
+  op.hotlinkList = stg->value("HotlinkList", conf_dir + "/hotlinks/DEFAULT1.HOT").toString();
+
+  op.hotBarConfig = stg->value("HotlinkBarConfig", conf_dir+ "/hotlinkbar.ini").toString();
+  stg->endGroup();
+delete stg;
+stg = new QSettings (op.tbConfig, QSettings::IniFormat, this);
+out << tr("mosaix: reading Toolbars\n");
+stg->beginGroup("Mosaic");
+op.openFile = stg->value("OpenFile", true).toBool();
+op.saveFile = stg->value("SaveFile", true).toBool();
+op.print = stg->value("Print", true).toBool();
+op.printPreview = stg->value("PrintPreview", true).toBool();
+op.copy = stg->value("Copy", true).toBool();
+op.paste = stg->value("Paste", true).toBool();
+op.find = stg->value("Find", true).toBool();
+op.searchCache = stg->value("SearchCache", true).toBool();
+op.managerViewsTB = stg->value("ManagerViews",true).toBool();
+op.help = stg->value("Help", true).toBool();
+stg->endGroup();
+stg->beginGroup("Web");
+op.back = stg->value("Back",true).toBool();
+op.forward = stg->value("Forward", true).toBool();
+op.noimages = stg->value("NoImages", true).toBool();
+op.reload = stg->value("Reload", true).toBool();
+op.home = stg->value("Home", true).toBool();
+op.stop = stg->value("Stop", true).toBool();
+op.news = stg->value("News",true).toBool();
+op.email = stg->value("E-Mail", true).toBool();
+op.add2hot = stg->value("Add2Hot",true).toBool();
+op.curhotlist = stg->value("CurHotList", true).toBool();
+stg->endGroup();
+stg->beginGroup("HotinkBar");
+stg->value("NumberButtons", -1).toBool();
+stg->endGroup();
+stg->beginGroup("opions");
+op.buttontext = stg->value("ButtonText", false).toBool();
+stg->endGroup();
+delete stg;
+
+
+/***********************************************************************
+  There will be code - loading other configs
+
+  IT IS COMING SOON!!!!!!
+
+
+
+
+
+
+  ************************************************************************/
+
+
+
+
+//loading hotlinks
+out << tr("mosaix: loading hotlists\n");
 
 }

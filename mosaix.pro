@@ -7,11 +7,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     mxloader.cpp \
-    mxcoremethods.cpp
+    mxcoremethods.cpp \
+    mxbuttonconf.cpp
 HEADERS += mainwindow.h \
     mxloader.h \
     config.h \
     MXSettings.h \
-    mxcoremethods.h
-FORMS += mainwindow.ui
+    mxcoremethods.h \
+    mxbuttonconf.h
+FORMS += mainwindow.ui \
+    mxbuttonconf.ui
 RESOURCES += icons.qrc
