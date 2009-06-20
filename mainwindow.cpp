@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
     load();
+    hlink = op.hotlinkList;
     ui->setupUi(this);
 
     createWindow();
