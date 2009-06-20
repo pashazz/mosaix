@@ -486,6 +486,7 @@ void MainWindow::readSettings() {
     createWindow();
     createMenus();
     createToolbars();
+    update();
 
 }
 
@@ -498,8 +499,8 @@ void MainWindow::createWindow() {
 void MainWindow::on_actToolConf_triggered()
 {
 MXButtonConf *frm = new MXButtonConf(this, op);
-frm->show();
-if (frm->result() == QDialog::Accepted)
+
+if (frm->exec() == QDialog::Accepted)
     readSettings();
 }
 

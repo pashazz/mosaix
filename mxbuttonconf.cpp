@@ -5,7 +5,7 @@ MXButtonConf::MXButtonConf(QWidget *parent,  MXOptions opt) :
     m_ui(new Ui::MXButtonConf), core (new MXCoreMethods())
 {
     m_ui->setupUi(this);
-
+    getSettings(opt);
     conf = opt.tbConfig;
     connect (m_ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onClick(QAbstractButton*)));
 }
@@ -68,7 +68,13 @@ m_ui->cbForward->setChecked(opt.forward);
 m_ui->cbHelp->setChecked(opt.help);
 m_ui->cbHome->setChecked(opt.home);
 m_ui->cbMai->setChecked(opt.email);
-
+m_ui->cbManager->setChecked(opt.managerViewsTB);
+m_ui->cbNews->setChecked(opt.news);
+m_ui->cbNoImages->setChecked(opt.noimages);
+m_ui->cbPaste->setChecked(opt.paste);
+m_ui->cbReload->setChecked(opt.reload);
+m_ui->cbSearchCache->setChecked(opt.searchCache);
+m_ui->cbStop->setChecked(opt.stop);
 
 
 }
