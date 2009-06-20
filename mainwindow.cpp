@@ -253,6 +253,7 @@ timer->start(1000);
 void MainWindow::hotListParser() {
 if (!QFile::exists(hlink)) {
     qDebug() << "mosaix: error reading hotlinks: file does not exists, hotlinks will be disabled!";
+    return;
 }
 
     QSettings *sets = new QSettings (hlink, QSettings::IniFormat, this);
@@ -496,7 +497,7 @@ void MainWindow::createWindow() {
 
 void MainWindow::on_actToolConf_triggered()
 {
-MXButtonConf *frm = new MXButtonConf(this, op.tbConfig);
+MXButtonConf *frm = new MXButtonConf(this, op);
 frm->show();
 if (frm->result() == QDialog::Accepted)
     readSettings();

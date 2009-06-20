@@ -1,12 +1,12 @@
 #include "mxbuttonconf.h"
 #include "ui_mxbuttonconf.h"
-
-MXButtonConf::MXButtonConf(QWidget *parent, const QString &tbConf) :
+MXButtonConf::MXButtonConf(QWidget *parent,  MXOptions opt) :
     QDialog(parent),
     m_ui(new Ui::MXButtonConf), core (new MXCoreMethods())
 {
     m_ui->setupUi(this);
-    conf = tbConf;
+
+    conf = opt.tbConfig;
     connect (m_ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onClick(QAbstractButton*)));
 }
 
@@ -53,4 +53,20 @@ void MXButtonConf::onClick(QAbstractButton *b) {
  }
     else
         setResult(0);
+}
+void MXButtonConf::getSettings(MXOptions opt) {
+m_ui->cbOpenFile->setChecked(opt.openFile);
+m_ui->cbSaveFile->setChecked(opt.saveFile);
+m_ui->cbPrint->setChecked(opt.print);
+m_ui->cbPrintPreview->setChecked(opt.printPreview);
+m_ui->cbAdd2hot->setChecked(opt.add2hot);
+m_ui->cbBack->setChecked(opt.back);
+m_ui->cbCopy->setChecked(opt.copy);
+m_ui->cbCurHot->setChecked(opt.curhotlist);
+m_ui->cbFind->setChecked(opt.find);
+m_ui->cbForward->setChecked(opt.forward);
+m_ui->cbHelp->setChecked(opt.help);
+m_ui->cbHome->setChecked(opt.home);
+m_ui->cbMai->setChecked(opt.email);
+
 }
