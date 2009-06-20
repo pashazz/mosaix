@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>680</height>
+    <width>705</width>
+    <height>455</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -33,22 +33,42 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="maximumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_6">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
-      </property>
       <item>
-       <widget class="QWebView" name="webView">
-        <property name="contextMenuPolicy">
-         <enum>Qt::CustomContextMenu</enum>
+       <widget class="QTabWidget" name="tabPages">
+        <property name="currentIndex">
+         <number>0</number>
         </property>
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
+        <property name="documentMode">
+         <bool>true</bool>
         </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="tabWeb">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QWebView" name="webView">
+            <property name="url">
+             <url>
+              <string>about:blank</string>
+             </url>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -60,7 +80,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>705</width>
      <height>19</height>
     </rect>
    </property>
@@ -269,7 +289,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -280,7 +300,7 @@
        <property name="movable">
         <bool>false</bool>
        </property>
-       <widget class="QWidget" name="tbSession">
+       <widget class="QWidget" name="tab">
         <attribute name="title">
          <string>S</string>
         </attribute>
@@ -315,7 +335,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tbGlobal">
+       <widget class="QWidget" name="tab_2">
         <attribute name="title">
          <string>G</string>
         </attribute>
@@ -337,7 +357,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tbSource">
+       <widget class="QWidget" name="tab_3">
         <attribute name="title">
          <string>S</string>
         </attribute>
@@ -380,119 +400,137 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabHotlink">
+       <widget class="QWidget" name="tab_4">
         <attribute name="title">
          <string>H</string>
         </attribute>
         <attribute name="toolTip">
          <string>Hotlist View</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_7">
-         <item>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Hotlist:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Add to:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="cbGroups"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="txtHotlist"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QTreeWidget" name="twHotlinks">
-           <attribute name="headerVisible">
-            <bool>false</bool>
-           </attribute>
-           <column>
+        <widget class="QWidget" name="gridLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>60</y>
+           <width>171</width>
+           <height>56</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
             <property name="text">
-             <string notr="true">1</string>
-            </property>
-           </column>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="frame">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>22</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>x</string>
+             <string>Hotlist:</string>
             </property>
            </widget>
-           <widget class="QLabel" name="label">
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>0</y>
-              <width>53</width>
-              <height>15</height>
-             </rect>
-            </property>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>TextLabel</string>
+             <string>Add to:</string>
             </property>
            </widget>
-          </widget>
-         </item>
-        </layout>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBox_2"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QTreeWidget" name="treeWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>120</y>
+           <width>171</width>
+           <height>81</height>
+          </rect>
+         </property>
+         <attribute name="headerVisible">
+          <bool>false</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QFrame" name="frame">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>171</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>22</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>x</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label">
+          <property name="geometry">
+           <rect>
+            <x>60</x>
+            <y>0</y>
+            <width>53</width>
+            <height>15</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </widget>
        </widget>
-       <widget class="QWidget" name="tabCache">
+       <widget class="QWidget" name="tab_5">
         <attribute name="title">
          <string>C</string>
         </attribute>
@@ -514,7 +552,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabNews">
+       <widget class="QWidget" name="tab_6">
         <attribute name="title">
          <string>N</string>
         </attribute>
@@ -523,7 +561,7 @@
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_6"/>
        </widget>
-       <widget class="QWidget" name="tabHelo">
+       <widget class="QWidget" name="tab_7">
         <attribute name="title">
          <string>?</string>
         </attribute>
@@ -1153,6 +1191,8 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

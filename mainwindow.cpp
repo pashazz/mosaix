@@ -2,13 +2,13 @@
 #include "ui_mainwindow.h"
 #include <QSettings>
 #include "config.h"
-#include <QtWebKit>
-#include <QUrl>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
     load();
+    linkHovered = false;
     hlink = op.hotlinkList;
     ui->setupUi(this);
 
@@ -16,7 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     createMenus();
     createToolbars();
     connectAll();
+    statusBar()->showMessage(tr("For help, press F1"));
+
 openUrl(op.homePage);
+
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +34,7 @@ void MainWindow::createMenus(){
     connect (ui->actReload, SIGNAL (triggered()), ui->webView, SLOT(reload()));
     connect (ui->actStopTransf, SIGNAL(triggered()), ui->webView, SLOT(stop()));
    connect (ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT (onUrlChanged(QUrl)));
+
 
     hotListParser();
     //tuning
@@ -127,7 +131,7 @@ connect (ui->tbMosaic, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on
 connect(ui->tbWeb, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 connect (ui->tbLocation, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 //connect (ui->tbGlobe, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
-
+createBrowserMenu();
 
 
 
@@ -335,16 +339,68 @@ void MainWindow::makeHotlistsMenu() {
   MXBookmarkList mnu = menu.at(topMenu);
 
 makeGroup(mnu);
-
+makeTree(mnu);
+ui->txtHotlist->setText(op.hotlinkList);
 
   }
+void MainWindow::makeTree(const MXBookmarkList &list, QTreeWidgetItem *parent){
+     MXBookmark item;
+    const  QString folder = ":/icons/icons/open-folder.png";
+      const QString paper = ":/icons/icons/document-new.png";
+    if (parent ==0 )
+      {
+        MXBookmark top = list.at(topMenu);
+          parent = new QTreeWidgetItem (ui->twHotlinks, 0);
+         parent->setText(0,menuNames.at(topMenu));
+        parent->setIcon(0, QIcon (folder));
+        ui->twHotlinks->addTopLevelItem(parent);
+        ui->cbGroups->addItem(menuNames.at(topMenu), top.url);
+
+    }
+    foreach (item, list) {
+        if (item.name == "MENU") {
+            //recursive call makeGroup;
+            //get UserMenu by number
+            QString menuID = item.url;
+            if (menuID.startsWith("UserMenu")) { //"UserMenu" contains 8 symbols
+             QString menuNubmer = menuID.right(menuID.count() - 8);
+
+             int num = menuNubmer.toInt();
 
 
-void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent) {
+             QTreeWidgetItem *Titem = new QTreeWidgetItem (parent, 0);
+             QString menuName = menuNames.at(num);
+             Titem->setText(0, menuName);
+             Titem->setIcon(0, QIcon(folder));
+             parent->addChild(Titem);
+             ui->cbGroups->addItem(menuName, menuID);
+
+             makeTree(menu.at(num), Titem);
+
+
+            }
+        }
+ else {
+            //get a parent menu
+                QTreeWidgetItem *Titem = new QTreeWidgetItem (parent, 0);
+                Titem->setText(0,item.name);
+                Titem->setIcon(0, QIcon (paper));
+                parent->addChild(Titem);
+
+
+
+        }
+}
+    }
+
+
+void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent){
     MXBookmark item;
+
     if (parent == 0) { //then parent = menuHotlists
             parent = ui->menuHotlists;
             //add a first-level point
+
             QMenu *top = new QMenu (menuNames.at(topMenu), this);
             parent->addMenu(top);
             makeGroup(list, top);
@@ -363,7 +419,7 @@ void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent) {
              //build a simple QMenu
              QString menuName = menuNames.at(num);
              QMenu *submenu = new QMenu (menuName, this);
-             parent->addMenu(submenu);
+
              makeGroup(menu.at(num), submenu);
 
 
@@ -375,6 +431,7 @@ void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent) {
             //get a parent menu
                 QAction *userAction  = new QAction (item.name, this);
                 userAction->setStatusTip(item.url);
+
                 connect(userAction, SIGNAL(triggered()), this, SLOT (onCustomMenuClicked()));
                 //add item
                 parent->addAction(userAction);
@@ -418,11 +475,7 @@ void MainWindow::onCustomMenuClicked() { //slot on custom menu triggered
 
 
 void MainWindow::openUrl(QString url) {
-    if (!url.startsWith("http://"))
-        url = "http://" + url.trimmed();
-
-
-ui->webView->load (QUrl (url));
+ui->webView->load (QUrl(guessUrlFromString(url)));
 
 }
 
@@ -510,13 +563,13 @@ void MainWindow::readSettings() {
 }
 
 void MainWindow::createWindow() {
-    //reading size and location settings
-   // resize (op.window.first);
-   // move (op.window.second);
-   // ui->webView->resize(op.webBrowser.first);
-   // ui->webView->move (op.webBrowser.second);
-   // ui->manViews->resize(op.managerLocation.first);
-  //  ui->manViews->move(op.managerLocation.second);
+ //reading size and location settings
+   resize (op.window.first);
+   move (op.window.second);
+   ui->webView->resize(op.webBrowser.first);
+   ui->webView->move (op.webBrowser.second);
+   ui->manViews->resize(op.managerLocation.first);
+    ui->manViews->move(op.managerLocation.second);
 
     }
 
@@ -641,8 +694,11 @@ void MainWindow::connectAll() {
    connect (addr->lineEdit(), SIGNAL(returnPressed()), this, SLOT(loadPage()));
    connect(yes, SIGNAL (clicked()), this, SLOT(loadPage()));
     connect (stop, SIGNAL(clicked()), this, SLOT(loadPage()));
-
-
+   connect (ui->webView, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(onBrowserMenu(QPoint)));
+    connect (ui->webView, SIGNAL(titleChanged(QString)), this, SLOT(onTitleChanged(QString)));
+connect (ui->webView, SIGNAL (iconChanged()), this, SLOT (onIconChanged()));
+connect (ui->webView, SIGNAL (statusBarMessage(QString)), this, SLOT (setStatusBarMessage(QString)));
+connect (ui->webView->page(), SIGNAL (linkHovered(QString,QString,QString)), this, SLOT (onLinkHovered(QString,QString,QString)));
 }
 
 void MainWindow::onUrlChanged(QUrl url) {
@@ -654,6 +710,7 @@ void MainWindow::onStarted() {
     stop->setEnabled(true);
     ui->actStopTransf->setEnabled(true);
     progress->setEnabled(true);
+    currentPage = 0;
 
 }
 
@@ -661,6 +718,7 @@ void MainWindow::onFinished() {
     stop->setEnabled(false);
        ui->actStopTransf->setEnabled(false);
     progress->setEnabled(false);
+    currentPage = ui->webView->page();
 
 
 }
@@ -673,10 +731,10 @@ void MainWindow::saveMySettings() {
     core->writeSetting("Location", "Toolbars", ui->tbLocation->isVisible(), QDir::homePath() + CONFFILE);
     core->writeSetting("StatusBar", "Toolbars", statusBar()->isVisible(), QDir::homePath() + CONFFILE);
     //write size and location of controls
-    core->writeSetting("WebBrowser", "Size", ui->webView->size(), op.miscConfig);
-    core->writeSetting ("WebBrowser", "Position", ui->webView->pos(), op.miscConfig);
+    core->writeSetting("WebBrowser", "Size",  ui->webView->size(), op.miscConfig);
+    core->writeSetting ("WebBrowser", "Position", ui->webView->mapToGlobal(ui->webView->pos()), op.miscConfig);
     core->writeSetting("ManagerViews", "Size", ui->manViews->size(), op.miscConfig);
-    core->writeSetting("ManagerViews", "Position", ui->manViews->pos(), op.miscConfig);
+    core->writeSetting("ManagerViews", "Position", ui->manViews->mapToGlobal(ui->manViews->pos()), op.miscConfig);
 
 }
 
@@ -684,3 +742,143 @@ void MainWindow::on_actStatus_triggered(bool checked)
 {
     statusBar()->setVisible(checked);
 }
+void MainWindow::createBrowserMenu() {
+    cmBrowser = new QMenu (this);
+    cmBrowser->addAction(ui->actSave);
+    cmBrowser->addAction(ui->actSaveText);
+    cmBrowser->addSeparator();
+   //document header
+info = new QAction (tr("Document Header Infomation"), this);
+connect (info, SIGNAL(triggered()), this, SLOT(onShowInfo()));
+cmBrowser->addAction(info);
+cmBrowser->addSeparator();
+shortcut = new QAction (tr("Create Internet Shortcut"), this);
+connect (shortcut, SIGNAL(triggered()), this, SLOT(onShortcut()));
+cmBrowser->addAction(shortcut);
+cmBrowser->addSeparator();
+spawn = new  QAction (tr("Spawn Mosaic from current page"), this);
+connect (spawn, SIGNAL (triggered()), this, SLOT (onSpawn()));
+cmBrowser->addAction(spawn);
+cmBrowser->addSeparator();
+pixel  = new QAction (tr("Pixel Color"), this);
+connect (pixel, SIGNAL(triggered()), this, SLOT(onPixel()));
+cmBrowser->addAction(pixel);
+
+  //Yanex сделай то же самое с cmLink(естесссно там другое меню, придумаю пункты сам.
+//у mosaic на этот счет не меню а г..о
+    //other part of menu will dinamically  created
+
+}
+void MainWindow::onBrowserMenu(QPoint p) {
+
+   QWidget* w = static_cast<QWidget*>(QObject::sender());
+
+   if (linkHovered) {
+   /*!
+2yanex - здесь показывается меню ссылочное. Вызов: cmLink.exec(w->mapToGlobal(p));
+заполни это меню
+данные берешь тут:
+linkData.at (0) - url ссылки
+linkData.at(1) - title - не нужно
+linkData.at(2) - текст ссылки
+*/
+       return;
+   }
+
+
+   cmBrowser->exec(w->mapToGlobal(p));
+
+}
+
+void MainWindow::onTitleChanged(QString title) {
+setWindowTitle(tr("%1 - Mosaix").arg(title));
+}
+
+
+
+
+void MainWindow::on_actCopy_triggered()
+{
+
+}
+void MainWindow::onIconChanged() {
+    setWindowIcon(ui->webView->icon());
+}
+void MainWindow::setStatusBarMessage(QString msg) {
+   ui->statusBar->showMessage(msg);
+}
+
+void MainWindow::on_actDefaultLayout_triggered()
+{
+
+}
+
+
+void MainWindow::on_actPresent_triggered()
+{
+
+}
+
+QUrl MainWindow::guessUrlFromString(const QString &string)
+{
+    QString urlStr = string.trimmed();
+    QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
+
+    // Check if it looks like a qualified URL. Try parsing it and see.
+    bool hasSchema = test.exactMatch(urlStr);
+    if (hasSchema) {
+        QUrl url = QUrl::fromEncoded(urlStr.toUtf8(), QUrl::TolerantMode);
+        if (url.isValid())
+            return url;
+    }
+
+    // Might be a file.
+    if (QFile::exists(urlStr)) {
+        QFileInfo info(urlStr);
+        return QUrl::fromLocalFile(info.absoluteFilePath());
+    }
+
+    // Might be a shorturl - try to detect the schema.
+    if (!hasSchema) {
+        int dotIndex = urlStr.indexOf(QLatin1Char('.'));
+        if (dotIndex != -1) {
+            QString prefix = urlStr.left(dotIndex).toLower();
+            QByteArray schema = (prefix == QLatin1String("ftp")) ? prefix.toLatin1() : "http";
+            QUrl url =
+                QUrl::fromEncoded(schema + "://" + urlStr.toUtf8(), QUrl::TolerantMode);
+            if (url.isValid())
+                return url;
+        }
+    }
+
+    // Fall back to QUrl's own tolerant parser.
+    QUrl url = QUrl::fromEncoded(string.toUtf8(), QUrl::TolerantMode);
+
+    // finally for cases where the user just types in a hostname add http
+    if (url.scheme().isEmpty())
+        url = QUrl::fromEncoded("http://" + string.toUtf8(), QUrl::TolerantMode);
+    return url;
+}
+
+void MainWindow::on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column)
+{
+    MXBookmark bkm = getItemByName(item->text(column));
+    openUrl(bkm.url);
+}
+
+void MainWindow::onLinkHovered(QString link, QString title, QString textContent)
+{
+    linkHovered = true;
+    linkData.clear();
+    linkData.append(link);
+    linkData.append(title);
+    linkData.append(textContent);
+    qDebug () << link << title << textContent;
+
+}
+void MainWindow::onShowInfo() {}
+void MainWindow::onPixel(){}
+void MainWindow::onSpawn(){}
+void MainWindow::onShortcut(){}
+
+//yanex сделай эти методы

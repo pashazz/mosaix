@@ -5,7 +5,9 @@
 #include "mxbuttonconf.h"
 #include "mxloader.h"
 #include <QtGui>
-
+#include <QtWebKit>
+#include <QUrl>
+ #include <QTreeWidgetItem>
 namespace Ui
 {
     class MainWindow;
@@ -25,6 +27,10 @@ public:
      void saveMySettings();
 
 private slots:
+void on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column);
+void on_actPresent_triggered();
+void on_actDefaultLayout_triggered();
+void on_actCopy_triggered();
 void on_actStatus_triggered(bool checked);
 void loadPage();
 void onStarted();
@@ -40,6 +46,15 @@ void on_actExit_triggered();
 void onCustomMenuClicked ();
 void updateTimer();
 void onToolbarMenu (QPoint p);
+void onBrowserMenu(QPoint p);
+void onTitleChanged(QString title);
+void onIconChanged ();
+void setStatusBarMessage(QString);
+void onLinkHovered (QString, QString, QString);
+void onShowInfo();
+void onShortcut();
+void onSpawn();
+void onPixel ();
 private:
 //creators
     Ui::MainWindow *ui;
@@ -47,17 +62,18 @@ private:
     void createToolbars();
     void createWindow();
     void connectAll();
-
+    void createBrowserMenu();
+    QUrl guessUrlFromString(const QString &string);
 //core
     MXCoreMethods *core;
 //options variables
     MXOptions op;
-    MXLoader *par;
     //Hotlinks variables and functions
 
     void hotListParser();
     void makeHotlistsMenu();
     void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
+    void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
     MXBookmark getItemByName (const QString &name);
     void load();
     int topMenu;
@@ -72,7 +88,25 @@ private:
     QPushButton *stop;
     QComboBox *addr;
     QMenu *cmToolbars;
+    QMenu *cmBrowser;
+    QMenu *cmLink;
     QProgressBar *progress;
+    //current webpage
+    QWebPage *currentPage;
+    QStringList linkData;
+    bool linkHovered;
+    //webVews
+
+
+
+    //actions
+    QAction *spawn; //spawn mosaic
+    QAction *info; //header information
+    QAction *shortcut; //create internet shortcut
+    QAction *pixerColor;
+    QAction *openInNewWindow;
+    QAction *add2hot;
+    QAction *pixel;
     protected:
     void closeEvent(QCloseEvent *e);
 

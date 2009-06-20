@@ -27,5 +27,6 @@
         <file>icons/view-refresh.png</file>
         <file>icons/logo.png</file>
         <file>icons/minilogo.png</file>
+        <file>icons/document-new.png</file>
     </qresource>
 </RCC>
