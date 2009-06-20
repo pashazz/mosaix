@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>614</width>
-    <height>414</height>
+    <height>453</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,11 +17,20 @@
    <string>MosaiX 0.1-dev - by NCSA Mosaic 3.0</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="icons.qrc">
     <normaloff>:/icons/icons/logo.png</normaloff>:/icons/icons/logo.png</iconset>
   </property>
   <property name="whatsThis">
    <string/>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="maximumSize">
@@ -30,7 +39,41 @@
      <height>351</height>
     </size>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <item>
+       <widget class="QTabWidget" name="tabPages">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="documentMode">
+         <bool>true</bool>
+        </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="tab_8">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QWebView" name="webView">
+            <property name="url">
+             <url>
+              <string>about:blank</string>
+             </url>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -38,7 +81,7 @@
      <x>0</x>
      <y>0</y>
      <width>614</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -151,7 +194,11 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actContents"/>
+    <addaction name="actOnlineRes"/>
+    <addaction name="separator"/>
     <addaction name="actAbout"/>
+    <addaction name="actSupport"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
@@ -178,6 +225,21 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actMOpen"/>
+   <addaction name="actMSave"/>
+   <addaction name="separator"/>
+   <addaction name="actMPrint"/>
+   <addaction name="actMPreview"/>
+   <addaction name="separator"/>
+   <addaction name="actMCopy"/>
+   <addaction name="actMPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actMFind"/>
+   <addaction name="actMCacheSrch"/>
+   <addaction name="separator"/>
+   <addaction name="actMManViews"/>
+   <addaction name="separator"/>
+   <addaction name="actMHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="contextMenuPolicy">
@@ -200,6 +262,19 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
+   <addaction name="actWBack"/>
+   <addaction name="actWForward"/>
+   <addaction name="separator"/>
+   <addaction name="actWRelImg"/>
+   <addaction name="actWReload"/>
+   <addaction name="separator"/>
+   <addaction name="actWHome"/>
+   <addaction name="actWStop"/>
+   <addaction name="separator"/>
+   <addaction name="actWNews"/>
+   <addaction name="actWMail"/>
+   <addaction name="separator"/>
+   <addaction name="actWAdd"/>
   </widget>
   <widget class="QToolBar" name="tbLocation">
    <property name="contextMenuPolicy">
@@ -217,10 +292,339 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
+   <addaction name="actLStop"/>
+   <addaction name="actLOk"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTabWidget" name="tabLeft">
+       <property name="tabPosition">
+        <enum>QTabWidget::South</enum>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>6</number>
+       </property>
+       <property name="elideMode">
+        <enum>Qt::ElideNone</enum>
+       </property>
+       <property name="tabsClosable">
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>false</bool>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>S</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Session History</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="lblSessionFiles">
+           <property name="text">
+            <string>&lt;b&gt;Session Files:&lt;/b&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbSessionFiles"/>
+         </item>
+         <item>
+          <widget class="QTreeWidget" name="trSessionFiles">
+           <property name="rootIsDecorated">
+            <bool>true</bool>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>G</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Global History</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QTreeWidget" name="trHistoryGlobal">
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>S</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Source View</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QTextBrowser" name="txtSource"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="hlSource">
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="cmdSourceSave">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>H</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Hotlist View</string>
+        </attribute>
+        <widget class="QWidget" name="gridLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>60</y>
+           <width>171</width>
+           <height>56</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Hotlist:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Add to:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBox_2"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QTreeWidget" name="treeWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>120</y>
+           <width>171</width>
+           <height>81</height>
+          </rect>
+         </property>
+         <attribute name="headerVisible">
+          <bool>false</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QFrame" name="frame">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>171</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>22</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>x</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label">
+          <property name="geometry">
+           <rect>
+            <x>60</x>
+            <y>0</y>
+            <width>53</width>
+            <height>15</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>C</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Cashe View</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QTreeWidget" name="trCacheView">
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_6">
+        <attribute name="title">
+         <string>N</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>News View</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QTreeWidget" name="trNewsView">
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_7">
+        <attribute name="title">
+         <string>?</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Help View</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QTreeWidget" name="trHelpView">
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/open.png</normaloff>:/icons/icons/open.png</iconset>
    </property>
    <property name="text">
@@ -249,7 +653,7 @@
   </action>
   <action name="actSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -272,7 +676,7 @@
   </action>
   <action name="actPrint">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/print.png</normaloff>:/icons/icons/print.png</iconset>
    </property>
    <property name="text">
@@ -287,7 +691,7 @@
   </action>
   <action name="actPrintPr">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/preview.png</normaloff>:/icons/icons/preview.png</iconset>
    </property>
    <property name="text">
@@ -315,7 +719,7 @@
   </action>
   <action name="actCopy">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
    </property>
    <property name="text">
@@ -330,7 +734,7 @@
   </action>
   <action name="actPaste">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/edit.png</normaloff>:/icons/icons/edit.png</iconset>
    </property>
    <property name="text">
@@ -345,7 +749,7 @@
   </action>
   <action name="actFind">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/search.png</normaloff>:/icons/icons/search.png</iconset>
    </property>
    <property name="text">
@@ -453,7 +857,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/manager.png</normaloff>:/icons/icons/manager.png</iconset>
    </property>
    <property name="text">
@@ -623,7 +1027,7 @@
   </action>
   <action name="actBack">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/back.png</normaloff>:/icons/icons/back.png</iconset>
    </property>
    <property name="text">
@@ -638,7 +1042,7 @@
   </action>
   <action name="actForward">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/next.png</normaloff>:/icons/icons/next.png</iconset>
    </property>
    <property name="text">
@@ -653,7 +1057,7 @@
   </action>
   <action name="actReload">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/view-refresh.png</normaloff>:/icons/icons/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -689,7 +1093,7 @@
   </action>
   <action name="actNews">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
    </property>
    <property name="text">
@@ -707,7 +1111,7 @@
   </action>
   <action name="actMail">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/newmsg.png</normaloff>:/icons/icons/newmsg.png</iconset>
    </property>
    <property name="text">
@@ -730,7 +1134,7 @@
   </action>
   <action name="actHome">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/home.png</normaloff>:/icons/icons/home.png</iconset>
    </property>
    <property name="text">
@@ -779,8 +1183,248 @@
     <string>Display program infomation, version and copyrights</string>
    </property>
   </action>
+  <action name="actContents">
+   <property name="text">
+    <string>&amp;Contents</string>
+   </property>
+   <property name="statusTip">
+    <string>Display help for current task or command</string>
+   </property>
+   <property name="whatsThis">
+    <string>Display help for current task or command</string>
+   </property>
+  </action>
+  <action name="actOnlineRes">
+   <property name="text">
+    <string>&amp;Online Resources</string>
+   </property>
+   <property name="statusTip">
+    <string>Display MosaiX Online Resources</string>
+   </property>
+   <property name="whatsThis">
+    <string>Display MosaiX Online Resources</string>
+   </property>
+  </action>
+  <action name="actSupport">
+   <property name="text">
+    <string>&amp;Mail Technical Support...</string>
+   </property>
+   <property name="statusTip">
+    <string>Send mail to the developers</string>
+   </property>
+   <property name="whatsThis">
+    <string>Send mail to the developers</string>
+   </property>
+  </action>
+  <action name="actMOpen">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open document</string>
+   </property>
+   <property name="statusTip">
+    <string>Open a document via a Uniform Resource Locator</string>
+   </property>
+  </action>
+  <action name="actMSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save to disk</string>
+   </property>
+   <property name="statusTip">
+    <string>Save current document to disk</string>
+   </property>
+  </action>
+  <action name="actMPrint">
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="statusTip">
+    <string>Print the active document</string>
+   </property>
+  </action>
+  <action name="actMPreview">
+   <property name="text">
+    <string>Preview</string>
+   </property>
+   <property name="toolTip">
+    <string>Print Preview</string>
+   </property>
+   <property name="statusTip">
+    <string>Display a print preview of the current document</string>
+   </property>
+  </action>
+  <action name="actMCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy Currently Selected Source to Clipboard</string>
+   </property>
+  </action>
+  <action name="actMPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="statusTip">
+    <string>Paste from clipboard</string>
+   </property>
+  </action>
+  <action name="actMFind">
+   <property name="text">
+    <string>Find</string>
+   </property>
+   <property name="statusTip">
+    <string>Find the specified text in the current document</string>
+   </property>
+  </action>
+  <action name="actMCacheSrch">
+   <property name="text">
+    <string>Cashe Srch</string>
+   </property>
+   <property name="toolTip">
+    <string>Cashe Search</string>
+   </property>
+   <property name="statusTip">
+    <string>Search Cache for a Text String</string>
+   </property>
+  </action>
+  <action name="actMManViews">
+   <property name="text">
+    <string>Man. Views</string>
+   </property>
+   <property name="toolTip">
+    <string>Manager Views</string>
+   </property>
+   <property name="statusTip">
+    <string>Turn on/off Manager Views</string>
+   </property>
+  </action>
+  <action name="actMHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="statusTip">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actWBack">
+   <property name="text">
+    <string>Back</string>
+   </property>
+   <property name="statusTip">
+    <string>Jump back to the last document</string>
+   </property>
+  </action>
+  <action name="actWForward">
+   <property name="text">
+    <string>Forward</string>
+   </property>
+   <property name="statusTip">
+    <string>Jump forward to the next document</string>
+   </property>
+  </action>
+  <action name="actWRelImg">
+   <property name="text">
+    <string>Rel Img</string>
+   </property>
+   <property name="toolTip">
+    <string>Don't reload images</string>
+   </property>
+   <property name="statusTip">
+    <string>When reloading page, get images from the local cashe</string>
+   </property>
+  </action>
+  <action name="actWReload">
+   <property name="text">
+    <string>Reload</string>
+   </property>
+   <property name="statusTip">
+    <string>Reload the current document</string>
+   </property>
+  </action>
+  <action name="actWHome">
+   <property name="text">
+    <string>Home</string>
+   </property>
+   <property name="toolTip">
+    <string>Load home page</string>
+   </property>
+   <property name="statusTip">
+    <string>Load the Home Page</string>
+   </property>
+  </action>
+  <action name="actWStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop Transfer</string>
+   </property>
+   <property name="whatsThis">
+    <string>Stop the current transfer</string>
+   </property>
+  </action>
+  <action name="actWMail">
+   <property name="text">
+    <string>Mail</string>
+   </property>
+   <property name="toolTip">
+    <string>Send</string>
+   </property>
+   <property name="statusTip">
+    <string>Send Internet E-mail</string>
+   </property>
+   <property name="whatsThis">
+    <string>Send Internet E-mail</string>
+   </property>
+  </action>
+  <action name="actWAdd">
+   <property name="text">
+    <string>Add2Hot</string>
+   </property>
+  </action>
+  <action name="actLStop">
+   <property name="text">
+    <string>X</string>
+   </property>
+   <property name="statusTip">
+    <string>Cancel Load</string>
+   </property>
+  </action>
+  <action name="actLOk">
+   <property name="text">
+    <string>v</string>
+   </property>
+   <property name="statusTip">
+    <string>Load URL</string>
+   </property>
+  </action>
+  <action name="actWNews">
+   <property name="text">
+    <string>News</string>
+   </property>
+   <property name="toolTip">
+    <string>Read Newsgroups</string>
+   </property>
+   <property name="statusTip">
+    <string>Read Newsgroups</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
