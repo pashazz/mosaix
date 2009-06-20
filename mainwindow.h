@@ -22,10 +22,14 @@ public:
     //main functions
      void openUrl (QString url);
      void readSettings();
+     void saveMySettings();
 
 private slots:
-
-
+void on_actStatus_triggered(bool checked);
+void loadPage();
+void onStarted();
+void onFinished();
+void onUrlChanged(QUrl url);
 void on_actToolConf_triggered();
 void on_actLocTb_triggered(bool checked);
 void on_actWebTb_triggered(bool checked);
@@ -42,6 +46,7 @@ private:
     void createMenus();
     void createToolbars();
     void createWindow();
+    void connectAll();
 
 //core
     MXCoreMethods *core;
@@ -67,6 +72,7 @@ private:
     QPushButton *stop;
     QComboBox *addr;
     QMenu *cmToolbars;
+    QProgressBar *progress;
     protected:
     void closeEvent(QCloseEvent *e);
 

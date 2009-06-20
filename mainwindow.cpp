@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QSettings>
 #include "config.h"
+#include <QtWebKit>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
@@ -13,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     createWindow();
     createMenus();
     createToolbars();
-
+    connectAll();
+openUrl(op.homePage);
 }
 
 MainWindow::~MainWindow()
@@ -23,6 +26,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::createMenus(){
     //connects
+    connect (ui->actBack, SIGNAL(triggered()), ui->webView, SLOT(back()));
+    connect (ui->actForward, SIGNAL (triggered()), ui->webView, SLOT(forward()));
+    connect (ui->actReload, SIGNAL (triggered()), ui->webView, SLOT(reload()));
+    connect (ui->actStopTransf, SIGNAL(triggered()), ui->webView, SLOT(stop()));
+   connect (ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT (onUrlChanged(QUrl)));
 
     hotListParser();
     //tuning
@@ -199,12 +207,13 @@ ui->tbWeb->setVisible(op.web);
 //then Location toolbar
 //first, layout
 yes = new QPushButton (QIcon(":/icons/icons/yes.png"),"", this);
-//connect
+connect (yes, SIGNAL(clicked()), this, SLOT(loadPage()));
 yes->setFlat(true);
 yes->setToolTip(tr("Load URL"));
 ui->tbLocation->addWidget(yes);
 stop = new QPushButton (QIcon(":/icons/icons/process-stop.png"), "", this);
-//connect
+connect(stop, SIGNAL(clicked()), ui->webView, SLOT(stop()));
+stop->setEnabled(false);
 stop->setFlat(true);
 stop->setToolTip(tr("Cancel Load"));
 ui->tbLocation->addWidget(stop);
@@ -235,16 +244,24 @@ ui->actMosaicTb->setChecked(op.mosaic);
 ui->actWebTb->setChecked(op.web);
 ui->actHotlinkTb->setChecked(op.hotlinkbar);
 ui->actStatus->setChecked(op.statusbar);
+ui->actStopTransf->setEnabled(false);
 
 //set statusBar
 ui->statusBar->setVisible(op.statusbar);
 time = new QLabel (ui->statusBar);
 
-ui->statusBar->addPermanentWidget(time);
     //timer
+progress = new QProgressBar(this);
+connect (ui->webView, SIGNAL(loadProgress(int)), progress, SLOT(setValue(int)));
+progress->setEnabled(false);
+ui->statusBar->addPermanentWidget(progress);
+
 timer = new QTimer (this);
 connect (timer, SIGNAL (timeout()), this, SLOT (updateTimer()));
 timer->start(1000);
+ui->statusBar->addPermanentWidget(time);
+
+
 
 
 
@@ -400,7 +417,14 @@ void MainWindow::onCustomMenuClicked() { //slot on custom menu triggered
      }
 
 
-void MainWindow::openUrl(QString url) {}
+void MainWindow::openUrl(QString url) {
+    if (!url.startsWith("http://"))
+        url = "http://" + url.trimmed();
+
+
+ui->webView->load (QUrl (url));
+
+}
 
 void MainWindow::on_actExit_triggered()
 {
@@ -417,7 +441,7 @@ void MainWindow::on_actButText_triggered(bool checked)
     else {
           ui->tbMosaic->setToolButtonStyle(Qt::ToolButtonIconOnly);
     ui->tbWeb->setToolButtonStyle(Qt::ToolButtonIconOnly);}
-core->writeSetting("ButtonText", "opions", checked, op.tbConfig);
+core->writeSetting("ButtonText", "Options", checked, op.tbConfig);
 
 }
 
@@ -434,14 +458,8 @@ void MainWindow::updateTimer() {
     time->update();
 }
 
-void MainWindow::closeEvent(QCloseEvent *e) {
-    //saving settings
-    //toolbars
-    core->writeSetting("Mosaic", "Toolbars",  ui->tbMosaic->isVisible(), QDir::homePath() + CONFFILE);
-    core->writeSetting("Web", "Toolbars", ui->tbWeb->isVisible(), QDir::homePath() + CONFFILE);
-    core->writeSetting("Location", "Toolbars", ui->tbLocation->isVisible(), QDir::homePath() + CONFFILE);
-    //other coming soon
-
+void MainWindow::closeEvent(QCloseEvent *e) {    
+    saveMySettings();
    e->accept();
 
 }
@@ -476,8 +494,8 @@ void MainWindow::onToolbarMenu(QPoint p) {
 }
 
 void MainWindow::readSettings() {
+    saveMySettings();
     //clean all toolbars and hostlists;
-    //call mxloader to reread settings
     ui->menuHotlists->clear();
     ui->tbLocation->clear();
     ui->tbMosaic->clear();
@@ -486,14 +504,20 @@ void MainWindow::readSettings() {
     createWindow();
     createMenus();
     createToolbars();
+    connectAll();
     update();
 
 }
 
 void MainWindow::createWindow() {
     //reading size and location settings
-   resize(op.size);
-   move(op.position);
+   // resize (op.window.first);
+   // move (op.window.second);
+   // ui->webView->resize(op.webBrowser.first);
+   // ui->webView->move (op.webBrowser.second);
+   // ui->manViews->resize(op.managerLocation.first);
+  //  ui->manViews->move(op.managerLocation.second);
+
     }
 
 void MainWindow::on_actToolConf_triggered()
@@ -525,8 +549,8 @@ out << tr("mosaix: reading main.ini config\n");
    op.showDate = stg->value("ShowDate", true).toBool();
    op.showDay = stg->value("ShowDay", true).toBool();
    op.showTime = stg->value("ShowTime", true).toBool();
-   op.position = stg->value("Position", QPoint (0,0)).toPoint();
-   op.size = stg->value("Size", QSize (640, 480)).toSize();
+   op.window.second = stg->value("Position", QPoint (0,0)).toPoint();
+   op.window.first = stg->value("Size", QSize (640, 480)).toSize();
    stg->endGroup();
    //toolbars
    stg->beginGroup("Toolbars");
@@ -589,24 +613,74 @@ stg->beginGroup("opions");
 op.buttontext = stg->value("ButtonText", false).toBool();
 stg->endGroup();
 delete stg;
+out  << "mosaix:reading locations\n";
 
-
-/***********************************************************************
-  There will be code - loading other configs
-
-  IT IS COMING SOON!!!!!!
-
-
-
-
-
-
-  ************************************************************************/
-
-
-
+stg = new QSettings (op.miscConfig, QSettings::IniFormat, this);
+stg->beginGroup("Size");
+QString w = "WebBrowser";
+QString m = "ManagerViews";
+op.webBrowser.first = stg->value(w).toSize();
+op.managerLocation.first = stg->value(m).toSize();
+stg->endGroup();
+stg->beginGroup("Position");
+op.webBrowser.second = stg->value(w).toPoint();
+op.managerLocation.second = stg->value(m).toPoint();
+stg->endGroup();
+delete stg;
 
 //loading hotlinks
 out << tr("mosaix: loading hotlists\n");
+}
 
+void MainWindow::loadPage() {
+    openUrl(addr->lineEdit()->text());
+
+}
+
+void MainWindow::connectAll() {
+   connect (addr->lineEdit(), SIGNAL(returnPressed()), this, SLOT(loadPage()));
+   connect(yes, SIGNAL (clicked()), this, SLOT(loadPage()));
+    connect (stop, SIGNAL(clicked()), this, SLOT(loadPage()));
+
+
+}
+
+void MainWindow::onUrlChanged(QUrl url) {
+if (addr->lineEdit()->text() != url.toString())
+    addr->lineEdit()->setText(url.toString());
+
+}
+void MainWindow::onStarted() {
+    stop->setEnabled(true);
+    ui->actStopTransf->setEnabled(true);
+    progress->setEnabled(true);
+
+}
+
+void MainWindow::onFinished() {
+    stop->setEnabled(false);
+       ui->actStopTransf->setEnabled(false);
+    progress->setEnabled(false);
+
+
+}
+
+void MainWindow::saveMySettings() {
+    //saving settings
+    //toolbars
+    core->writeSetting("Mosaic", "Toolbars",  ui->tbMosaic->isVisible(), QDir::homePath() + CONFFILE);
+    core->writeSetting("Web", "Toolbars", ui->tbWeb->isVisible(), QDir::homePath() + CONFFILE);
+    core->writeSetting("Location", "Toolbars", ui->tbLocation->isVisible(), QDir::homePath() + CONFFILE);
+    core->writeSetting("StatusBar", "Toolbars", statusBar()->isVisible(), QDir::homePath() + CONFFILE);
+    //write size and location of controls
+    core->writeSetting("WebBrowser", "Size", ui->webView->size(), op.miscConfig);
+    core->writeSetting ("WebBrowser", "Position", ui->webView->pos(), op.miscConfig);
+    core->writeSetting("ManagerViews", "Size", ui->manViews->size(), op.miscConfig);
+    core->writeSetting("ManagerViews", "Position", ui->manViews->pos(), op.miscConfig);
+
+}
+
+void MainWindow::on_actStatus_triggered(bool checked)
+{
+    statusBar()->setVisible(checked);
 }

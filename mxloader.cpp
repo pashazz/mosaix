@@ -123,6 +123,8 @@ void MXLoader::createConfig() {
     hbar->endGroup();
     hbar->sync();
 
+
+
 delete main;
 delete tbar;
 delete hbar;

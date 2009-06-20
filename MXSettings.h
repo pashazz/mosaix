@@ -14,6 +14,7 @@ QDateTime time;
 };
 typedef QList<MXBookmark> MXBookmarkList;
 typedef QList <MXBookmarkList> MXMenu;
+typedef QPair <QSize, QPoint> Location; //first - size, second - position
 
  struct MXOptions {
 public:
@@ -29,8 +30,7 @@ bool cacheManager;
 bool showDate;
 bool showDay;
 bool showTime;
-QPoint position;
-QSize size;
+
 //toolbars
 bool mosaic;
 bool web;
@@ -81,9 +81,12 @@ bool curhotlist;
 int numberButtons;
 //options
 bool buttontext;
+//locations
+Location webBrowser;
+Location managerLocation;
+Location window;
 
 
-//
 };
 
 
