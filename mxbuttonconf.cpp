@@ -69,4 +69,6 @@ m_ui->cbHelp->setChecked(opt.help);
 m_ui->cbHome->setChecked(opt.home);
 m_ui->cbMai->setChecked(opt.email);
 
+
+
 }
