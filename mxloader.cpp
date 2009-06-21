@@ -22,6 +22,7 @@ void MXLoader::start()     //start load mosaix - if no configuration - create it
 }
 MainWindow *w = new MainWindow ();
 w->show();
+
 }
 
 void MXLoader::createConfig() {

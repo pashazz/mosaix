@@ -8,6 +8,7 @@
 #include <QtWebKit>
 #include <QUrl>
  #include <QTreeWidgetItem>
+#include "mxhtlprop.h"
 namespace Ui
 {
     class MainWindow;
@@ -28,8 +29,14 @@ public:
 
 
 private slots:
+void on_txtHotlist_textChanged(QString );
+void on_twHotlinks_customContextMenuRequested(QPoint pos);
+void on_actAlphabet_triggered();
+void on_actHotlinkPropreties_triggered();
+void on_actAdd2hot_triggered();
+void on_actPresent_triggered(bool checked);
 void on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column);
-void on_actPresent_triggered();
+
 void on_actDefaultLayout_triggered();
 void on_actCopy_triggered();
 void on_actStatus_triggered(bool checked);
@@ -61,6 +68,7 @@ void onAddAnchor();
 void onQueryLink();
 void onChangeFont();
 
+
 private:
 //creators
     Ui::MainWindow *ui;
@@ -70,7 +78,10 @@ private:
     void connectAll();
     void createBrowserMenu();
     void createHotlinkBar();
+    void createManager() {}
+
     QUrl guessUrlFromString(const QString &string);
+
 //core
     MXCoreMethods *core;
 //options variables
@@ -81,6 +92,9 @@ private:
     void makeHotlistsMenu();
     void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
     void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
+    void alphabetize(QTreeWidgetItem *parent = 0);
+    void makeHotlinkFile (QTreeWidgetItem *parent, QString group);
+
     MXBookmark getItemByName (const QString &name);
     void load();
     int topMenu;
@@ -97,6 +111,7 @@ private:
     QMenu *cmToolbars;
     QMenu *cmBrowser;
     QMenu *cmLink;
+    QMenu *cmHotTree;
     QProgressBar *progress;
     //current webpage
     QWebPage *currentPage;

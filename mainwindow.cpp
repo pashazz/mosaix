@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     createWindow();
     createMenus();
     createToolbars();
+    createHotlinkBar();
     connectAll();
     statusBar()->showMessage(tr("For help, press F1"));
 
@@ -130,6 +131,11 @@ connect(ui->tbWeb, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onTool
 connect (ui->tbLocation, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 //connect (ui->tbGlobe, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 createBrowserMenu();
+//create a hotlink menu
+cmHotTree = new QMenu (this);
+cmHotTree->addAction(ui->actHotlinkPropreties);
+cmHotTree->addSeparator();
+cmHotTree->addAction(ui->actAlphabet);
 
 
 
@@ -315,7 +321,7 @@ QString group;
              item.name = itemList.at(0);
              item.url= itemList.at(1);
              if (itemList.count() == 3) {
-             item.time = QDateTime::fromString(itemList.at(2), "dd-MMM-yy HH:mm:ss");
+             item.time = QDateTime::fromString(itemList.at(2), DATE_FORMAT);
              }
              userMenu.append(item);
          }
@@ -419,7 +425,7 @@ void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent){
              //build a simple QMenu
              QString menuName = menuNames.at(num);
              QMenu *submenu = new QMenu (menuName, this);
-
+            parent->addMenu(submenu);
              makeGroup(menu.at(num), submenu);
 
 
@@ -553,6 +559,10 @@ void MainWindow::readSettings() {
     ui->tbLocation->clear();
     ui->tbMosaic->clear();
     ui->tbWeb->clear();
+    statusBar()->removeWidget(progress);
+    statusBar()->removeWidget(time);
+
+    ui->twHotlinks->clear();
     load();
     createWindow();
     createMenus();
@@ -668,6 +678,7 @@ stg->endGroup();
 delete stg;
 out  << "mosaix:reading locations\n";
 
+
 stg = new QSettings (op.miscConfig, QSettings::IniFormat, this);
 stg->beginGroup("Size");
 QString w = "WebBrowser";
@@ -683,6 +694,7 @@ delete stg;
 
 //loading hotlinks
 out << tr("mosaix: loading hotlists\n");
+
 }
 
 void MainWindow::loadPage() {
@@ -717,6 +729,7 @@ void MainWindow::onStarted() {
     stop->setEnabled(true);
     ui->actStopTransf->setEnabled(true);
     progress->setEnabled(true);
+    currentPage = 0;
     }
 
 void MainWindow::onFinished(bool good) {
@@ -848,10 +861,6 @@ void MainWindow::on_actDefaultLayout_triggered()
 }
 
 
-void MainWindow::on_actPresent_triggered()
-{
-
-}
 
 QUrl MainWindow::guessUrlFromString(const QString &string)
 {
@@ -912,3 +921,188 @@ void MainWindow::onLoadAnchor() {}
 void MainWindow::onAddAnchor() {}
 void MainWindow::onQueryLink() {}
 void MainWindow::onChangeFont() {}
+
+void MainWindow::on_actPresent_triggered(bool checked)
+{
+       if (checked)
+       ui->webView->showMaximized();
+   else
+       ui->webView->showNormal();
+}
+
+void MainWindow::createHotlinkBar() {
+  QSettings  *stg = new QSettings (op.hotBarConfig, QSettings::IniFormat, this);
+QStringList groups = stg->childGroups();
+QString group;
+foreach (group, groups) {
+    stg->beginGroup(group);
+
+    QString url = stg->value("url").toString();
+    QString name = stg->value("name").toString();
+   //Yanex дальше сам
+
+
+}
+}
+
+void MainWindow::on_actAdd2hot_triggered()
+{
+//get group name
+QSettings stg  (op.hotlinkList, QSettings::IniFormat, this);
+QStringList lstGr = stg.childGroups();
+QString group;
+QString gr, k;
+foreach (gr, lstGr) {
+    stg.beginGroup(gr);
+    foreach (k, stg.allKeys()) {
+        if (k == "Menu_Name") //here get menu name
+        {
+            QString name = stg.value(k).toString();
+            if (name == ui->cbGroups->currentText())
+            { group = gr;}
+        }
+
+    }
+stg.endGroup();
+}
+
+ //get current url
+    QString url = ui->webView->page()->mainFrame()->url().toString();
+ //get current title
+    QString title = ui->webView->page()->mainFrame()->title();
+ //get current hotlink file
+    QString file = ui->txtHotlist->text();
+  //get current time
+    QDateTime time = QDateTime::currentDateTime();
+  //get current time in string
+    QString strt = time.toString(DATE_FORMAT);
+  //get latest item number
+    stg.beginGroup(group);
+    QStringList items = stg.allKeys();
+    QString key;
+    int last = -1;
+    bool *ok;
+    foreach (key, items) {
+      if (key.startsWith("Item")) {
+          int ID = key.right(key.count() - 4).toInt(ok, 10);
+          if (ID > last)
+              last = ID;
+      }
+            }
+if (last == -1) {return;}
+last++;
+QString value;
+value.append(title + ",");
+value.append(url + ",");
+value.append(strt);
+stg.setValue("Item" + QString(last), value);
+stg.endGroup();
+// re-read hotlinks
+readSettings();
+}
+
+
+void MainWindow::on_actHotlinkPropreties_triggered()
+{
+    //get hotlink id and/or parent hotlink id
+    if (ui->twHotlinks->currentItem()->childCount() > 0) //menu
+    {
+        QString menuID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->text(0), true);
+        QStringList data;
+        data.append(ui->twHotlinks->currentItem()->text(0));
+
+        MXHotlinkProperties *p = new MXHotlinkProperties (this, true, data, ui->txtHotlist->text(), menuID);
+        if (p->exec() == QDialog::Accepted)
+            readSettings();
+
+    }
+    else {
+        QString menuID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->parent()->text(0), true);
+        QString itemID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->text(0), false, menuID);
+        QStringList data;
+        data.append(ui->twHotlinks->currentItem()->text(0));
+        MXBookmark item = getItemByName(ui->twHotlinks->currentItem()->text(0));
+        data.append(item.url);
+        data.append(item.time.toString(DATE_FORMAT));
+
+        MXHotlinkProperties *p = new MXHotlinkProperties (this, false, data, ui->txtHotlist->text(), menuID, itemID);
+        if (p->exec() == QDialog::Accepted)
+            readSettings();
+
+    }
+
+}
+
+void MainWindow::alphabetize(QTreeWidgetItem *parent ) {
+if (parent == 0) {parent = ui->twHotlinks->topLevelItem(0);}
+if (parent->childCount() == 0) {return;}
+parent->sortChildren  (0, Qt::AscendingOrder);
+
+makeHotlinkFile(parent, core->getHotlinkID(ui->txtHotlist->text(), parent->text(0), true));
+readSettings();
+
+
+}
+
+void MainWindow::makeHotlinkFile(QTreeWidgetItem *parent, QString group) {
+    QTreeWidgetItem *child;
+
+    QSettings stg (ui->txtHotlist->text(), QSettings::IniFormat, this);
+
+
+   int max = parent->childCount();
+   int i;
+
+ stg.beginGroup(group);
+
+
+   for (i = 0; i < max; ++i) {
+      child = parent->child(i);
+      if (child->childCount() == 0) //item
+      {
+          QString key = "Item" + QString (i);
+          MXBookmark item = getItemByName(child->text(0));
+          QString time = item.time.toString(DATE_FORMAT);
+          QString value = item.name + "," + item.url + "," + time;
+          stg.setValue(key, value);
+
+
+      }
+      else{
+          //make a dummy item
+          QString key = "Item" + QString (i);
+          QString ID = core->getHotlinkID(ui->txtHotlist->text(), child->text(0), true);
+          QString value = "MENU," + ID;
+          //hack (getHotlinkID return a value with a space: User MenuX)
+          value = value.replace(" ", "");
+          stg.setValue(key, value);
+          makeHotlinkFile(child, ID);
+
+      }
+
+   }
+stg.endGroup();
+
+   }
+
+
+
+void MainWindow::on_actAlphabet_triggered()
+{
+   if (ui->twHotlinks->currentItem() == 0) {return;}
+   if (ui->twHotlinks->currentItem()->childCount() == 0)
+       alphabetize(ui->twHotlinks->currentItem()->parent());
+   else
+       alphabetize(ui->twHotlinks->currentItem());
+}
+
+void MainWindow::on_twHotlinks_customContextMenuRequested(QPoint pos)
+{
+    QWidget *w = dynamic_cast<QWidget*>(sender());
+   cmHotTree->exec(w->mapToGlobal(pos));
+}
+
+void MainWindow::on_txtHotlist_textChanged(QString )
+{
+    op.hotlinkList = ui->txtHotlist->text();
+}

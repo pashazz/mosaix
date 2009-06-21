@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>711</width>
-    <height>622</height>
+    <width>713</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -60,8 +60,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>711</width>
-     <height>22</height>
+     <width>713</width>
+     <height>19</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -260,7 +260,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -403,12 +403,19 @@
             <widget class="QComboBox" name="cbGroups"/>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="txtHotlist"/>
+            <widget class="QLineEdit" name="txtHotlist">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
          <item>
           <widget class="QTreeWidget" name="twHotlinks">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
            <attribute name="headerVisible">
             <bool>false</bool>
            </attribute>
@@ -433,43 +440,6 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>22</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>x</string>
-            </property>
-           </widget>
            <widget class="QLabel" name="label">
             <property name="geometry">
              <rect>
@@ -545,7 +515,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="hotlinkBar">
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
@@ -1143,6 +1113,16 @@
    </property>
    <property name="whatsThis">
     <string>Send mail to the developers</string>
+   </property>
+  </action>
+  <action name="actHotlinkPropreties">
+   <property name="text">
+    <string>Properites</string>
+   </property>
+  </action>
+  <action name="actAlphabet">
+   <property name="text">
+    <string>Alphabetize Folder</string>
    </property>
   </action>
  </widget>

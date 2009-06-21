@@ -15,7 +15,6 @@ public:
     MXLoader();
     void start();
   void load(MXOptions *options = 0);
-
 private:
    void createConfig();
 
