@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>680</height>
+    <width>711</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,7 +17,7 @@
    <string>MosaiX 0.1-dev - by NCSA Mosaic 3.0</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="icons.qrc">
     <normaloff>:/icons/icons/logo.png</normaloff>:/icons/icons/logo.png</iconset>
   </property>
   <property name="whatsThis">
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>711</width>
      <height>19</height>
     </rect>
    </property>
@@ -269,7 +269,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -346,7 +346,11 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QTextBrowser" name="txtSource"/>
+          <widget class="QPlainTextEdit" name="txtSource">
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="hlSource">
@@ -550,9 +554,15 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3"/>
+  </widget>
   <action name="actOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/open.png</normaloff>:/icons/icons/open.png</iconset>
    </property>
    <property name="text">
@@ -581,7 +591,7 @@
   </action>
   <action name="actSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -604,7 +614,7 @@
   </action>
   <action name="actPrint">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/print.png</normaloff>:/icons/icons/print.png</iconset>
    </property>
    <property name="text">
@@ -619,7 +629,7 @@
   </action>
   <action name="actPrintPr">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/preview.png</normaloff>:/icons/icons/preview.png</iconset>
    </property>
    <property name="text">
@@ -647,7 +657,7 @@
   </action>
   <action name="actCopy">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
    </property>
    <property name="text">
@@ -662,7 +672,7 @@
   </action>
   <action name="actPaste">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/edit.png</normaloff>:/icons/icons/edit.png</iconset>
    </property>
    <property name="text">
@@ -677,7 +687,7 @@
   </action>
   <action name="actFind">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/search.png</normaloff>:/icons/icons/search.png</iconset>
    </property>
    <property name="text">
@@ -785,7 +795,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/manager.png</normaloff>:/icons/icons/manager.png</iconset>
    </property>
    <property name="text">
@@ -955,7 +965,7 @@
   </action>
   <action name="actBack">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/back.png</normaloff>:/icons/icons/back.png</iconset>
    </property>
    <property name="text">
@@ -970,7 +980,7 @@
   </action>
   <action name="actForward">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/next.png</normaloff>:/icons/icons/next.png</iconset>
    </property>
    <property name="text">
@@ -985,7 +995,7 @@
   </action>
   <action name="actReload">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/view-refresh.png</normaloff>:/icons/icons/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -1021,7 +1031,7 @@
   </action>
   <action name="actNews">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
    </property>
    <property name="text">
@@ -1039,7 +1049,7 @@
   </action>
   <action name="actMail">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/newmsg.png</normaloff>:/icons/icons/newmsg.png</iconset>
    </property>
    <property name="text">
@@ -1062,7 +1072,7 @@
   </action>
   <action name="actHome">
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/home.png</normaloff>:/icons/icons/home.png</iconset>
    </property>
    <property name="text">
@@ -1153,6 +1163,8 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

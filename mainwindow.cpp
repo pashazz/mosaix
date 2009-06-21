@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
     load();
-    linkHovered = false;
     hlink = op.hotlinkList;
     ui->setupUi(this);
 
@@ -18,7 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
     connectAll();
     statusBar()->showMessage(tr("For help, press F1"));
 
-openUrl(op.homePage);
+if (qApp->arguments().count() == 1)
+    openUrl(op.homePage);
+else
+    openUrl(qApp->arguments().at(1));
 
 }
 
@@ -29,11 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::createMenus(){
     //connects
-    connect (ui->actBack, SIGNAL(triggered()), ui->webView, SLOT(back()));
-    connect (ui->actForward, SIGNAL (triggered()), ui->webView, SLOT(forward()));
-    connect (ui->actReload, SIGNAL (triggered()), ui->webView, SLOT(reload()));
-    connect (ui->actStopTransf, SIGNAL(triggered()), ui->webView, SLOT(stop()));
-   connect (ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT (onUrlChanged(QUrl)));
+
 
 
     hotListParser();
@@ -265,6 +263,8 @@ connect (timer, SIGNAL (timeout()), this, SLOT (updateTimer()));
 timer->start(1000);
 ui->statusBar->addPermanentWidget(time);
 
+
+//add actions to Hotlink Manage toolbar
 
 
 
@@ -698,29 +698,35 @@ void MainWindow::connectAll() {
     connect (ui->webView, SIGNAL(titleChanged(QString)), this, SLOT(onTitleChanged(QString)));
 connect (ui->webView, SIGNAL (iconChanged()), this, SLOT (onIconChanged()));
 connect (ui->webView, SIGNAL (statusBarMessage(QString)), this, SLOT (setStatusBarMessage(QString)));
-connect (ui->webView->page(), SIGNAL (linkHovered(QString,QString,QString)), this, SLOT (onLinkHovered(QString,QString,QString)));
+    connect (ui->actBack, SIGNAL(triggered()), ui->webView, SLOT(back()));
+    connect (ui->actForward, SIGNAL (triggered()), ui->webView, SLOT(forward()));
+    connect (ui->actReload, SIGNAL (triggered()), ui->webView, SLOT(reload()));
+    connect (ui->actStopTransf, SIGNAL(triggered()), ui->webView, SLOT(stop()));
+   connect (ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT (onUrlChanged(QUrl)));
+   connect (ui->webView, SIGNAL(loadStarted()), this, SLOT(onStarted()));
+   connect (ui->webView, SIGNAL (loadFinished(bool)), this, SLOT(onFinished(bool)));
 }
 
 void MainWindow::onUrlChanged(QUrl url) {
 if (addr->lineEdit()->text() != url.toString())
     addr->lineEdit()->setText(url.toString());
 
+
 }
 void MainWindow::onStarted() {
     stop->setEnabled(true);
     ui->actStopTransf->setEnabled(true);
     progress->setEnabled(true);
-    currentPage = 0;
+    }
 
-}
+void MainWindow::onFinished(bool good) {
 
-void MainWindow::onFinished() {
     stop->setEnabled(false);
        ui->actStopTransf->setEnabled(false);
     progress->setEnabled(false);
     currentPage = ui->webView->page();
-
-
+    //get source
+ui->txtSource->setPlainText(ui->webView->page()->mainFrame()->toHtml());
 }
 
 void MainWindow::saveMySettings() {
@@ -763,25 +769,17 @@ cmBrowser->addSeparator();
 pixel  = new QAction (tr("Pixel Color"), this);
 connect (pixel, SIGNAL(triggered()), this, SLOT(onPixel()));
 cmBrowser->addAction(pixel);
+cmLink  =new QMenu (this);
 
-  //Yanex сделай то же самое с cmLink(естесссно там другое меню, придумаю пункты сам.
-//у mosaic на этот счет не меню а г..о
-    //other part of menu will dinamically  created
 
 }
 void MainWindow::onBrowserMenu(QPoint p) {
 
    QWidget* w = static_cast<QWidget*>(QObject::sender());
 
-   if (linkHovered) {
-   /*!
-2yanex - здесь показывается меню ссылочное. Вызов: cmLink.exec(w->mapToGlobal(p));
-заполни это меню
-данные берешь тут:
-linkData.at (0) - url ссылки
-linkData.at(1) - title - не нужно
-linkData.at(2) - текст ссылки
-*/
+r =  ui->webView->page()->mainFrame()->hitTestContent(p);
+QUrl url = r.linkUrl();
+if (!url.isEmpty()) {
        return;
    }
 
@@ -866,19 +864,12 @@ void MainWindow::on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int colu
     openUrl(bkm.url);
 }
 
-void MainWindow::onLinkHovered(QString link, QString title, QString textContent)
-{
-    linkHovered = true;
-    linkData.clear();
-    linkData.append(link);
-    linkData.append(title);
-    linkData.append(textContent);
-    qDebug () << link << title << textContent;
 
-}
 void MainWindow::onShowInfo() {}
 void MainWindow::onPixel(){}
 void MainWindow::onSpawn(){}
 void MainWindow::onShortcut(){}
 
 //yanex сделай эти методы
+
+

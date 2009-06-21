@@ -26,6 +26,7 @@ public:
      void readSettings();
      void saveMySettings();
 
+
 private slots:
 void on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column);
 void on_actPresent_triggered();
@@ -34,7 +35,7 @@ void on_actCopy_triggered();
 void on_actStatus_triggered(bool checked);
 void loadPage();
 void onStarted();
-void onFinished();
+void onFinished(bool);
 void onUrlChanged(QUrl url);
 void on_actToolConf_triggered();
 void on_actLocTb_triggered(bool checked);
@@ -50,7 +51,6 @@ void onBrowserMenu(QPoint p);
 void onTitleChanged(QString title);
 void onIconChanged ();
 void setStatusBarMessage(QString);
-void onLinkHovered (QString, QString, QString);
 void onShowInfo();
 void onShortcut();
 void onSpawn();
@@ -63,6 +63,7 @@ private:
     void createWindow();
     void connectAll();
     void createBrowserMenu();
+    void createHotlinkBar();
     QUrl guessUrlFromString(const QString &string);
 //core
     MXCoreMethods *core;
@@ -93,9 +94,9 @@ private:
     QProgressBar *progress;
     //current webpage
     QWebPage *currentPage;
-    QStringList linkData;
-    bool linkHovered;
-    //webVews
+    QString linkUrl;
+    QWebHitTestResult r;
+
 
 
 
@@ -107,6 +108,7 @@ private:
     QAction *openInNewWindow;
     QAction *add2hot;
     QAction *pixel;
+    QToolBar *hotBar;
     protected:
     void closeEvent(QCloseEvent *e);
 
