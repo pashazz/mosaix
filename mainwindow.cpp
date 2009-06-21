@@ -780,6 +780,42 @@ void MainWindow::onBrowserMenu(QPoint p) {
 r =  ui->webView->page()->mainFrame()->hitTestContent(p);
 QUrl url = r.linkUrl();
 if (!url.isEmpty()) {
+       QMenu *cmLink = new QMenu(this);
+       cmLink->addAction(ui->actCopy);
+       cmLink->addSeparator();
+        QAction *cmLLoad = new QAction(tr("Load Anchor to Disk"), cmLink);
+       QObject::connect(cmLLoad, SIGNAL(triggered()), this, SLOT(onLoadAnchor()));
+       cmLLoad->setStatusTip(tr("Save the item to the local disk"));
+       cmLink->addAction(cmLLoad);
+        QAction *cmLAdd = new QAction(tr("Add Anchor to Hotlist"), cmLink);
+       QObject::connect(cmLAdd, SIGNAL(triggered()), this, SLOT(onAddAnchor()));
+       cmLAdd->setStatusTip(tr("Add Anchor to the Hotlist"));
+       cmLink->addAction(cmLAdd);
+        QAction *cmLInfo = new QAction(tr("Query the link for information on the file, Query Link"), cmLink);
+       QObject::connect(cmLInfo, SIGNAL(triggered()), this, SLOT(onQueryLink()));
+       cmLInfo->setStatusTip("");
+       cmLink->addAction(cmLInfo);
+       cmLink->addSeparator();
+        QAction *cmLFont = new QAction(tr("Change font"), cmLink);
+       QObject::connect(cmLFont, SIGNAL(triggered()), this, SLOT(onChangeFont()));
+       cmLFont->setToolTip("");
+       cmLink->addAction(cmLFont);
+       cmLink->addSeparator();
+        QAction *cmLShortcut = new QAction(tr("Create Internet Shortcut"), cmLink);
+       QObject::connect(cmLShortcut, SIGNAL(triggered()), this, SLOT(onShortcut()));
+       cmLShortcut->setStatusTip(tr("Create a file with the URL for drag and drop"));
+       cmLink->addAction(cmLShortcut);
+       cmLink->addSeparator();
+        QAction *cmLSpawn = new QAction(tr("Spawn MosaiX from Anchor"), cmLink);
+       QObject::connect(cmLSpawn, SIGNAL(triggered()), this, SLOT(onSpawn()));
+       cmLink->addAction(cmLSpawn);
+       cmLink->addSeparator();
+        QAction *cmLPixel = new QAction(tr("Pixel Color"), cmLink);
+       QObject::connect(cmLPixel, SIGNAL(triggered()), this, SLOT(onPixel()));
+       cmLPixel->setStatusTip("");
+       cmLink->addAction(cmLPixel);
+       
+       cmLink->exec(w->mapToGlobal(p));
        return;
    }
 
@@ -872,4 +908,7 @@ void MainWindow::onShortcut(){}
 
 //yanex сделай эти методы
 
-
+void MainWindow::onLoadAnchor() {}
+void MainWindow::onAddAnchor() {}
+void MainWindow::onQueryLink() {}
+void MainWindow::onChangeFont() {}

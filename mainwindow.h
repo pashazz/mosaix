@@ -55,6 +55,12 @@ void onShowInfo();
 void onShortcut();
 void onSpawn();
 void onPixel ();
+
+void onLoadAnchor();
+void onAddAnchor();
+void onQueryLink();
+void onChangeFont();
+
 private:
 //creators
     Ui::MainWindow *ui;

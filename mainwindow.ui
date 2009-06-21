@@ -61,7 +61,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -205,11 +205,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="contextMenuPolicy">
@@ -232,10 +227,6 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="tbLocation">
    <property name="contextMenuPolicy">

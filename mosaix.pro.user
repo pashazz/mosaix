@@ -58,78 +58,50 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >COLORFGBG=15;0</value>
-    <value type="QString" >CONFIG_PROTECT=/usr/share/config</value>
-    <value type="QString" >CONFIG_PROTECT_MASK=/etc/gentoo-release /etc/sandbox.d /etc/env.d/java/ /etc/udev/rules.d /etc/fonts/fonts.conf /etc/gconf /etc/terminfo /etc/ca-certificates.conf /etc/revdep-rebuild /etc/splash</value>
-    <value type="QString" >CVS_RSH=ssh</value>
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-bY2R8pFQAH,guid=cb0e625da0374b3536f464b04a3d3227</value>
-    <value type="QString" >DESKTOP_SESSION=KDE-4</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-scx6JtDLqT,guid=d997abbaefcad76f355e9cd84a3d3567</value>
+    <value type="QString" >DESKTOP_SESSION=default</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0</value>
-    <value type="QString" >DM_CONTROL=/var/run/xdmctl</value>
-    <value type="QString" >EDITOR=/bin/nano</value>
-    <value type="QString" >GCC_SPECS=</value>
-    <value type="QString" >GDK_USE_XFT=1</value>
-    <value type="QString" >GS_LIB=/home/pasha/.fonts</value>
-    <value type="QString" >GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/pasha/.gtkrc-2.0:/home/pasha/.gtkrc-2.0-kde4:/home/pasha/.kde4/share/config/gtkrc-2.0</value>
-    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/pasha/.gtkrc::/home/pasha/.kde4/share/config/gtkrc</value>
-    <value type="QString" >HOME=/home/pasha</value>
-    <value type="QString" >INFOPATH=/usr/share/info:/usr/share/binutils-data/x86_64-pc-linux-gnu/2.19.1/info:/usr/share/gcc-data/x86_64-pc-linux-gnu/4.3.3/info</value>
-    <value type="QString" >JAVAC=/etc/java-config-2/current-system-vm/bin/javac</value>
-    <value type="QString" >JAVA_HOME=/etc/java-config-2/current-system-vm</value>
-    <value type="QString" >JDK_HOME=/etc/java-config-2/current-system-vm</value>
-    <value type="QString" >KDE_FULL_SESSION=true</value>
-    <value type="QString" >KDE_MULTIHEAD=false</value>
-    <value type="QString" >KDE_SESSION_UID=1000</value>
-    <value type="QString" >KDE_SESSION_VERSION=4</value>
-    <value type="QString" >KONSOLE_DBUS_SERVICE=:1.31</value>
-    <value type="QString" >KONSOLE_DBUS_SESSION=/Sessions/2</value>
+    <value type="QString" >DISPLAY=:0.0</value>
+    <value type="QString" >GDMSESSION=default</value>
+    <value type="QString" >GDM_LANG=ru_RU.UTF-8</value>
+    <value type="QString" >GDM_XSERVER_LOCATION=local</value>
+    <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
+    <value type="QString" >GNOME_KEYRING_PID=4042</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-6IXClR/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-2IVbm1/S.gpg-agent:4194:1</value>
+    <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
+    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/yanex/.gtkrc-1.2-gnome2</value>
+    <value type="QString" >HOME=/home/yanex</value>
+    <value type="QString" >INSIDE_NAUTILUS_PYTHON=</value>
     <value type="QString" >LANG=ru_RU.UTF-8</value>
-    <value type="QString" >LANGUAGE=</value>
-    <value type="QString" >LC_ALL=</value>
-    <value type="QString" >LD_LIBRARY_PATH=/usr/lib64/qtcreator:</value>
-    <value type="QString" >LESS=-R -M --shift 5</value>
-    <value type="QString" >LESSOPEN=|lesspipe.sh %s</value>
-    <value type="QString" >LIBGL_DRIVERS_PATH=/usr/lib64/dri:/usr/lib32/dri:/usr/lib32/dri:/usr/lib64/dri</value>
-    <value type="QString" >LOGNAME=pasha</value>
-    <value type="QString" >MANPATH=/etc/java-config-2/current-system-vm/man:/usr/local/share/man:/usr/share/man:/usr/share/binutils-data/x86_64-pc-linux-gnu/2.19.1/man:/usr/share/gcc-data/x86_64-pc-linux-gnu/4.3.3/man:/etc/java-config/system-vm/man/:/usr/qt/3/doc/man</value>
-    <value type="QString" >OPENGL_PROFILE=ati</value>
-    <value type="QString" >PAGER=/usr/bin/less</value>
-    <value type="QString" >PATH=/opt/qtsdk-2009.01/qt/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/usr/x86_64-pc-linux-gnu/gcc-bin/4.3.3:/usr/qt/3/bin:/usr/games/bin</value>
-    <value type="QString" >PRELINK_PATH_MASK=/usr/lib64/klibc</value>
-    <value type="QString" >PROFILEHOME=</value>
-    <value type="QString" >PWD=/home/pasha/work/mosaix</value>
-    <value type="QString" >QMAKESPEC=linux-g++</value>
-    <value type="QString" >QTDIR=/opt/qtsdk-2009.01/qt</value>
-    <value type="QString" >QT_PLUGIN_PATH=/home/pasha/.kde4/lib64/kde4/plugins/:/usr/lib64/kde4/plugins/</value>
-    <value type="QString" >SANE_CONFIG_DIR=/etc/sane.d</value>
-    <value type="QString" >SESSION_MANAGER=local/pashazz:@/tmp/.ICE-unix/10621,unix/pashazz:/tmp/.ICE-unix/10621</value>
-    <value type="QString" >SGML_CATALOG_FILES=/etc/sgml/sgml-docbook-3.0.cat:/etc/sgml/sgml-ent.cat:/etc/sgml/sgml-lite.cat:/etc/sgml/xml-docbook-4.3.cat:/etc/sgml/xml-docbook-4.2.cat:/etc/sgml/openjade-1.3.2.cat:/etc/sgml/sgml-docbook.cat:/etc/sgml/sgml-docbook-3.1.cat:/etc/sgml/xml-docbook-4.4.cat:/etc/sgml/dsssl-docbook-stylesheets.cat</value>
-    <value type="QString" >SHELL=/bin/zsh</value>
-    <value type="QString" >SHLVL=2</value>
-    <value type="QString" >STRIGI_PLUGIN_PATH=/usr/lib64/strigi:</value>
-    <value type="QString" >TERM=xterm</value>
-    <value type="QString" >USB_DEVFS_PATH=/dev/bus/usb</value>
-    <value type="QString" >USER=pasha</value>
-    <value type="QString" >WINDOWID=44042915</value>
+    <value type="QString" >LD_LIBRARY_PATH=/home/yanex/qtsdk-2009.02/lib/qtcreator:</value>
+    <value type="QString" >LOGNAME=yanex</value>
+    <value type="QString" >ORBIT_SOCKETDIR=/tmp/orbit-yanex</value>
+    <value type="QString" >PATH=/home/yanex/qtsdk-2009.02/qt/bin:/home/yanex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString" >PWD=/home/yanex</value>
+    <value type="QString" >PYGTK_USE_GIL_STATE_API=</value>
+    <value type="QString" >QTDIR=/home/yanex/qtsdk-2009.02/qt</value>
+    <value type="QString" >SESSION_MANAGER=local/yanex-laptop:/tmp/.ICE-unix/4058</value>
+    <value type="QString" >SHELL=/bin/bash</value>
+    <value type="QString" >SSH_AGENT_PID=4171</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-6IXClR/socket.ssh</value>
+    <value type="QString" >USER=yanex</value>
+    <value type="QString" >USERNAME=yanex</value>
     <value type="QString" >WINDOWPATH=7</value>
-    <value type="QString" >XCURSOR_THEME=ComixCursors-opaque-Black-Large-Slim</value>
-    <value type="QString" >XDG_CONFIG_DIRS=/etc/xdg</value>
-    <value type="QString" >XDG_DATA_DIRS=/usr/share:/usr/local/share:/usr/share</value>
-    <value type="QString" >XDG_MENU_PREFIX=kde-4.2-</value>
-    <value type="QString" >XDM_MANAGED=method=classic</value>
-    <value type="QString" >XSESSION=kde-4.2</value>
+    <value type="QString" >XAUTHORITY=/tmp/.gdmOVOJVU</value>
+    <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
+    <value type="QString" >XDG_SESSION_COOKIE=fd6605e30655ad657231f79949f273fb-1245525349.711861-816767303</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >/home/pasha/work/mosaix/mosaix.pro</value>
+    <value type="QString" >/home/yanex/mosaix/mosaix.pro</value>
     <value type="QString" >-spec</value>
-    <value type="QString" >linux-g++-64</value>
+    <value type="QString" >linux-g++</value>
     <value type="QString" >-r</value>
     <value type="QString" >CONFIG+=debug</value>
    </valuelist>
-   <value key="abstractProcess.command" type="QString" >/opt/qtsdk-2009.01/qt/bin/qmake</value>
+   <value key="abstractProcess.command" type="QString" >/home/yanex/qtsdk-2009.02/qt/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool" >false</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/pasha/work/mosaix</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/yanex/mosaix</value>
    <value key="buildConfiguration" type="int" >2</value>
   </valuemap>
  </data>
@@ -138,74 +110,46 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >COLORFGBG=15;0</value>
-    <value type="QString" >CONFIG_PROTECT=/usr/share/config</value>
-    <value type="QString" >CONFIG_PROTECT_MASK=/etc/gentoo-release /etc/sandbox.d /etc/env.d/java/ /etc/udev/rules.d /etc/fonts/fonts.conf /etc/gconf /etc/terminfo /etc/ca-certificates.conf /etc/revdep-rebuild /etc/splash</value>
-    <value type="QString" >CVS_RSH=ssh</value>
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-bY2R8pFQAH,guid=cb0e625da0374b3536f464b04a3d3227</value>
-    <value type="QString" >DESKTOP_SESSION=KDE-4</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-scx6JtDLqT,guid=d997abbaefcad76f355e9cd84a3d3567</value>
+    <value type="QString" >DESKTOP_SESSION=default</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0</value>
-    <value type="QString" >DM_CONTROL=/var/run/xdmctl</value>
-    <value type="QString" >EDITOR=/bin/nano</value>
-    <value type="QString" >GCC_SPECS=</value>
-    <value type="QString" >GDK_USE_XFT=1</value>
-    <value type="QString" >GS_LIB=/home/pasha/.fonts</value>
-    <value type="QString" >GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/pasha/.gtkrc-2.0:/home/pasha/.gtkrc-2.0-kde4:/home/pasha/.kde4/share/config/gtkrc-2.0</value>
-    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/pasha/.gtkrc::/home/pasha/.kde4/share/config/gtkrc</value>
-    <value type="QString" >HOME=/home/pasha</value>
-    <value type="QString" >INFOPATH=/usr/share/info:/usr/share/binutils-data/x86_64-pc-linux-gnu/2.19.1/info:/usr/share/gcc-data/x86_64-pc-linux-gnu/4.3.3/info</value>
-    <value type="QString" >JAVAC=/etc/java-config-2/current-system-vm/bin/javac</value>
-    <value type="QString" >JAVA_HOME=/etc/java-config-2/current-system-vm</value>
-    <value type="QString" >JDK_HOME=/etc/java-config-2/current-system-vm</value>
-    <value type="QString" >KDE_FULL_SESSION=true</value>
-    <value type="QString" >KDE_MULTIHEAD=false</value>
-    <value type="QString" >KDE_SESSION_UID=1000</value>
-    <value type="QString" >KDE_SESSION_VERSION=4</value>
-    <value type="QString" >KONSOLE_DBUS_SERVICE=:1.31</value>
-    <value type="QString" >KONSOLE_DBUS_SESSION=/Sessions/2</value>
+    <value type="QString" >DISPLAY=:0.0</value>
+    <value type="QString" >GDMSESSION=default</value>
+    <value type="QString" >GDM_LANG=ru_RU.UTF-8</value>
+    <value type="QString" >GDM_XSERVER_LOCATION=local</value>
+    <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
+    <value type="QString" >GNOME_KEYRING_PID=4042</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-6IXClR/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-2IVbm1/S.gpg-agent:4194:1</value>
+    <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
+    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/yanex/.gtkrc-1.2-gnome2</value>
+    <value type="QString" >HOME=/home/yanex</value>
+    <value type="QString" >INSIDE_NAUTILUS_PYTHON=</value>
     <value type="QString" >LANG=ru_RU.UTF-8</value>
-    <value type="QString" >LANGUAGE=</value>
-    <value type="QString" >LC_ALL=</value>
-    <value type="QString" >LD_LIBRARY_PATH=/usr/lib64/qtcreator:</value>
-    <value type="QString" >LESS=-R -M --shift 5</value>
-    <value type="QString" >LESSOPEN=|lesspipe.sh %s</value>
-    <value type="QString" >LIBGL_DRIVERS_PATH=/usr/lib64/dri:/usr/lib32/dri:/usr/lib32/dri:/usr/lib64/dri</value>
-    <value type="QString" >LOGNAME=pasha</value>
-    <value type="QString" >MANPATH=/etc/java-config-2/current-system-vm/man:/usr/local/share/man:/usr/share/man:/usr/share/binutils-data/x86_64-pc-linux-gnu/2.19.1/man:/usr/share/gcc-data/x86_64-pc-linux-gnu/4.3.3/man:/etc/java-config/system-vm/man/:/usr/qt/3/doc/man</value>
-    <value type="QString" >OPENGL_PROFILE=ati</value>
-    <value type="QString" >PAGER=/usr/bin/less</value>
-    <value type="QString" >PATH=/opt/qtsdk-2009.01/qt/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/usr/x86_64-pc-linux-gnu/gcc-bin/4.3.3:/usr/qt/3/bin:/usr/games/bin</value>
-    <value type="QString" >PRELINK_PATH_MASK=/usr/lib64/klibc</value>
-    <value type="QString" >PROFILEHOME=</value>
-    <value type="QString" >PWD=/home/pasha/work/mosaix</value>
-    <value type="QString" >QMAKESPEC=linux-g++</value>
-    <value type="QString" >QTDIR=/opt/qtsdk-2009.01/qt</value>
-    <value type="QString" >QT_PLUGIN_PATH=/home/pasha/.kde4/lib64/kde4/plugins/:/usr/lib64/kde4/plugins/</value>
-    <value type="QString" >SANE_CONFIG_DIR=/etc/sane.d</value>
-    <value type="QString" >SESSION_MANAGER=local/pashazz:@/tmp/.ICE-unix/10621,unix/pashazz:/tmp/.ICE-unix/10621</value>
-    <value type="QString" >SGML_CATALOG_FILES=/etc/sgml/sgml-docbook-3.0.cat:/etc/sgml/sgml-ent.cat:/etc/sgml/sgml-lite.cat:/etc/sgml/xml-docbook-4.3.cat:/etc/sgml/xml-docbook-4.2.cat:/etc/sgml/openjade-1.3.2.cat:/etc/sgml/sgml-docbook.cat:/etc/sgml/sgml-docbook-3.1.cat:/etc/sgml/xml-docbook-4.4.cat:/etc/sgml/dsssl-docbook-stylesheets.cat</value>
-    <value type="QString" >SHELL=/bin/zsh</value>
-    <value type="QString" >SHLVL=2</value>
-    <value type="QString" >STRIGI_PLUGIN_PATH=/usr/lib64/strigi:</value>
-    <value type="QString" >TERM=xterm</value>
-    <value type="QString" >USB_DEVFS_PATH=/dev/bus/usb</value>
-    <value type="QString" >USER=pasha</value>
-    <value type="QString" >WINDOWID=44042915</value>
+    <value type="QString" >LD_LIBRARY_PATH=/home/yanex/qtsdk-2009.02/lib/qtcreator:</value>
+    <value type="QString" >LOGNAME=yanex</value>
+    <value type="QString" >ORBIT_SOCKETDIR=/tmp/orbit-yanex</value>
+    <value type="QString" >PATH=/home/yanex/qtsdk-2009.02/qt/bin:/home/yanex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString" >PWD=/home/yanex</value>
+    <value type="QString" >PYGTK_USE_GIL_STATE_API=</value>
+    <value type="QString" >QTDIR=/home/yanex/qtsdk-2009.02/qt</value>
+    <value type="QString" >SESSION_MANAGER=local/yanex-laptop:/tmp/.ICE-unix/4058</value>
+    <value type="QString" >SHELL=/bin/bash</value>
+    <value type="QString" >SSH_AGENT_PID=4171</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-6IXClR/socket.ssh</value>
+    <value type="QString" >USER=yanex</value>
+    <value type="QString" >USERNAME=yanex</value>
     <value type="QString" >WINDOWPATH=7</value>
-    <value type="QString" >XCURSOR_THEME=ComixCursors-opaque-Black-Large-Slim</value>
-    <value type="QString" >XDG_CONFIG_DIRS=/etc/xdg</value>
-    <value type="QString" >XDG_DATA_DIRS=/usr/share:/usr/local/share:/usr/share</value>
-    <value type="QString" >XDG_MENU_PREFIX=kde-4.2-</value>
-    <value type="QString" >XDM_MANAGED=method=classic</value>
-    <value type="QString" >XSESSION=kde-4.2</value>
+    <value type="QString" >XAUTHORITY=/tmp/.gdmOVOJVU</value>
+    <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
+    <value type="QString" >XDG_SESSION_COOKIE=fd6605e30655ad657231f79949f273fb-1245525349.711861-816767303</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >-w</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/pasha/work/mosaix</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/yanex/mosaix</value>
   </valuemap>
  </data>
  <data>
