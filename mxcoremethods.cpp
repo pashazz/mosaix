@@ -22,20 +22,25 @@ QString MXCoreMethods::getHotlinkID(QString file, QString title, bool isMenu, QS
 QStringList lstGr  = stg.childGroups();
 QString group;
 QString gr, k;
+
 foreach (gr, lstGr) {
     stg.beginGroup(gr);
-    foreach (k, stg.allKeys()) {
+    foreach (k, stg.allKeys()) { //first for menus
         if (k == "Menu_Name") //here get menu name
         {
             QString name = stg.value(k).toString();
             if (name == title)
-            { group = gr;}
+
+            {stg.endGroup();
+                qDebug() << tr ("group found: title %1, ID %2").arg(title, gr);
+                return gr;}
+
         }
 
     }
-stg.endGroup();
+    //если это не так
+    stg.endGroup();
 }
- return group;
  }
     else {
             QSettings stg  (file, QSettings::IniFormat, this);
@@ -47,10 +52,14 @@ foreach (key, keys) {
     QString res = stg.value(key).toString();
     QStringList l = res.split(',');
     QString value = l.at(0);
-    if (value == title)
-        return key;
+    if (value == title){
+        stg.endGroup();
+        qDebug() << tr ("key found: title %1, ID %2").arg(title, key);
+        return key;}
+
 
 }
-
+//если и это не так
+stg.endGroup();
     }
     }

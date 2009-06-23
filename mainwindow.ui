@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>713</width>
-    <height>624</height>
+    <width>717</width>
+    <height>628</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>713</width>
+     <width>717</width>
      <height>19</height>
     </rect>
    </property>
@@ -260,7 +260,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -273,7 +273,7 @@
        </property>
        <widget class="QWidget" name="tbSession">
         <attribute name="title">
-         <string>S</string>
+         <string>Session History</string>
         </attribute>
         <attribute name="toolTip">
          <string>Session History</string>
@@ -308,10 +308,7 @@
        </widget>
        <widget class="QWidget" name="tbGlobal">
         <attribute name="title">
-         <string>G</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Global History</string>
+         <string/>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
@@ -329,8 +326,12 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tbSource">
+        <attribute name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/icons/document-new.png</normaloff>:/icons/icons/document-new.png</iconset>
+        </attribute>
         <attribute name="title">
-         <string>S</string>
+         <string/>
         </attribute>
         <attribute name="toolTip">
          <string>Source View</string>
@@ -377,7 +378,7 @@
        </widget>
        <widget class="QWidget" name="tabHotlink">
         <attribute name="title">
-         <string>H</string>
+         <string/>
         </attribute>
         <attribute name="toolTip">
          <string>Hotlist View</string>
@@ -459,7 +460,7 @@
        </widget>
        <widget class="QWidget" name="tabCache">
         <attribute name="title">
-         <string>C</string>
+         <string/>
         </attribute>
         <attribute name="toolTip">
          <string>Cashe View</string>
@@ -480,8 +481,12 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tabNews">
+        <attribute name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
+        </attribute>
         <attribute name="title">
-         <string>N</string>
+         <string/>
         </attribute>
         <attribute name="toolTip">
          <string>News View</string>
@@ -489,8 +494,12 @@
         <layout class="QHBoxLayout" name="horizontalLayout_6"/>
        </widget>
        <widget class="QWidget" name="tabHelo">
+        <attribute name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/icons/help.png</normaloff>:/icons/icons/help.png</iconset>
+        </attribute>
         <attribute name="title">
-         <string>?</string>
+         <string/>
         </attribute>
         <attribute name="toolTip">
          <string>Help View</string>
@@ -1117,12 +1126,20 @@
   </action>
   <action name="actHotlinkPropreties">
    <property name="text">
-    <string>Properites</string>
+    <string>&amp;Properites</string>
    </property>
   </action>
   <action name="actAlphabet">
    <property name="text">
     <string>Alphabetize Folder</string>
+   </property>
+   <property name="toolTip">
+    <string>&amp;Alphabetize Folder</string>
+   </property>
+  </action>
+  <action name="actHotDelete">
+   <property name="text">
+    <string>&amp;Delete</string>
    </property>
   </action>
  </widget>

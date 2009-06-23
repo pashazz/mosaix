@@ -29,6 +29,15 @@ public:
 
 
 private slots:
+void on_cmdSourceSave_clicked();
+void on_actPrSet_triggered();
+void on_actPrintPr_triggered();
+void on_actPrint_triggered();
+void on_actSaveText_triggered();
+void on_actSave_triggered();
+void on_actionOpenLocal_triggered();
+void on_actOpen_triggered();
+void on_actHotDelete_triggered();
 void on_txtHotlist_textChanged(QString );
 void on_twHotlinks_customContextMenuRequested(QPoint pos);
 void on_actAlphabet_triggered();
@@ -68,7 +77,7 @@ void onAddAnchor();
 void onQueryLink();
 void onChangeFont();
 
-
+void onTabChanged(int);
 private:
 //creators
     Ui::MainWindow *ui;
@@ -93,13 +102,14 @@ private:
     void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
     void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
     void alphabetize(QTreeWidgetItem *parent = 0);
-    void makeHotlinkFile (QTreeWidgetItem *parent, QString group);
+    QString makeHotlinkFile ( QString group);
 
     MXBookmark getItemByName (const QString &name);
     void load();
     int topMenu;
     QString hlink;
     QStringList menuNames;
+    QStringList menuIDs;
     MXMenu menu;
 
     //labels & menus
@@ -117,7 +127,7 @@ private:
     QWebPage *currentPage;
     QString linkUrl;
     QWebHitTestResult r;
-
+    QStringList tabs;
 
 
 

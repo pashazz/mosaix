@@ -22,6 +22,9 @@ if (qApp->arguments().count() == 1)
     openUrl(op.homePage);
 else
     openUrl(qApp->arguments().at(1));
+//managerviews
+tabs << tr("Session History") << tr("Global History") << "src" << tr("Hotlist View") << tr("Cache View") << tr("News View") << tr("Help View") ;
+ui->tabLeft->setTabText(0, tabs.at(0));
 
 }
 
@@ -134,6 +137,7 @@ createBrowserMenu();
 //create a hotlink menu
 cmHotTree = new QMenu (this);
 cmHotTree->addAction(ui->actHotlinkPropreties);
+cmHotTree->addAction(ui->actHotDelete);
 cmHotTree->addSeparator();
 cmHotTree->addAction(ui->actAlphabet);
 
@@ -333,6 +337,7 @@ topMenu = groups.indexOf(group);
      //Done with menu
     menu.append(userMenu);
     menuNames.append(myName);
+    menuIDs.append(group);
     sets->endGroup();
 }
     makeHotlistsMenu();
@@ -717,6 +722,7 @@ connect (ui->webView, SIGNAL (statusBarMessage(QString)), this, SLOT (setStatusB
    connect (ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT (onUrlChanged(QUrl)));
    connect (ui->webView, SIGNAL(loadStarted()), this, SLOT(onStarted()));
    connect (ui->webView, SIGNAL (loadFinished(bool)), this, SLOT(onFinished(bool)));
+   connect (ui->tabLeft, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 }
 
 void MainWindow::onUrlChanged(QUrl url) {
@@ -1035,65 +1041,90 @@ void MainWindow::on_actHotlinkPropreties_triggered()
 
 void MainWindow::alphabetize(QTreeWidgetItem *parent ) {
 if (parent == 0) {parent = ui->twHotlinks->topLevelItem(0);}
-if (parent->childCount() == 0) {return;}
-parent->sortChildren  (0, Qt::AscendingOrder);
+parent->sortChildren(0, Qt::AscendingOrder);
+//получаем группу  -  мы сохраняем имя группы (User MenuX) в menuIDS
+//гарантируется, что индексы menuIDS и menuNames совпадают
+int index = menuNames.indexOf(parent->text(0));
 
-makeHotlinkFile(parent, core->getHotlinkID(ui->txtHotlist->text(), parent->text(0), true));
+makeHotlinkFile(menuIDs.at(index));
 readSettings();
 
 
 }
 
-void MainWindow::makeHotlinkFile(QTreeWidgetItem *parent, QString group) {
-    QTreeWidgetItem *child;
+QString MainWindow::makeHotlinkFile(QString group) { //возвращаю имя своей группы
+    QString fn = ui->txtHotlist->text();
 
-    QSettings stg (ui->txtHotlist->text(), QSettings::IniFormat, this);
-
-
-   int max = parent->childCount();
-   int i;
-
+    QSettings stg (fn, QSettings::IniFormat, this);
+QStringList hotlinksKeys;
+QStringList values;
+QString key;
+QString v;
+QString myName, myType;
  stg.beginGroup(group);
+ //получаем ключи
+hotlinksKeys = stg.allKeys();
+foreach (key, hotlinksKeys) {
+    if (key != "Menu_Name" && key != "Menu_Type") {
+    v = stg.value(key).toString();
+    //получаем значения и кидаем их в values
+    if (!v.startsWith("MENU")) {
 
+        values.append(v);
+    }
+    else { //получаем группу меню и рекурсивно вызываем себя
+QStringList value = v.split(",");
+QString gr = value.at(1);
+gr.insert(4, " "); //hack
 
-   for (i = 0; i < max; ++i) {
-      child = parent->child(i);
-      if (child->childCount() == 0) //item
-      {
-          QString key = "Item" + QString (i);
-          MXBookmark item = getItemByName(child->text(0));
-          QString time = item.time.toString(DATE_FORMAT);
-          QString value = item.name + "," + item.url + "," + time;
-          stg.setValue(key, value);
+QString name = makeHotlinkFile(gr);
+values.append(name);
+    }
+}
+    else {
+        if (key == "Menu_Name")
+        {myName = stg.value(key).toString();}
+   else if (key == "Menu_Type")
+        {myType = stg.value(key).toString();}
 
+    }
+//удалим ключ
+    stg.remove(key);
+}
 
-      }
-      else{
-          //make a dummy item
-          QString key = "Item" + QString (i);
-          QString ID = core->getHotlinkID(ui->txtHotlist->text(), child->text(0), true);
-          QString value = "MENU," + ID;
-          //hack (getHotlinkID return a value with a space: User MenuX)
-          value = value.replace(" ", "");
-          stg.setValue(key, value);
-          makeHotlinkFile(child, ID);
+//сортируем значения
+values.sort();
+int i;
+//теперь меняем значения в массиве values - с имени меню на строчку MENU,UserMenuX
+for (i = 0; i < menuNames.count(); ++i) {
+    //формируем значение для замены
+    QString after;
+   QString curID = menuIDs.at(i);
+after.append("MENU,");
+after.append(curID.replace(" ", ""));
+qDebug() << after;
+values.replaceInStrings(menuNames.at(i), after);
 
-      }
-
-   }
+}
+//сначала запишем имя, и если можно, тип
+if (!myName.isEmpty()) {stg.setValue("Menu_Name",myName);}
+if (!myType.isEmpty()) {stg.setValue("Menu_Type", myType);}
+//теперь запишем значения из values
+for (i =0; i < values.count(); ++i) {
+   QString k = "Item" + QVariant(i).toString();
+   stg.setValue(k, values.at(i));
+}
+//закрываем группу
 stg.endGroup();
-
+return myName;
    }
 
 
 
 void MainWindow::on_actAlphabet_triggered()
 {
-   if (ui->twHotlinks->currentItem() == 0) {return;}
-   if (ui->twHotlinks->currentItem()->childCount() == 0)
-       alphabetize(ui->twHotlinks->currentItem()->parent());
-   else
-       alphabetize(ui->twHotlinks->currentItem());
+
+  alphabetize();
 }
 
 void MainWindow::on_twHotlinks_customContextMenuRequested(QPoint pos)
@@ -1105,4 +1136,135 @@ void MainWindow::on_twHotlinks_customContextMenuRequested(QPoint pos)
 void MainWindow::on_txtHotlist_textChanged(QString )
 {
     op.hotlinkList = ui->txtHotlist->text();
+}
+
+
+
+void MainWindow::on_actHotDelete_triggered()
+{
+      if (ui->twHotlinks->currentItem()->childCount() == 0) {
+        //get menu id
+        QString menuid = menuIDs.at(menuNames.indexOf(ui->twHotlinks->currentItem()->parent()->text(0)));
+        QString itemid = core->getHotlinkID(op.hotlinkList,ui->twHotlinks->currentItem()->text(0), false, menuid);
+        QSettings stg (op.hotlinkList, QSettings::IniFormat, this);
+        stg.beginGroup(menuid);
+        stg.remove(itemid);
+        //проверяем ключи
+        QStringList keys = stg.allKeys();
+     int i = 0; //счетчик индексов
+     QString key;
+     foreach (key, keys) {
+         if (!key.startsWith("Item")) {continue;}
+         //обработка
+         if (!stg.contains("Item" + QString (i))) {
+         //сдвигаем все ключи и выходим
+             for (;;) {
+                 //value
+                 ++i;
+                 if (!stg.contains("Item" + QString (i))) {break;}
+                 QString currentValue = stg.value("Item" + QString(i)).toString();
+                 //сдвигаем ключ на -1 позицию
+                 stg.remove("Item" + QVariant(i).toString());
+                 stg.setValue("Item" +QVariant (i-1).toString(), currentValue);
+
+             }
+         }
+
+     }
+
+
+    }
+    else {
+                QString menuid = menuIDs.at(menuNames.indexOf(ui->twHotlinks->currentItem()->text(0)));
+                 QSettings stg (op.hotlinkList, QSettings::IniFormat, this);
+        stg.beginGroup(menuid);
+        stg.remove("");
+
+        stg.endGroup();
+        /*!
+TODO! сдвиг групп */
+}
+}
+
+void MainWindow::on_actOpen_triggered()
+{
+    bool *ok;
+    QString url = QInputDialog::getText(this, " ", tr("Open Document:"), QLineEdit::Normal, "", ok, Qt::CustomizeWindowHint |Qt::WindowTitleHint);
+    if (*ok)
+        openUrl(url);
+}
+
+void MainWindow::on_actionOpenLocal_triggered()
+{
+    QString fileName  = QFileDialog::getOpenFileName(this, tr("Open"), op.downloadDir, tr("HTML Files(*.htm *.html);;Text files (*.txt);;All files (*.*)"));
+    openUrl(fileName);
+}
+
+void MainWindow::on_actSave_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), op.downloadDir, tr("HTML Files(*.htm *.html);;Text files (*.txt);;All files (*.*)"));
+    QString html = ui->webView->page()->mainFrame()->toHtml();
+    QFile file (fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        QMessageBox::warning(this, tr("Error"), tr("Error save file %1: %2").arg(fileName, file.errorString()));
+    QTextStream out(&file);
+    out << html;
+    file.close();
+
+}
+
+void MainWindow::on_actSaveText_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName( this, tr("Save As Text"),  op.downloadDir, tr("Text files (*.txt);;All files (*.*)"));
+    QString text = ui->webView->page()->mainFrame()->toPlainText();
+        QFile file (fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        QMessageBox::warning(this, tr("Error"), tr("Error save file %1: %2").arg(fileName, file.errorString()));
+    QTextStream out(&file);
+    out << text;
+    file.close();
+}
+
+void MainWindow::on_actPrint_triggered()
+{
+    QPrintDialog printDialog (this);
+    if (printDialog.exec() == QDialog::Accepted)
+    {
+        ui->webView->print(printDialog.printer());
+            }
+}
+
+void MainWindow::on_actPrintPr_triggered()
+{
+    QPrintPreviewDialog *pr = new QPrintPreviewDialog (this);
+  connect(pr, SIGNAL(paintRequested(QPrinter*)), ui->webView, SLOT(print(QPrinter*)));
+      pr->exec();
+}
+
+void MainWindow::on_actPrSet_triggered()
+{
+    QPageSetupDialog *pg = new QPageSetupDialog (this);
+    pg->exec();
+}
+
+void MainWindow::on_cmdSourceSave_clicked()
+{
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), op.downloadDir, tr("HTML Files(*.htm *.html);;Text files (*.txt);;All files (*.*)"));
+    QString html = ui->txtSource->toPlainText();
+    QFile file (fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        QMessageBox::warning(this, tr("Error"), tr("Error save file %1: %2").arg(fileName, file.errorString()));
+    QTextStream out(&file);
+    out << html;
+    file.close();
+}
+void MainWindow::onTabChanged(int i) {
+    const int ignore = 2; //source view
+   for (int x =0; x <= ui->tabLeft->count(); ++x)
+    {
+           ui->tabLeft->setTabText(x, "");
+
+   }
+   if (i != ignore)
+    ui->tabLeft->setTabText(i, tabs.at(i));
 }

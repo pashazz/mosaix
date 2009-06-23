@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>222</height>
+    <width>452</width>
+    <height>224</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,7 +100,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="txtDate"/>
+     <widget class="QLineEdit" name="txtDate">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="btnTimestamp">
