@@ -9,6 +9,7 @@
 #include <QUrl>
  #include <QTreeWidgetItem>
 #include "mxhtlprop.h"
+#include "mxdownloadinterface.h"
 namespace Ui
 {
     class MainWindow;
@@ -102,7 +103,9 @@ private:
     void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
     void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
     void alphabetize(QTreeWidgetItem *parent = 0);
+    void createOtherMenus();
     QString makeHotlinkFile ( QString group);
+    QMenu* getMenuForItem (int index);
 
     MXBookmark getItemByName (const QString &name);
     void load();
@@ -110,8 +113,11 @@ private:
     QString hlink;
     QStringList menuNames;
     QStringList menuIDs;
+    QDir plugdir;
+    QStringList pluginFilenames;
+    void addPlugin(QObject *pl);
     MXMenu menu;
-
+    void initMgr();
     //labels & menus
     QLabel *time;
     QTimer *timer;
@@ -122,15 +128,18 @@ private:
     QMenu *cmBrowser;
     QMenu *cmLink;
     QMenu *cmHotTree;
+    QMenu *srcManager;
+    QMenu *cacheManager;
     QProgressBar *progress;
     //current webpage
     QWebPage *currentPage;
     QString linkUrl;
     QWebHitTestResult r;
     QStringList tabs;
-
-
-
+    QList <MXDownloadInterface *> plugins;
+    QNetworkAccessManager *netmgr;
+    QNetworkDiskCache *cache;
+    QNetworkProxy *proxy;
     //actions
     QAction *spawn; //spawn mosaic
     QAction *info; //header information
@@ -140,8 +149,11 @@ private:
     QAction *add2hot;
     QAction *pixel;
     QToolBar *hotBar;
+    int curIndex;
     protected:
     void closeEvent(QCloseEvent *e);
+    void changeEvent(QEvent *e);
+    void loadPlugins();
 
 };
 

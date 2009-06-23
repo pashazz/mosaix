@@ -1,7 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-06-04T15:57:00
 # -------------------------------------------------
-QT += webkit sql
+QT += webkit \
+    sql
 TARGET = mosaix
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -11,7 +12,8 @@ SOURCES += main.cpp \
     mxbuttonconf.cpp \
     mxdownloadinterface.cpp \
     mxhtlprop.cpp \
-    sqliteworker.cpp
+    sqliteworker.cpp \
+    mxinput.cpp
 HEADERS += mainwindow.h \
     mxloader.h \
     config.h \
@@ -20,8 +22,10 @@ HEADERS += mainwindow.h \
     mxbuttonconf.h \
     mxdownloadinterface.h \
     mxhtlprop.h \
-    sqliteworker.h
+    sqliteworker.h \
+    mxinput.h
 FORMS += mainwindow.ui \
     mxbuttonconf.ui \
-    mxhtlprop.ui
+    mxhtlprop.ui \
+    mxinput.ui
 RESOURCES += icons.qrc

@@ -8,4 +8,5 @@ const QString CONFFILE = "/.mosaix/main.ini";
 const QString HOTLINKS_DIR = "/.mosaix/hotlinks";
 const QString DATE_FORMAT = "dd-MMM-yy HH:mm:ss";
 const QString DATABASE = "/.mosaix/main.dat";
+const QString PLUGINS_DIR = "/.mosaix/plugins";
 #endif // CONFIG_H

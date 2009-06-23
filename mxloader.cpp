@@ -57,7 +57,11 @@ void MXLoader::createConfig() {
     main->beginGroup("Proxy");
     main->setValue("HttpProxy", ""); //other proxies coming soon
     main->endGroup();
+    main->beginGroup("Cache");
+    main->setValue("Directory", QDir::homePath() + CONFDIR + "/cache");
+    main->setValue("Limit", 50);
     main->beginGroup("Mail");
+
     main->setValue("Name", "");
     main->setValue("Password", "");
     main->setValue("Host", "");

@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     createToolbars();
     createHotlinkBar();
     connectAll();
+    initMgr();
+    createOtherMenus();
     statusBar()->showMessage(tr("For help, press F1"));
 
 if (qApp->arguments().count() == 1)
@@ -25,6 +27,7 @@ else
 //managerviews
 tabs << tr("Session History") << tr("Global History") << "src" << tr("Hotlist View") << tr("Cache View") << tr("News View") << tr("Help View") ;
 ui->tabLeft->setTabText(0, tabs.at(0));
+curIndex = 0;
 
 }
 
@@ -35,7 +38,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::createMenus(){
     //connects
-
+ui->txtSource->setFont(op.srcFont);
 
 
     hotListParser();
@@ -164,12 +167,10 @@ ui->tbMosaic->addSeparator();
 if (op.find)
     ui->tbMosaic->addAction(ui->actFind);
 if(op.searchCache) {
-    QAction *scache = new QAction (QIcon(":/icons/icons/csearch.png"), tr("Cache Srch"), this);
-    scache->setToolTip(tr("Search Cache"));
-    scache->setStatusTip(tr("Search Cache for a Text String"));
+
     //connect HERE
 
-    ui->tbMosaic->addAction(scache);
+    ui->tbMosaic->addAction(ui->scache);
 
 }
 ui->tbMosaic->addSeparator();
@@ -632,6 +633,10 @@ out << tr("mosaix: reading main.ini config\n");
    stg->beginGroup("Proxy");
    op.httpProxy = stg->value("HhttpProxy").toString();
    stg->endGroup();
+
+   stg->beginGroup("Cache");
+   op.cacheDir = stg->value("Directory").toString();
+   op.cacheLimit = stg->value("Limit").toInt();
    stg->beginGroup("Mail");
   op.mailName = stg->value("Name").toString();
   op.mailPassword = stg->value("Password").toString();
@@ -673,12 +678,13 @@ op.news = stg->value("News",true).toBool();
 op.email = stg->value("E-Mail", true).toBool();
 op.add2hot = stg->value("Add2Hot",true).toBool();
 op.curhotlist = stg->value("CurHotList", true).toBool();
+
 stg->endGroup();
-stg->beginGroup("HotinkBar");
-stg->value("NumberButtons", -1).toBool();
-stg->endGroup();
-stg->beginGroup("opions");
+stg->beginGroup("Options");
 op.buttontext = stg->value("ButtonText", false).toBool();
+op.srcFont = stg->value("SrcFont").value<QFont>();
+
+
 stg->endGroup();
 delete stg;
 out  << "mosaix:reading locations\n";
@@ -1259,6 +1265,7 @@ void MainWindow::on_cmdSourceSave_clicked()
     file.close();
 }
 void MainWindow::onTabChanged(int i) {
+
     const int ignore = 2; //source view
    for (int x =0; x <= ui->tabLeft->count(); ++x)
     {
@@ -1267,4 +1274,99 @@ void MainWindow::onTabChanged(int i) {
    }
    if (i != ignore)
     ui->tabLeft->setTabText(i, tabs.at(i));
+   //set menu;
+QMenu *toDelete = getMenuForItem(curIndex);
+if  (toDelete != 0) {
+    menuBar()->removeAction(toDelete->menuAction());}
+
+   curIndex = i;
+   QMenu *menu = getMenuForItem(i);
+   if (menu != 0) {
+       menuBar()->insertMenu(ui->menu_Edit->menuAction(),menu );}
+
+
+
+}
+
+void MainWindow::loadPlugins() {
+           plugdir = QDir(QDir::homePath() + PLUGINS_DIR);
+
+QString fn;
+    foreach ( fn, plugdir.entryList(QDir::Files)) {
+       QPluginLoader ldr (plugdir.absoluteFilePath(fn));
+       QObject *plugin = ldr.instance();
+       if (plugin) {
+           addPlugin(plugin);
+           pluginFilenames += fn;
+
+    }
+   }
+}
+
+void MainWindow::addPlugin(QObject *pl) {
+    MXDownloadInterface *down = qobject_cast<MXDownloadInterface*> (pl);
+    if (down){
+       plugins.append(down);
+
+    }
+}
+
+
+
+void MainWindow::changeEvent(QEvent *e)
+
+{
+   QMainWindow::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        //managerviews
+tabs << tr("Session History") << tr("Global History") << "src" << tr("Hotlist View") << tr("Cache View") << tr("News View") << tr("Help View") ;
+ui->tabLeft->setTabText(0, tabs.at(0));
+//status
+statusBar()->showMessage(tr("For help, press F1"));
+default:
+;
+
+}
+}
+
+    void MainWindow::initMgr() {
+//network acess manager coming soon
+cache = new QNetworkDiskCache (this);
+cache->setCacheDirectory(op.cacheDir);
+cache->setMaximumCacheSize(op.cacheLimit);
+netmgr = new QNetworkAccessManager (this);
+netmgr->setCache(cache);
+ui->webView->page()->setNetworkAccessManager(netmgr);
+
+
+    }
+QMenu* MainWindow::getMenuForItem (int index) {
+switch (index) {
+        case 0:
+        return ui->mnuHistory;
+        case 2:
+        return srcManager;
+        case 3:
+        return /*hotlistManager;*/ 0;
+        case 4:
+        return cacheManager;
+        default:
+        return 0;
+    }
+}
+
+void MainWindow::createOtherMenus() {
+    srcManager = new QMenu (tr("Source M&anager"),this);
+    srcManager->addAction(ui->actSrcFont);
+
+    cacheManager = new QMenu (tr("Cache M&anager"), this);
+    cacheManager->addAction(ui->scache);
+    cacheManager->addSeparator();
+    cacheManager->addAction(ui->actCacheDelete);
+    cacheManager->addSeparator();
+    cacheManager->addAction(ui->actCacheOptions);
+    //hotlist manager coming soon
+
 }

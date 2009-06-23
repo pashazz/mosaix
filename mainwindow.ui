@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>717</width>
-    <height>628</height>
+    <width>719</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,7 +17,7 @@
    <string>MosaiX 0.1-dev - by NCSA Mosaic 3.0</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset>
     <normaloff>:/icons/icons/logo.png</normaloff>:/icons/icons/logo.png</iconset>
   </property>
   <property name="whatsThis">
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>717</width>
+     <width>719</width>
      <height>19</height>
     </rect>
    </property>
@@ -95,7 +95,7 @@
     <addaction name="separator"/>
     <addaction name="actSelectAll"/>
    </widget>
-   <widget class="QMenu" name="menuHistory_M_anager">
+   <widget class="QMenu" name="mnuHistory">
     <property name="title">
      <string>History M&amp;anager</string>
     </property>
@@ -182,7 +182,7 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
-   <addaction name="menuHistory_M_anager"/>
+   <addaction name="mnuHistory"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Navigate"/>
    <addaction name="menu_Tools"/>
@@ -327,7 +327,7 @@
        </widget>
        <widget class="QWidget" name="tbSource">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/document-new.png</normaloff>:/icons/icons/document-new.png</iconset>
         </attribute>
         <attribute name="title">
@@ -482,7 +482,7 @@
        </widget>
        <widget class="QWidget" name="tabNews">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
         </attribute>
         <attribute name="title">
@@ -495,7 +495,7 @@
        </widget>
        <widget class="QWidget" name="tabHelo">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/help.png</normaloff>:/icons/icons/help.png</iconset>
         </attribute>
         <attribute name="title">
@@ -532,7 +532,7 @@
   </widget>
   <action name="actOpen">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/open.png</normaloff>:/icons/icons/open.png</iconset>
    </property>
    <property name="text">
@@ -561,7 +561,7 @@
   </action>
   <action name="actSave">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -584,7 +584,7 @@
   </action>
   <action name="actPrint">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/print.png</normaloff>:/icons/icons/print.png</iconset>
    </property>
    <property name="text">
@@ -599,7 +599,7 @@
   </action>
   <action name="actPrintPr">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/preview.png</normaloff>:/icons/icons/preview.png</iconset>
    </property>
    <property name="text">
@@ -627,7 +627,7 @@
   </action>
   <action name="actCopy">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
    </property>
    <property name="text">
@@ -642,7 +642,7 @@
   </action>
   <action name="actPaste">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/edit.png</normaloff>:/icons/icons/edit.png</iconset>
    </property>
    <property name="text">
@@ -657,7 +657,7 @@
   </action>
   <action name="actFind">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/search.png</normaloff>:/icons/icons/search.png</iconset>
    </property>
    <property name="text">
@@ -765,7 +765,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/manager.png</normaloff>:/icons/icons/manager.png</iconset>
    </property>
    <property name="text">
@@ -935,7 +935,7 @@
   </action>
   <action name="actBack">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/back.png</normaloff>:/icons/icons/back.png</iconset>
    </property>
    <property name="text">
@@ -950,7 +950,7 @@
   </action>
   <action name="actForward">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/next.png</normaloff>:/icons/icons/next.png</iconset>
    </property>
    <property name="text">
@@ -965,7 +965,7 @@
   </action>
   <action name="actReload">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/view-refresh.png</normaloff>:/icons/icons/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -1001,7 +1001,7 @@
   </action>
   <action name="actNews">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
    </property>
    <property name="text">
@@ -1019,7 +1019,7 @@
   </action>
   <action name="actMail">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/newmsg.png</normaloff>:/icons/icons/newmsg.png</iconset>
    </property>
    <property name="text">
@@ -1042,7 +1042,7 @@
   </action>
   <action name="actHome">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/home.png</normaloff>:/icons/icons/home.png</iconset>
    </property>
    <property name="text">
@@ -1142,6 +1142,44 @@
     <string>&amp;Delete</string>
    </property>
   </action>
+  <action name="actSrcFont">
+   <property name="text">
+    <string>Change &amp;Font</string>
+   </property>
+   <property name="statusTip">
+    <string>Change Font for Source View</string>
+   </property>
+  </action>
+  <action name="scache">
+   <property name="text">
+    <string>&amp;Search Cache</string>
+   </property>
+   <property name="iconText">
+    <string>Cache Srch</string>
+   </property>
+   <property name="toolTip">
+    <string>Search Cache</string>
+   </property>
+   <property name="statusTip">
+    <string>Search Cache for a Text String</string>
+   </property>
+  </action>
+  <action name="actCacheDelete">
+   <property name="text">
+    <string>&amp;Delete All</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove all items from the cache.</string>
+   </property>
+  </action>
+  <action name="actCacheOptions">
+   <property name="text">
+    <string>&amp;Options</string>
+   </property>
+   <property name="statusTip">
+    <string>Cache Preference Page</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1151,8 +1189,6 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -6,6 +6,7 @@
 #include <QSize>
 #include <QDate>
 #include <QDateTime>
+#include <QFont>
 
 struct MXBookmark {
 QString name;
@@ -40,6 +41,9 @@ bool hotlinkbar;
 bool statusbar;
 //proxy
 QString httpProxy;
+//cache
+QString cacheDir;
+int cacheLimit;
 //mail
 QString mailName;
 QString mailPassword;
@@ -77,10 +81,10 @@ bool news;
 bool email;
 bool add2hot;
 bool curhotlist;
-//hotlinkbar
-int numberButtons;
+
 //options
 bool buttontext;
+QFont srcFont;
 //locations
 Location webBrowser;
 Location managerLocation;
