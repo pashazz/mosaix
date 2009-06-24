@@ -41,17 +41,17 @@ void MXHotlinkProperties::changeEvent(QEvent *e)
 void MXHotlinkProperties::on_buttonBox_accepted()
 {
 
-    QDateTime d;
+    QDateTime d = QDateTime::fromString (m_ui->txtDate->text(), DATE_FORMAT);
 int st;
-st+=Running;
     if(!folder){
         st += Item;
 
-  d = d.fromString (m_ui->txtDate->text(), DATE_FORMAT);}
+}
     else{
        m_ui->txtTitle->setText(  m_ui->txtTitle->text().replace(" ", "_"));
 st += Folder;
 if (isCreate) {st += Create;} else {st+=Change;}
+qDebug() << m_ui->txtTitle->text() << m_ui->txtURL->text();
    emit onSavingProperties( m_ui->txtTitle->text(), m_ui->txtURL->text(), d, st);
 
    close();

@@ -801,7 +801,7 @@ else {
   //здесь анпрямую подключаем
 
 }
-connect (pr, SIGNAL (onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onPropertiesChanged(QString,QString,QDateTime)));
+connect (pr, SIGNAL (onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onHLProperties(QString,QString,QDateTime,int)));
 pr->exec();
 }
 void MainWindow::alphabetize(QTreeWidgetItem *parent ) {
@@ -1098,15 +1098,17 @@ void MainWindow::makeMenu(QMenu* menu, QTreeWidgetItem *item) {
 
 }
 void MainWindow::onHLProperties(QString title, QString url, QDateTime  date, int status) {
-
+if (ui->twHotlinks->currentItem() == 0) {
+    //создаем корневой элементЪ
+    return;
+}
     QString oldname = ui->twHotlinks->currentItem()->text(0);
-    if  (status == Folder) {
-        if (status == Folder | Change) {
+        if (status == Folder + Change) {
 if(oldname != title) {
     hdata->renameTable(oldname, title);
     ui->twHotlinks->currentItem()->setText(0, title);
-} }
-else if (status == Folder | Create){
+}
+else if (status == Folder + Create){
 
    /*QMenu *menu = hdata->addFolder(title);
  folderCreated(menu);*/
@@ -1115,14 +1117,14 @@ else if (status == Folder | Create){
     }
 
 else {
-    if (status == Item | Change) {
+    if (status == Item+ Change) {
         hdata->updateHotlink(oldname, title, url, date);
         ui->twHotlinks->currentItem()->setText(0, title);
         ui->twHotlinks->currentItem()->setText (1, url);
         ui->twHotlinks->currentItem()->setText(2, date.toString(DATE_FORMAT));
 
     }
-    if (status == Item | Create)
+    if (status == Item + Create)
     {
 QStringList list;
 list << title << url << date.toString(DATE_FORMAT);
