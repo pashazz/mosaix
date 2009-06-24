@@ -781,56 +781,7 @@ foreach (group, groups) {
 
 void MainWindow::on_actAdd2hot_triggered()
 {
-//get group name
-QSettings stg  (op.hotlinkList, QSettings::IniFormat, this);
-QStringList lstGr = stg.childGroups();
-QString group;
-QString gr, k;
-foreach (gr, lstGr) {
-    stg.beginGroup(gr);
-    foreach (k, stg.allKeys()) {
-        if (k == "Menu_Name") //here get menu name
-        {
-            QString name = stg.value(k).toString();
-            if (name == ui->cbGroups->currentText())
-            { group = gr;}
-        }
 
-    }
-stg.endGroup();
-}
-
- //get current url
-    QString url = ui->webView->page()->mainFrame()->url().toString();
- //get current title
-    QString title = ui->webView->page()->mainFrame()->title();
- //get current hotlink file
-    QString file = ui->txtHotlist->text();
-  //get current time
-    QDateTime time = QDateTime::currentDateTime();
-  //get current time in string
-    QString strt = time.toString(DATE_FORMAT);
-  //get latest item number
-    stg.beginGroup(group);
-    QStringList items = stg.allKeys();
-    QString key;
-    int last = -1;
-    bool *ok;
-    foreach (key, items) {
-      if (key.startsWith("Item")) {
-          int ID = key.right(key.count() - 4).toInt(ok, 10);
-          if (ID > last)
-              last = ID;
-      }
-            }
-if (last == -1) {return;}
-last++;
-QString value;
-value.append(title + ",");
-value.append(url + ",");
-value.append(strt);
-stg.setValue("Item" + last, value);
-// re-read hotlinks
 }
 
 
@@ -1120,7 +1071,9 @@ QMenu* MainWindow::menuData(QList<QTreeWidgetItem*> wd) {
         }
         }
     menu->addMenu(toplevel);
+
 }
+   return menu;
     }
 
 
