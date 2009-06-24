@@ -1,9 +1,9 @@
 #include "mxhtlprop.h"
 #include "ui_mxhtlprop.h"
 
-MXHotlinkProperties::MXHotlinkProperties(QWidget *parent, bool isFolder, QStringList data, QString config, QString menuID, QString itemID) :
+MXHotlinkProperties::MXHotlinkProperties(QWidget *parent, bool isFolder, bool create, QStringList data) :
     QDialog(parent),
-    m_ui(new Ui::MXHotlinkProperties), conf(config), folder (isFolder), menu(menuID), item(itemID), core(new MXCoreMethods)
+    m_ui(new Ui::MXHotlinkProperties), folder (isFolder), isCreate(create)
 {
     m_ui->setupUi(this);
     m_ui->txtTitle->setText(data.at(0));
@@ -12,12 +12,13 @@ MXHotlinkProperties::MXHotlinkProperties(QWidget *parent, bool isFolder, QString
     m_ui->txtURL->setVisible(false);
     m_ui->txtDate->setVisible(false);
     m_ui->lblDate->setEnabled(false);
-
+    m_ui->btnTimestamp->setVisible(false);
     }
     else {
      m_ui->txtURL->setText(data.at(1));
      m_ui->txtDate->setText(data.at(2));
     }
+    oldname = m_ui->txtTitle->text();
 }
 
 MXHotlinkProperties::~MXHotlinkProperties()
@@ -39,24 +40,24 @@ void MXHotlinkProperties::changeEvent(QEvent *e)
 
 void MXHotlinkProperties::on_buttonBox_accepted()
 {
-    //применяем изменения
-    QString value;
-    QString key;
-    if (folder){
-        key = "Menu_Name";
-        value = m_ui->txtTitle->text();
-    }
-    else
-    {
-        key = item;
-        value.append(m_ui->txtTitle->text() + ",");
-        value.append(m_ui->txtURL->text() + ",");
-        value.append(m_ui->txtDate->text());
-    }
-    core->writeSetting(key, menu, value, conf);
-    close();
 
+    QDateTime d;
+int st;
+st+=Running;
+    if(!folder){
+        st += Item;
+
+  d = d.fromString (m_ui->txtDate->text(), DATE_FORMAT);}
+    else{
+       m_ui->txtTitle->setText(  m_ui->txtTitle->text().replace(" ", "_"));
+st += Folder;
+if (isCreate) {st += Create;} else {st+=Change;}
+   emit onSavingProperties( m_ui->txtTitle->text(), m_ui->txtURL->text(), d, st);
+
+   close();
 }
+}
+
 
 
 void MXHotlinkProperties::on_btnTimestamp_clicked()

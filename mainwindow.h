@@ -10,10 +10,15 @@
  #include <QTreeWidgetItem>
 #include "mxhtlprop.h"
 #include "mxdownloadinterface.h"
+#include "aboutdialog.h"
+#include "hotlink.h"
+
 namespace Ui
 {
     class MainWindow;
 }
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +35,9 @@ public:
 
 
 private slots:
+
+void on_actAbout_triggered();
+void on_actSrcFont_triggered();
 void on_cmdSourceSave_clicked();
 void on_actPrSet_triggered();
 void on_actPrintPr_triggered();
@@ -46,7 +54,6 @@ void on_actHotlinkPropreties_triggered();
 void on_actAdd2hot_triggered();
 void on_actPresent_triggered(bool checked);
 void on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column);
-
 void on_actDefaultLayout_triggered();
 void on_actCopy_triggered();
 void on_actStatus_triggered(bool checked);
@@ -61,7 +68,6 @@ void on_actMosaicTb_triggered(bool checked);
 void on_actHome_triggered();
 void on_actButText_triggered(bool checked);
 void on_actExit_triggered();
-void onCustomMenuClicked ();
 void updateTimer();
 void onToolbarMenu (QPoint p);
 void onBrowserMenu(QPoint p);
@@ -77,9 +83,12 @@ void onLoadAnchor();
 void onAddAnchor();
 void onQueryLink();
 void onChangeFont();
-
 void onTabChanged(int);
+void onCustomMenuClicked (QAction*);
+    void onHLProperties ( QString, QString, QDateTime, int);
+
 private:
+
 //creators
     Ui::MainWindow *ui;
     void createMenus();
@@ -88,8 +97,9 @@ private:
     void connectAll();
     void createBrowserMenu();
     void createHotlinkBar();
-    void createManager() {}
-
+    void createManager() ;
+    void makeMenu(QMenu* menu, QTreeWidgetItem *item);
+    QMenu* menuData(QList<QTreeWidgetItem *>w);
     QUrl guessUrlFromString(const QString &string);
 
 //core
@@ -98,25 +108,16 @@ private:
     MXOptions op;
     //Hotlinks variables and functions
 
-    void hotListParser();
     void makeHotlistsMenu();
-    void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
-    void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
     void alphabetize(QTreeWidgetItem *parent = 0);
     void createOtherMenus();
-    QString makeHotlinkFile ( QString group);
+
     QMenu* getMenuForItem (int index);
 
-    MXBookmark getItemByName (const QString &name);
     void load();
-    int topMenu;
-    QString hlink;
-    QStringList menuNames;
-    QStringList menuIDs;
     QDir plugdir;
     QStringList pluginFilenames;
     void addPlugin(QObject *pl);
-    MXMenu menu;
     void initMgr();
     //labels & menus
     QLabel *time;
@@ -131,6 +132,7 @@ private:
     QMenu *srcManager;
     QMenu *cacheManager;
     QProgressBar *progress;
+    HotlinkData *hdata;
     //current webpage
     QWebPage *currentPage;
     QString linkUrl;
@@ -154,6 +156,10 @@ private:
     void closeEvent(QCloseEvent *e);
     void changeEvent(QEvent *e);
     void loadPlugins();
+
+    void folderCreated (QMenu*);
+void hotlinkCreated (QAction*, QString, QString, QDateTime);
+
 
 };
 

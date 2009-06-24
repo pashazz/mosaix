@@ -8,13 +8,8 @@
 #include <QDateTime>
 #include <QFont>
 
-struct MXBookmark {
-QString name;
-QString url;
-QDateTime time;
-};
-typedef QList<MXBookmark> MXBookmarkList;
-typedef QList <MXBookmarkList> MXMenu;
+
+
 typedef QPair <QSize, QPoint> Location; //first - size, second - position
 
  struct MXOptions {

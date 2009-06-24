@@ -13,7 +13,9 @@ SOURCES += main.cpp \
     mxdownloadinterface.cpp \
     mxhtlprop.cpp \
     sqliteworker.cpp \
-    mxinput.cpp
+    mxinput.cpp \
+    aboutdialog.cpp \
+    hotlink.cpp
 HEADERS += mainwindow.h \
     mxloader.h \
     config.h \
@@ -23,9 +25,12 @@ HEADERS += mainwindow.h \
     mxdownloadinterface.h \
     mxhtlprop.h \
     sqliteworker.h \
-    mxinput.h
+    mxinput.h \
+    aboutdialog.h \
+    hotlink.h
 FORMS += mainwindow.ui \
     mxbuttonconf.ui \
     mxhtlprop.ui \
-    mxinput.ui
+    mxinput.ui \
+    aboutdialog.ui
 RESOURCES += icons.qrc

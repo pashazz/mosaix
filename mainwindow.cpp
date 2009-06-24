@@ -3,14 +3,13 @@
 #include <QSettings>
 #include "config.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
     load();
-    hlink = op.hotlinkList;
-    ui->setupUi(this);
+  hdata = new HotlinkData(op.hotlinkList);
 
+    ui->setupUi(this);
     createWindow();
     createMenus();
     createToolbars();
@@ -38,10 +37,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::createMenus(){
     //connects
+
+    makeHotlistsMenu();
 ui->txtSource->setFont(op.srcFont);
 
-
-    hotListParser();
     //tuning
     ui->actExit->setMenuRole(QAction::QuitRole);
     ui->actAbout->setMenuRole(QAction::AboutRole);
@@ -99,6 +98,8 @@ ui->txtSource->setFont(op.srcFont);
        case QSysInfo::WV_WINDOWS7
                wv.append("7");      break;
        case QSysInfo::WV_CE:
+    void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
+    void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
            wv.append("CE");         break;
        case QSysInfo::WV_CENET:
            vw.append("CE .NET");    break;
@@ -136,6 +137,7 @@ connect (ui->tbMosaic, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on
 connect(ui->tbWeb, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 connect (ui->tbLocation, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
 //connect (ui->tbGlobe, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onToolbarMenu(QPoint)), Qt::DirectConnection);
+
 createBrowserMenu();
 //create a hotlink menu
 cmHotTree = new QMenu (this);
@@ -198,7 +200,7 @@ if (op.noimages) {
     //copy of "reload text only"
     QAction *act = new QAction ("Rel Img", this); //Find icon, idiot!
     act->setToolTip(tr("Don`t Reload Images"));
-    act->setStatusTip(tr("When reloading page,get images from local cache"));  
+    act->setStatusTip(tr("When reloading page,get images from local cache"));
 
 }
 if (op.reload)
@@ -280,210 +282,30 @@ ui->statusBar->addPermanentWidget(time);
 
 
 
+//and a Source Manager
 
 }
-void MainWindow::hotListParser() {
-if (!QFile::exists(hlink)) {
-    qDebug() << "mosaix: error reading hotlinks: file does not exists, hotlinks will be disabled!";
-    return;
-}
 
-    QSettings *sets = new QSettings (hlink, QSettings::IniFormat, this);
-QStringList groups = sets->childGroups();
-
-QString group;
-
-  foreach(group, groups) {
-        /*
-          There is code to parse .HOT file
-
-          */
-      MXBookmarkList userMenu;
-      QString myName, myLevel;
-      //array of items of this Menu
-      sets->beginGroup(group);
-     QStringList keys = sets->allKeys();
-     QString key;
-     foreach (key, keys) {
-
-         if (key == "Menu_Name") {
-             myName = sets->value(key).toString();
-             continue;}
-   else      if (key == "Menu_Type"){
-             myLevel = sets->value(key, "FUCK").toString();
-             continue;
-         }
-    else     if (key.startsWith("Item")) {
-             /*parse item here */
-              MXBookmark item;
-              QString itemString  = "";
-
-             if(sets->contains(key)) {
-           itemString = sets->value(key, "fuck").toString();
-
-             QStringList itemList = itemString.split(',');
- //maybe it submenu?
-             item.name = itemList.at(0);
-             item.url= itemList.at(1);
-             if (itemList.count() == 3) {
-             item.time = QDateTime::fromString(itemList.at(2), DATE_FORMAT);
-             }
-             userMenu.append(item);
-         }
-         }
-
-     }
-     if (myLevel == "TOPLEVEL")
-topMenu = groups.indexOf(group);
-     //Done with menu
-    menu.append(userMenu);
-    menuNames.append(myName);
-    menuIDs.append(group);
-    sets->endGroup();
-}
-    makeHotlistsMenu();
-
-
-
-}
 
 void MainWindow::makeHotlistsMenu() {
-  MXBookmarkList mnu = menu.at(topMenu);
+QList<QTreeWidgetItem*> main;
 
-makeGroup(mnu);
-makeTree(mnu);
+main = hdata->treeData();
+QMenu *hotlists = menuData(main);
+connect (hotlists, SIGNAL(triggered(QAction*)), this, SLOT(onCustomMenuClicked(QAction*)));
+menuBar()->insertMenu(ui->menu_Tools->menuAction(), hotlists);
+ui->twHotlinks->addTopLevelItems(main);
+
 ui->txtHotlist->setText(op.hotlinkList);
 
   }
-void MainWindow::makeTree(const MXBookmarkList &list, QTreeWidgetItem *parent){
-     MXBookmark item;
-    const  QString folder = ":/icons/icons/open-folder.png";
-      const QString paper = ":/icons/icons/document-new.png";
-    if (parent ==0 )
-      {
-        MXBookmark top = list.at(topMenu);
-          parent = new QTreeWidgetItem (ui->twHotlinks, 0);
-         parent->setText(0,menuNames.at(topMenu));
-        parent->setIcon(0, QIcon (folder));
-        ui->twHotlinks->addTopLevelItem(parent);
-        ui->cbGroups->addItem(menuNames.at(topMenu), top.url);
 
-    }
-    foreach (item, list) {
-        if (item.name == "MENU") {
-            //recursive call makeGroup;
-            //get UserMenu by number
-            QString menuID = item.url;
-            if (menuID.startsWith("UserMenu")) { //"UserMenu" contains 8 symbols
-             QString menuNubmer = menuID.right(menuID.count() - 8);
-
-             int num = menuNubmer.toInt();
-
-
-             QTreeWidgetItem *Titem = new QTreeWidgetItem (parent, 0);
-             QString menuName = menuNames.at(num);
-             Titem->setText(0, menuName);
-             Titem->setIcon(0, QIcon(folder));
-             parent->addChild(Titem);
-             ui->cbGroups->addItem(menuName, menuID);
-
-             makeTree(menu.at(num), Titem);
-
-
-            }
-        }
- else {
-            //get a parent menu
-                QTreeWidgetItem *Titem = new QTreeWidgetItem (parent, 0);
-                Titem->setText(0,item.name);
-                Titem->setIcon(0, QIcon (paper));
-                parent->addChild(Titem);
-
-
-
-        }
-}
-    }
-
-
-void MainWindow::makeGroup(const MXBookmarkList &list, QMenu *parent){
-    MXBookmark item;
-
-    if (parent == 0) { //then parent = menuHotlists
-            parent = ui->menuHotlists;
-            //add a first-level point
-
-            QMenu *top = new QMenu (menuNames.at(topMenu), this);
-            parent->addMenu(top);
-            makeGroup(list, top);
-            return;
-    }
-    foreach (item, list) {
-        if (item.name == "MENU") {
-            //recursive call makeGroup;
-            //get UserMenu by number
-            QString menuID = item.url;
-            if (menuID.startsWith("UserMenu")) { //"UserMenu" contains 8 symbols
-             QString menuNubmer = menuID.right(menuID.count() - 8);
-
-             int num = menuNubmer.toInt();
-
-             //build a simple QMenu
-             QString menuName = menuNames.at(num);
-             QMenu *submenu = new QMenu (menuName, this);
-            parent->addMenu(submenu);
-             makeGroup(menu.at(num), submenu);
-
-
-            }
-
-
-        }
-        else {
-            //get a parent menu
-                QAction *userAction  = new QAction (item.name, this);
-                userAction->setStatusTip(item.url);
-
-                connect(userAction, SIGNAL(triggered()), this, SLOT (onCustomMenuClicked()));
-                //add item
-                parent->addAction(userAction);
-
-
-
-        }
-    }
+void MainWindow::onCustomMenuClicked(QAction *act) { //slot on custom menu triggered
+if (!act->statusTip().isEmpty())
+    openUrl(act->statusTip());
 
 }
 
-void MainWindow::onCustomMenuClicked() { //slot on custom menu triggered
-    QObject *obj = sender();
-    QAction *act = dynamic_cast<QAction*> (obj);
-    MXBookmark curItem = getItemByName(act->text());
-    openUrl(curItem.url);
-
-
-}
-
-    MXBookmark MainWindow::getItemByName(const QString &name) {
-    MXBookmarkList list; //foreach
-    MXBookmark item; //foreach
-    MXBookmark returnItem;
-    bool done = false;
-    foreach  (list,menu ) {
-    foreach (item, list) {
-        if (item.name == name) {
-            returnItem = item;
-            done = true;
-           return returnItem;
-        }
-
-    }
-    }
-    if (!done)
-       return  returnItem;
-
-
-     }
 
 
 void MainWindow::openUrl(QString url) {
@@ -523,7 +345,7 @@ void MainWindow::updateTimer() {
     time->update();
 }
 
-void MainWindow::closeEvent(QCloseEvent *e) {    
+void MainWindow::closeEvent(QCloseEvent *e) {
     saveMySettings();
    e->accept();
 
@@ -561,7 +383,6 @@ void MainWindow::onToolbarMenu(QPoint p) {
 void MainWindow::readSettings() {
     saveMySettings();
     //clean all toolbars and hostlists;
-    ui->menuHotlists->clear();
     ui->tbLocation->clear();
     ui->tbMosaic->clear();
     ui->tbWeb->clear();
@@ -839,7 +660,7 @@ if (!url.isEmpty()) {
        QObject::connect(cmLPixel, SIGNAL(triggered()), this, SLOT(onPixel()));
        cmLPixel->setStatusTip("");
        cmLink->addAction(cmLPixel);
-       
+
        cmLink->exec(w->mapToGlobal(p));
        return;
    }
@@ -917,8 +738,9 @@ QUrl MainWindow::guessUrlFromString(const QString &string)
 
 void MainWindow::on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-    MXBookmark bkm = getItemByName(item->text(column));
-    openUrl(bkm.url);
+   if (!item->text(1).isEmpty())
+       openUrl(item->text(1));
+
 }
 
 
@@ -1007,123 +829,40 @@ QString value;
 value.append(title + ",");
 value.append(url + ",");
 value.append(strt);
-stg.setValue("Item" + QString(last), value);
-stg.endGroup();
+stg.setValue("Item" + last, value);
 // re-read hotlinks
-readSettings();
 }
 
 
 void MainWindow::on_actHotlinkPropreties_triggered()
 {
-    //get hotlink id and/or parent hotlink id
-    if (ui->twHotlinks->currentItem()->childCount() > 0) //menu
-    {
-        QString menuID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->text(0), true);
         QStringList data;
-        data.append(ui->twHotlinks->currentItem()->text(0));
-
-        MXHotlinkProperties *p = new MXHotlinkProperties (this, true, data, ui->txtHotlist->text(), menuID);
-        if (p->exec() == QDialog::Accepted)
-            readSettings();
-
-    }
-    else {
-        QString menuID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->parent()->text(0), true);
-        QString itemID = core->getHotlinkID(op.hotlinkList, ui->twHotlinks->currentItem()->text(0), false, menuID);
-        QStringList data;
-        data.append(ui->twHotlinks->currentItem()->text(0));
-        MXBookmark item = getItemByName(ui->twHotlinks->currentItem()->text(0));
-        data.append(item.url);
-        data.append(item.time.toString(DATE_FORMAT));
-
-        MXHotlinkProperties *p = new MXHotlinkProperties (this, false, data, ui->txtHotlist->text(), menuID, itemID);
-        if (p->exec() == QDialog::Accepted)
-            readSettings();
-
-    }
+    QTreeWidgetItem *w = ui->twHotlinks->currentItem();
+    MXHotlinkProperties *pr;
+if (w->columnCount() == 1){
+    pr = new MXHotlinkProperties(this, true, false, QStringList(w->text(0)));
+}
+else {
+    data.append(w->text(0));
+    data.append(w->text(1));
+    data.append(w->text(2));
+  pr = new MXHotlinkProperties(this, false, false, data);
+  //здесь анпрямую подключаем
 
 }
-
+connect (pr, SIGNAL (onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onPropertiesChanged(QString,QString,QDateTime)));
+pr->exec();
+}
 void MainWindow::alphabetize(QTreeWidgetItem *parent ) {
 if (parent == 0) {parent = ui->twHotlinks->topLevelItem(0);}
 parent->sortChildren(0, Qt::AscendingOrder);
 //получаем группу  -  мы сохраняем имя группы (User MenuX) в menuIDS
 //гарантируется, что индексы menuIDS и menuNames совпадают
-int index = menuNames.indexOf(parent->text(0));
 
-makeHotlinkFile(menuIDs.at(index));
 readSettings();
 
 
 }
-
-QString MainWindow::makeHotlinkFile(QString group) { //возвращаю имя своей группы
-    QString fn = ui->txtHotlist->text();
-
-    QSettings stg (fn, QSettings::IniFormat, this);
-QStringList hotlinksKeys;
-QStringList values;
-QString key;
-QString v;
-QString myName, myType;
- stg.beginGroup(group);
- //получаем ключи
-hotlinksKeys = stg.allKeys();
-foreach (key, hotlinksKeys) {
-    if (key != "Menu_Name" && key != "Menu_Type") {
-    v = stg.value(key).toString();
-    //получаем значения и кидаем их в values
-    if (!v.startsWith("MENU")) {
-
-        values.append(v);
-    }
-    else { //получаем группу меню и рекурсивно вызываем себя
-QStringList value = v.split(",");
-QString gr = value.at(1);
-gr.insert(4, " "); //hack
-
-QString name = makeHotlinkFile(gr);
-values.append(name);
-    }
-}
-    else {
-        if (key == "Menu_Name")
-        {myName = stg.value(key).toString();}
-   else if (key == "Menu_Type")
-        {myType = stg.value(key).toString();}
-
-    }
-//удалим ключ
-    stg.remove(key);
-}
-
-//сортируем значения
-values.sort();
-int i;
-//теперь меняем значения в массиве values - с имени меню на строчку MENU,UserMenuX
-for (i = 0; i < menuNames.count(); ++i) {
-    //формируем значение для замены
-    QString after;
-   QString curID = menuIDs.at(i);
-after.append("MENU,");
-after.append(curID.replace(" ", ""));
-qDebug() << after;
-values.replaceInStrings(menuNames.at(i), after);
-
-}
-//сначала запишем имя, и если можно, тип
-if (!myName.isEmpty()) {stg.setValue("Menu_Name",myName);}
-if (!myType.isEmpty()) {stg.setValue("Menu_Type", myType);}
-//теперь запишем значения из values
-for (i =0; i < values.count(); ++i) {
-   QString k = "Item" + QVariant(i).toString();
-   stg.setValue(k, values.at(i));
-}
-//закрываем группу
-stg.endGroup();
-return myName;
-   }
 
 
 
@@ -1148,48 +887,9 @@ void MainWindow::on_txtHotlist_textChanged(QString )
 
 void MainWindow::on_actHotDelete_triggered()
 {
-      if (ui->twHotlinks->currentItem()->childCount() == 0) {
-        //get menu id
-        QString menuid = menuIDs.at(menuNames.indexOf(ui->twHotlinks->currentItem()->parent()->text(0)));
-        QString itemid = core->getHotlinkID(op.hotlinkList,ui->twHotlinks->currentItem()->text(0), false, menuid);
-        QSettings stg (op.hotlinkList, QSettings::IniFormat, this);
-        stg.beginGroup(menuid);
-        stg.remove(itemid);
-        //проверяем ключи
-        QStringList keys = stg.allKeys();
-     int i = 0; //счетчик индексов
-     QString key;
-     foreach (key, keys) {
-         if (!key.startsWith("Item")) {continue;}
-         //обработка
-         if (!stg.contains("Item" + QString (i))) {
-         //сдвигаем все ключи и выходим
-             for (;;) {
-                 //value
-                 ++i;
-                 if (!stg.contains("Item" + QString (i))) {break;}
-                 QString currentValue = stg.value("Item" + QString(i)).toString();
-                 //сдвигаем ключ на -1 позицию
-                 stg.remove("Item" + QVariant(i).toString());
-                 stg.setValue("Item" +QVariant (i-1).toString(), currentValue);
-
-             }
-         }
-
-     }
 
 
-    }
-    else {
-                QString menuid = menuIDs.at(menuNames.indexOf(ui->twHotlinks->currentItem()->text(0)));
-                 QSettings stg (op.hotlinkList, QSettings::IniFormat, this);
-        stg.beginGroup(menuid);
-        stg.remove("");
 
-        stg.endGroup();
-        /*!
-TODO! сдвиг групп */
-}
 }
 
 void MainWindow::on_actOpen_triggered()
@@ -1370,3 +1070,143 @@ void MainWindow::createOtherMenus() {
     //hotlist manager coming soon
 
 }
+
+void MainWindow::on_actSrcFont_triggered()
+{
+    QFontDialog dlg (this);
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, op.srcFont, this);
+    if (ok) {
+        ui->txtSource->setFont(font);
+        core->writeSetting("SrcFont", "Options", font, op.tbConfig);
+
+    }
+}
+void MainWindow::createManager() {
+    //set a font for source manager
+    ui->txtSource->setFont(op.srcFont);
+}
+
+void MainWindow::on_actAbout_triggered()
+{
+AboutDialog *ab = new AboutDialog (this);
+ab->exec();
+
+}
+QMenu* MainWindow::menuData(QList<QTreeWidgetItem*> wd) {
+    /*!
+       эта функция просто принимает результаты treeData и конвертирует их в QMenu
+
+       */
+
+    QMenu *menu = new QMenu (tr("Hotl&ists"), this);
+   wd = hdata->treeData();
+   foreach (QTreeWidgetItem *w, wd) {
+    //set TOP-LEVEL menu
+    QMenu *toplevel = new QMenu (w->text(0),this);
+    ui->cbGroups->addItem(w->text(0));
+    for (int i = 0; i < w->childCount(); ++i) {
+        QMenu *mnu = new QMenu (w->child(i)->text(0),this);
+        if (w->child(i)->childCount() != 0) { //menu
+            makeMenu(mnu, w->child(i));
+            toplevel->addMenu(mnu);
+            ui->cbGroups->addItem(w->child(i)->text(0));
+        }
+        else {
+            QAction *act = new QAction(this);
+           act->setText(w->child(i)->text(0));
+           act->setStatusTip(w->child(i)->text(1));
+           toplevel->addAction(act);
+        }
+        }
+    menu->addMenu(toplevel);
+}
+    }
+
+
+void MainWindow::makeMenu(QMenu* menu, QTreeWidgetItem *item) {
+
+
+    for(int i = 0; i < item->childCount();++i) {
+        if (item->child(i)->childCount() != 0) {
+                    QMenu *mnu = new QMenu (menu);
+            mnu->setTitle(item->child(i)->text(0));
+            makeMenu(mnu, item->child(i));
+            menu->addMenu(mnu);
+            ui->cbGroups->addItem(item->child(i)->text(0));
+        }
+        else {
+            QAction *act = new QAction(menu);
+           act->setText(item->child(i)->text(0));
+           act->setStatusTip(item->child(i)->text(1));
+           menu->addAction(act);
+        }
+        }
+
+}
+void MainWindow::onHLProperties(QString title, QString url, QDateTime  date, int status) {
+
+    QString oldname = ui->twHotlinks->currentItem()->text(0);
+    if  (status == Folder) {
+        if (status == Folder | Change) {
+if(oldname != title) {
+    hdata->renameTable(oldname, title);
+    ui->twHotlinks->currentItem()->setText(0, title);
+} }
+else if (status == Folder | Create){
+
+   /*QMenu *menu = hdata->addFolder(title);
+ folderCreated(menu);*/
+
+}
+    }
+
+else {
+    if (status == Item | Change) {
+        hdata->updateHotlink(oldname, title, url, date);
+        ui->twHotlinks->currentItem()->setText(0, title);
+        ui->twHotlinks->currentItem()->setText (1, url);
+        ui->twHotlinks->currentItem()->setText(2, date.toString(DATE_FORMAT));
+
+    }
+    if (status == Item | Create)
+    {
+QStringList list;
+list << title << url << date.toString(DATE_FORMAT);
+QTreeWidgetItem *parent;
+if (ui->twHotlinks->currentItem()->columnCount() == 1)
+    parent = ui->twHotlinks->currentItem();
+else
+    parent = ui->twHotlinks->currentItem()->parent();
+QAction *act =hdata->addHotlink(parent->text(0), list);
+ hotlinkCreated(act, title, url, date);
+
+    }
+
+}
+}
+
+
+void MainWindow::folderCreated(QMenu *menu) {
+    if (menu) {
+        bool np;
+        QTreeWidgetItem *parent;
+        if(ui->twHotlinks->currentItem() == 0){
+            //add a first-level item
+
+        }
+if (ui->twHotlinks->currentItem()->columnCount() == 1){
+    parent = ui->twHotlinks->currentItem();
+}
+else {
+    parent = ui->twHotlinks->currentItem()->parent();
+    }
+
+QTreeWidgetItem *current = new QTreeWidgetItem(parent);
+if (np) { //если родитель нативен
+
+}
+    }
+}
+void MainWindow::hotlinkCreated(QAction *act, QString title, QString url, QDateTime date) {}
+
