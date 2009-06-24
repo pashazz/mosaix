@@ -49,9 +49,10 @@ int st;
 }
     else{
        m_ui->txtTitle->setText(  m_ui->txtTitle->text().replace(" ", "_"));
+       m_ui->txtTitle->setText(m_ui->txtTitle->text().replace(QRegExp("_TOP$"), ""));
 st += Folder;
 if (isCreate) {st += Create;} else {st+=Change;}
-qDebug() << m_ui->txtTitle->text() << m_ui->txtURL->text();
+
    emit onSavingProperties( m_ui->txtTitle->text(), m_ui->txtURL->text(), d, st);
 
    close();
