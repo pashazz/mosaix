@@ -17,8 +17,8 @@ class HotlinkData: public QObject
 public:
     HotlinkData(QString fileName);
     ~HotlinkData();
-    QMenu insertFolder(QString parentName,QString after,QString title); //добавлять hotlink будем ДО объекта с именем after
-    QAction insertHotlink(QString parentName,QString after,const QStringList &htl);
+    QMenu* insertFolder(QString parentName,QString after,QString title); //добавлять hotlink будем ДО объекта с именем after
+    QAction* insertHotlink(QString parentName,QStringList links, QStringList htl);
     void remove (QString title, bool isFolder);
     void alphabetize(QString folderName);
     void alphabetize(); //for all
@@ -26,20 +26,20 @@ public:
     bool updateTimestamp(); //for all
     QMenu* addFolder(QString parentname,QString title);
     QAction* addHotlink (QString parentName, const QStringList &htl); //добавляем hotlink в конец списка
-    void deleteHotlink (QString title);
-    void deleteFolder(QString title);
+    bool deleteHotlink (QString parentname, QString title);
+    bool deleteFolder(QString title);
     QList<QTreeWidgetItem*> treeData();
     QString fileName();
     void setFileName(QString file);
-        void updateHotlink(QString oldname, QString name, QString url, QDateTime date);
+    bool updateHotlink(QString parentname,QString oldname, QString name, QString url, QDateTime date);
     void renameTable (QString oldname, QString newname);
-
-
+    void sort(QStringList links, QString parentName, bool recursive = true);
     private:
     QString dbfile;
     void makeTable(QTreeWidgetItem *parent, QString tableName);
     QString workstr (QString s) {s = s.replace(" ", "_");return s;}
     QString printable(QString s) {s = s.replace("_", " ");return s;}
+    QString patable (QString parentname);
 
 
     };

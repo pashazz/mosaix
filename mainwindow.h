@@ -109,7 +109,6 @@ private:
     //Hotlinks variables and functions
 
     void makeHotlistsMenu();
-    void alphabetize(QTreeWidgetItem *parent = 0);
     void createOtherMenus();
 
     QMenu* getMenuForItem (int index);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>723</width>
-    <height>634</height>
+    <width>727</width>
+    <height>638</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,7 +17,7 @@
    <string>MosaiX 0.1-dev - by NCSA Mosaic 3.0</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset>
     <normaloff>:/icons/icons/logo.png</normaloff>:/icons/icons/logo.png</iconset>
   </property>
   <property name="whatsThis">
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>723</width>
+     <width>727</width>
      <height>19</height>
     </rect>
    </property>
@@ -321,7 +321,7 @@
        </widget>
        <widget class="QWidget" name="tbSource">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/document-new.png</normaloff>:/icons/icons/document-new.png</iconset>
         </attribute>
         <attribute name="title">
@@ -476,7 +476,7 @@
        </widget>
        <widget class="QWidget" name="tabNews">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
         </attribute>
         <attribute name="title">
@@ -489,7 +489,7 @@
        </widget>
        <widget class="QWidget" name="tabHelo">
         <attribute name="icon">
-         <iconset resource="icons.qrc">
+         <iconset>
           <normaloff>:/icons/icons/help.png</normaloff>:/icons/icons/help.png</iconset>
         </attribute>
         <attribute name="title">
@@ -526,7 +526,7 @@
   </widget>
   <action name="actOpen">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/open.png</normaloff>:/icons/icons/open.png</iconset>
    </property>
    <property name="text">
@@ -555,7 +555,7 @@
   </action>
   <action name="actSave">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -578,7 +578,7 @@
   </action>
   <action name="actPrint">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/print.png</normaloff>:/icons/icons/print.png</iconset>
    </property>
    <property name="text">
@@ -593,7 +593,7 @@
   </action>
   <action name="actPrintPr">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/preview.png</normaloff>:/icons/icons/preview.png</iconset>
    </property>
    <property name="text">
@@ -621,7 +621,7 @@
   </action>
   <action name="actCopy">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
    </property>
    <property name="text">
@@ -636,7 +636,7 @@
   </action>
   <action name="actPaste">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/edit.png</normaloff>:/icons/icons/edit.png</iconset>
    </property>
    <property name="text">
@@ -651,7 +651,7 @@
   </action>
   <action name="actFind">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/search.png</normaloff>:/icons/icons/search.png</iconset>
    </property>
    <property name="text">
@@ -759,7 +759,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/manager.png</normaloff>:/icons/icons/manager.png</iconset>
    </property>
    <property name="text">
@@ -929,7 +929,7 @@
   </action>
   <action name="actBack">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/back.png</normaloff>:/icons/icons/back.png</iconset>
    </property>
    <property name="text">
@@ -944,7 +944,7 @@
   </action>
   <action name="actForward">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/next.png</normaloff>:/icons/icons/next.png</iconset>
    </property>
    <property name="text">
@@ -959,7 +959,7 @@
   </action>
   <action name="actReload">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/view-refresh.png</normaloff>:/icons/icons/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -995,7 +995,7 @@
   </action>
   <action name="actNews">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/news.png</normaloff>:/icons/icons/news.png</iconset>
    </property>
    <property name="text">
@@ -1013,7 +1013,7 @@
   </action>
   <action name="actMail">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/newmsg.png</normaloff>:/icons/icons/newmsg.png</iconset>
    </property>
    <property name="text">
@@ -1036,7 +1036,7 @@
   </action>
   <action name="actHome">
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/home.png</normaloff>:/icons/icons/home.png</iconset>
    </property>
    <property name="text">
@@ -1135,6 +1135,9 @@
    <property name="text">
     <string>&amp;Delete</string>
    </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
   </action>
   <action name="actSrcFont">
    <property name="text">
@@ -1174,6 +1177,157 @@
     <string>Cache Preference Page</string>
    </property>
   </action>
+  <action name="actInsItem">
+   <property name="text">
+    <string>Insert New &amp;Item...</string>
+   </property>
+   <property name="statusTip">
+    <string>Inserts a new hotlist item (URL and Title)</string>
+   </property>
+  </action>
+  <action name="actInsFld">
+   <property name="text">
+    <string>Insert New Folder...</string>
+   </property>
+   <property name="statusTip">
+    <string>Inserts a new Folder</string>
+   </property>
+  </action>
+  <action name="actHotStart">
+   <property name="text">
+    <string>Open on Startu&amp;p</string>
+   </property>
+  </action>
+  <action name="actHotMenu">
+   <property name="text">
+    <string>On &amp;Menu Bar</string>
+   </property>
+   <property name="statusTip">
+    <string>Creates a menu bar entry in the main Mosaix window</string>
+   </property>
+  </action>
+  <action name="actOneRoot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>One Root</string>
+   </property>
+   <property name="toolTip">
+    <string>One &amp;Root</string>
+   </property>
+   <property name="statusTip">
+    <string>Displays hotlists on the menu under one menu item</string>
+   </property>
+  </action>
+  <action name="actHotFont">
+   <property name="text">
+    <string>Change &amp;Font...</string>
+   </property>
+  </action>
+  <action name="actOpenFolders">
+   <property name="text">
+    <string>&amp;Open All Folders</string>
+   </property>
+   <property name="statusTip">
+    <string>Open all hotlist folders</string>
+   </property>
+  </action>
+  <action name="action_Close_All_Folders">
+   <property name="text">
+    <string>&amp;Close All Folders</string>
+   </property>
+   <property name="statusTip">
+    <string>Close All Hotlist Folders</string>
+   </property>
+  </action>
+  <action name="actAlphFolder">
+   <property name="text">
+    <string>&amp;Folder</string>
+   </property>
+   <property name="statusTip">
+    <string>Alphabetize the items within selected folder</string>
+   </property>
+  </action>
+  <action name="actAlphAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Alphabetize all items in all folders</string>
+   </property>
+  </action>
+  <action name="actASFolder">
+   <property name="text">
+    <string>&amp;Folder</string>
+   </property>
+   <property name="statusTip">
+    <string>Automatically load all pages in the selected folder</string>
+   </property>
+  </action>
+  <action name="actASAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Automatically load all pages in all folders</string>
+   </property>
+  </action>
+  <action name="actTimeFolder">
+   <property name="text">
+    <string>&amp;Folder</string>
+   </property>
+  </action>
+  <action name="actTImeAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Load a previous session.</string>
+   </property>
+  </action>
+  <action name="actWNewFolder">
+   <property name="text">
+    <string>&amp;Folder</string>
+   </property>
+  </action>
+  <action name="actWNewAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>The Hotlist Manager will determine what pages have changed </string>
+   </property>
+  </action>
+  <action name="actNewSinceFolder">
+   <property name="text">
+    <string>&amp;Folder</string>
+   </property>
+   <property name="statusTip">
+    <string>What`s new since a given date for the selected folder?</string>
+   </property>
+  </action>
+  <action name="actNewSinceAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>What`s new since a given date for the entire hotlist?</string>
+   </property>
+  </action>
+  <action name="actRemoveEmpty">
+   <property name="text">
+    <string>&amp;Remove Items That Don`t Exist</string>
+   </property>
+  </action>
+  <action name="actNewHotlist">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="whatsThis">
+    <string>Creates a Emty Hotlist.</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1183,8 +1337,6 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

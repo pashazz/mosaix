@@ -95,12 +95,10 @@ ui->txtSource->setFont(op.srcFont);
                wv.append("Server 2003");    break;
        case QSysInfo::WV_VISTA:
                wv.append("Vista");  break;
-       case QSysInfo::WV_WINDOWS7
+       case QSysInfo::WV_WINDOWS7:
                wv.append("7");      break;
        case QSysInfo::WV_CE:
-    void makeGroup(const MXBookmarkList &list,  QMenu *parent = 0);
-    void makeTree(const MXBookmarkList &list, QTreeWidgetItem *treeParent = 0);
-           wv.append("CE");         break;
+        wv.append("CE");         break;
        case QSysInfo::WV_CENET:
            vw.append("CE .NET");    break;
        case QSysInfo::WV_CE_5:
@@ -781,8 +779,23 @@ foreach (group, groups) {
 
 void MainWindow::on_actAdd2hot_triggered()
 {
-
+QString parentname = ui->cbGroups->currentText();
+QStringList lst;
+lst<< ui->webView->title();
+lst<<ui->webView->url().toString();
+lst << QDateTime::currentDateTime().toString(DATE_FORMAT);
+QAction *act = hdata->addHotlink(parentname, lst);
+if (act){
+QTreeWidgetItem *w  = new QTreeWidgetItem (0);
+w->setText(0, lst.at(0));
+w->setText(1, lst.at(1));
+w->setText(2, lst.at(2));
+w->setIcon(0, QIcon(ITEM));
+QTreeWidgetItem *parent = ui->twHotlinks->findItems(parentname, Qt::MatchFixedString).at(0);
+parent->addChild(w);
 }
+}
+
 
 
 void MainWindow::on_actHotlinkPropreties_triggered()
@@ -804,23 +817,23 @@ else {
 connect (pr, SIGNAL (onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onHLProperties(QString,QString,QDateTime,int)));
 pr->exec();
 }
-void MainWindow::alphabetize(QTreeWidgetItem *parent ) {
-if (parent == 0) {parent = ui->twHotlinks->topLevelItem(0);}
-parent->sortChildren(0, Qt::AscendingOrder);
-//получаем группу  -  мы сохраняем имя группы (User MenuX) в menuIDS
-//гарантируется, что индексы menuIDS и menuNames совпадают
-
-readSettings();
-
-
-}
 
 
 
 void MainWindow::on_actAlphabet_triggered()
 {
 
-  alphabetize();
+QTreeWidgetItem *it;
+if (ui->twHotlinks->columnCount() == 1)
+it= ui->twHotlinks->currentItem();
+else
+    it = ui->twHotlinks->currentItem()->parent();
+it->sortChildren(0, Qt::AscendingOrder);
+QStringList list;
+for (int i =0; i < it->childCount(); ++i) {
+    list << it->child(i)->text(0);
+}
+hdata->sort(list, it->text(0));
 }
 
 void MainWindow::on_twHotlinks_customContextMenuRequested(QPoint pos)
@@ -838,9 +851,19 @@ void MainWindow::on_txtHotlist_textChanged(QString )
 
 void MainWindow::on_actHotDelete_triggered()
 {
-
-
-
+    bool res;
+QTreeWidgetItem *w = ui->twHotlinks->currentItem();
+if (w->columnCount() == 1) {
+ res =   hdata->deleteFolder(w->text (0));
+}
+else {
+  res =  hdata->deleteHotlink(w->parent()->text(0), w->text(0));
+}
+if(res){
+QList <QTreeWidgetItem*> items = ui->twHotlinks->findItems(w->text(0), Qt::MatchRecursive);
+foreach (QTreeWidgetItem *it, items)
+    it->parent()->removeChild(it);
+}
 }
 
 void MainWindow::on_actOpen_triggered()
@@ -1118,11 +1141,14 @@ else if (status == Folder + Create){
 
 else {
     if (status == Item+ Change) {
-        hdata->updateHotlink(oldname, title, url, date);
+        //parent
+        QTreeWidgetItem *parent = ui->twHotlinks->currentItem()->parent();
+      bool res=   hdata->updateHotlink(parent->text(0),oldname, title, url, date);
+      if(res) {
         ui->twHotlinks->currentItem()->setText(0, title);
         ui->twHotlinks->currentItem()->setText (1, url);
         ui->twHotlinks->currentItem()->setText(2, date.toString(DATE_FORMAT));
-
+    }
     }
     if (status == Item + Create)
     {
