@@ -12,6 +12,8 @@
 #include "mxdownloadinterface.h"
 #include "aboutdialog.h"
 #include "hotlink.h"
+#include "webpage.h"
+#include "webhistory.h"
 
 namespace Ui
 {
@@ -142,14 +144,10 @@ private:
     QMenu *hstManager;
     HotlinkData *hdata;
     //current webpage
-    QWebPage *currentPage;
-    QString linkUrl;
-    QWebHitTestResult r;
     QStringList tabs;
     QList <MXDownloadInterface *> plugins;
-    QNetworkAccessManager *netmgr;
-    QNetworkDiskCache *cache;
-    QNetworkProxy *proxy;
+    WebPage *page;
+    WebHistory *history;
     //actions
     QAction *spawn; //spawn mosaic
     QAction *info; //header information
@@ -169,7 +167,7 @@ private:
     QMenu* getMenuByTitle (QMenu *parent,QString title);
     void makeOneRootMenu(QList<QTreeWidgetItem*> wd);
     QTreeWidgetItem* gp ();
-
+QWebHitTestResult *r;
 };
 
 #endif // MAINWINDOW_H

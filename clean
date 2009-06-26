@@ -4,3 +4,4 @@ rm mosaix
 find ./ -path "./*~" -delete
 find ./ -path "./*Makefile*" -delete
 rm -rf qtc-gdbmacros
+rm ui_*

@@ -579,7 +579,6 @@ void MainWindow::onStarted() {
     stop->setEnabled(true);
     ui->actStopTransf->setEnabled(true);
     progress->setEnabled(true);
-    currentPage = 0;
     }
 
 void MainWindow::onFinished(bool good) {
@@ -587,7 +586,6 @@ void MainWindow::onFinished(bool good) {
     stop->setEnabled(false);
        ui->actStopTransf->setEnabled(false);
     progress->setEnabled(false);
-    currentPage = ui->webView->page();
     //get source
 ui->txtSource->setPlainText(ui->webView->page()->mainFrame()->toHtml());
 }
@@ -639,9 +637,8 @@ cmLink  =new QMenu (this);
 void MainWindow::onBrowserMenu(QPoint p) {
 
    QWidget* w = static_cast<QWidget*>(QObject::sender());
-
-r =  ui->webView->page()->mainFrame()->hitTestContent(p);
-QUrl url = r.linkUrl();
+r = new QWebHitTestResult();
+QUrl url = r->linkUrl();
 if (!url.isEmpty()) {
        QMenu *cmLink = new QMenu(this);
        cmLink->addAction(ui->actCopy);
@@ -1027,13 +1024,10 @@ default:
 }
 
     void MainWindow::initMgr() {
-//network acess manager coming soon
-cache = new QNetworkDiskCache (this);
-cache->setCacheDirectory(op.cacheDir);
-cache->setMaximumCacheSize(op.cacheLimit);
-netmgr = new QNetworkAccessManager (this);
-netmgr->setCache(cache);
-ui->webView->page()->setNetworkAccessManager(netmgr);
+        page = new WebPage (this, op.downloadDir);
+//set my page
+       ui->webView->setPage(page);
+ //set history
 
 
     }

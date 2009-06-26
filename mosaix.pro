@@ -15,7 +15,15 @@ SOURCES += main.cpp \
     sqliteworker.cpp \
     mxinput.cpp \
     aboutdialog.cpp \
-    hotlink.cpp
+    hotlink.cpp \
+    networkdiskcache.cpp \
+    networkcookiejar.cpp \
+    networkaccessmanager.cpp \
+    authenticationdialog.cpp \
+    webpage.cpp \
+    webhistoryitem.cpp \
+    webhistory.cpp \
+
 HEADERS += mainwindow.h \
     mxloader.h \
     config.h \
@@ -27,10 +35,18 @@ HEADERS += mainwindow.h \
     sqliteworker.h \
     mxinput.h \
     aboutdialog.h \
-    hotlink.h
+    hotlink.h \
+    networkdiskcache.h \
+    networkcookiejar.h \
+    networkaccessmanager.h \
+    authenticationdialog.h \
+    webpage.h \
+    webhistoryitem.h \
+    webhistory.h \
 FORMS += mainwindow.ui \
     mxbuttonconf.ui \
     mxhtlprop.ui \
     mxinput.ui \
-    aboutdialog.ui
+    aboutdialog.ui \
+    authenticationdialog.ui
 RESOURCES += icons.qrc
