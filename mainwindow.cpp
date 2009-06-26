@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), core (new MXCoreMethods)
 {
     load();
-  hdata = new HotlinkData(op.hotlinkList);
+  hdata = new HotlinkData(op.hotlinkList, this);
 
     ui->setupUi(this);
     createWindow();
@@ -1080,7 +1080,7 @@ ui->actExpandAll->setEnabled(false);
     edit->addAction(ui->actHotDelete);
     ui->actInsItem->setEnabled(false);
     edit->addAction(ui->actInsItem);
-    ui->actInsFld->setEnabled(false);
+   // ui->actInsFld->setEnabled(false); - а как же создание корня?
     edit->addAction(ui->actInsFld);
     edit->addSeparator();
     hotManager->addMenu(edit);
@@ -1229,6 +1229,8 @@ QTreeWidgetItem *parent;
     it->setIcon(0,QIcon(FOLDER));
     it->setText(0, title);
     ui->twHotlinks->insertTopLevelItem(0,it);
+    QMenu *menu =new QMenu (title, this);
+    hotlists->addMenu(menu);
     return;}
 
 }
@@ -1248,7 +1250,6 @@ if(oldname != title) {
 }
 
 else if (status == Folder + Create){
-QMenu menu;
 
     QTreeWidgetItem *it = new QTreeWidgetItem (parent);
     it->setIcon(0,QIcon(FOLDER));
@@ -1258,15 +1259,17 @@ QMenu menu;
     } else{   //если на папке щелкнул
         parent->insertChild(0 , it);
     }
-  QMenu *add =  hdata->insertFolder(parent->text(0), collectItems(parent), title);
+  hdata->insertFolder(parent->text(0), collectItems(parent), title);
   if (op.hOnMenu) {
 QMenu *mnu = getMenuByTitle(0, parent->text(0));
-if (mnu != 0)
-mnu->addMenu(add);
+if (mnu != 0){
+QMenu *menu = new QMenu(title, this);
+mnu->addMenu(menu);}
 else
-    qDebug() << tr("mosaix: pointer error.");
+{qDebug() << tr("mosaix: pointer error.");}
 }
 }
+
 else {
     if (status == Item+ Change) {
         //parent
@@ -1295,11 +1298,14 @@ QStringList links = collectItems(parent);
 QStringList list;
 list << title << url << date.toString(DATE_FORMAT);
 
-QAction *act =hdata->insertHotlink(parent->text(0),links,list);
+hdata->insertHotlink(parent->text(0),links,list);
+QAction *act = new QAction (this);
+act->setStatusTip(url);
+act->setText(title);
 if (op.hOnMenu) {
 QMenu *mnu = getMenuByTitle(0, parent->text(0));
 if (mnu != 0)
-/*mnu->addAction(act);*/;
+mnu->addAction(act);
 else
     qDebug() << tr("mosaix: pointer error.");
 }
@@ -1423,4 +1429,11 @@ void MainWindow::on_actHotFont_triggered()
 
 
     }
+}
+
+void MainWindow::on_actInsFld_triggered()
+{
+     MXHotlinkProperties *pr =  new MXHotlinkProperties(this, true, true, QStringList());
+    connect (pr, SIGNAL(onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onHLProperties(QString,QString,QDateTime,int)));
+    pr->exec();
 }

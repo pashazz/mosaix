@@ -15,7 +15,7 @@ class HotlinkData: public QObject
 {
     Q_PROPERTY (QString fileName READ fileName WRITE setFileName)
 public:
-    HotlinkData(QString fileName);
+    HotlinkData(QString fileName, QWidget *parent);
     ~HotlinkData();
     QMenu* insertFolder(QString parentName,QStringList links,QString title); //добавлять hotlink будем ДО объекта с именем after
     QAction* insertHotlink(QString parentName,QStringList links, QStringList htl);
@@ -40,7 +40,7 @@ public:
     QString workstr (QString s) {s = s.replace(" ", "_");return s;}
     QString printable(QString s) {s = s.replace("_", " ");return s;}
     QString patable (QString parentname);
-
+    QWidget *p;
 
     };
 

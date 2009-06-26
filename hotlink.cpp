@@ -1,8 +1,8 @@
 #include "hotlink.h"
 #include  <QtDebug>
 
-HotlinkData::HotlinkData(QString fileName)
-        : dbfile(fileName)
+HotlinkData::HotlinkData(QString fileName, QWidget *parent)
+        : dbfile(fileName), p(parent)
 
 {
     //open new connection
@@ -11,6 +11,7 @@ HotlinkData::HotlinkData(QString fileName)
         return;
 
    }
+       //init parent
        QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
        db.setDatabaseName(fileName);
        if(db.open()){
@@ -84,9 +85,10 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
     }
         else {
           //menu
-            makeTable(myItem, name);
+
             myItem->setIcon(0, QIcon(folder));
             parent->addChild(myItem);
+            makeTable(myItem, name);
         }
     }
 
@@ -111,7 +113,7 @@ QAction* HotlinkData::addHotlink(QString parentName, const QStringList  &htl) {
    bool good = q.exec();
    if (good) {
        qDebug() <<"mosaix: Query done, no errors - " + htl.at(0);
-       QAction *act = new QAction(htl.at(1), this);
+       QAction *act = new QAction(htl.at(1), p);
        act->setStatusTip(htl.at(2));
        act->setText(htl.at(0));
        return act;
@@ -172,7 +174,8 @@ parentname = workstr(parentname);
    QString ptable = patable(parentname);
 
      if (parentname.isEmpty()) {title.append("_TOP");}
-   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PIMARY KEY, name TEXT, url TEXT, date TEXT)", db);
+   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER)", db);
+ qDebug() << "Errors: "+ q.lastError().text();
    if (!parentname.isEmpty()) {
       QSqlQuery query;
       title = workstr(title);
@@ -183,7 +186,7 @@ q.bindValue(":date", "N/A");
 
 if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + q.executedQuery();}
    }
-   QMenu *menu = new QMenu (printable(title), 0);
+   QMenu *menu = new QMenu (printable(title),p );
    return menu;
 }
 bool HotlinkData::deleteHotlink(QString parentname,QString title) {

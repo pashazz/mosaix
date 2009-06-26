@@ -68,7 +68,7 @@
     <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nGCRpG624r,guid=4f5e5c7378497d7d6ea350cf4a447e79</value>
     <value type="QString" >DESKTOP_SESSION=KDE-4</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0</value>
+    <value type="QString" >DISPLAY=:0.0</value>
     <value type="QString" >DM_CONTROL=/var/run/xdmctl</value>
     <value type="QString" >EDITOR=/bin/nano</value>
     <value type="QString" >GCC_SPECS=</value>
@@ -142,7 +142,7 @@
     <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nGCRpG624r,guid=4f5e5c7378497d7d6ea350cf4a447e79</value>
     <value type="QString" >DESKTOP_SESSION=KDE-4</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0</value>
+    <value type="QString" >DISPLAY=:0.0</value>
     <value type="QString" >DM_CONTROL=/var/run/xdmctl</value>
     <value type="QString" >EDITOR=/bin/nano</value>
     <value type="QString" >GCC_SPECS=</value>

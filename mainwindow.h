@@ -38,6 +38,7 @@ public:
 
 private slots:
 
+void on_actInsFld_triggered();
 void on_actHotFont_triggered();
 void on_actInsItem_triggered();
 void on_twHotlinks_itemSelectionChanged();
