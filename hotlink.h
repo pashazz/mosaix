@@ -17,7 +17,7 @@ class HotlinkData: public QObject
 public:
     HotlinkData(QString fileName);
     ~HotlinkData();
-    QMenu* insertFolder(QString parentName,QString after,QString title); //добавлять hotlink будем ДО объекта с именем after
+    QMenu* insertFolder(QString parentName,QStringList links,QString title); //добавлять hotlink будем ДО объекта с именем after
     QAction* insertHotlink(QString parentName,QStringList links, QStringList htl);
     void remove (QString title, bool isFolder);
     void alphabetize(QString folderName);

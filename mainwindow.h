@@ -36,6 +36,13 @@ public:
 
 private slots:
 
+void on_actHotFont_triggered();
+void on_actInsItem_triggered();
+void on_twHotlinks_itemSelectionChanged();
+void on_twHotlinks_itemActivated(QTreeWidgetItem* item, int column);
+void on_actOneRoot_triggered(bool checked);
+void on_actHotMenu_triggered(bool checked);
+void on_actHotStart_triggered(bool checked);
 void on_actAbout_triggered();
 void on_actSrcFont_triggered();
 void on_cmdSourceSave_clicked();
@@ -129,8 +136,10 @@ private:
     QMenu *cmLink;
     QMenu *cmHotTree;
     QMenu *srcManager;
-    QMenu *cacheManager;
     QProgressBar *progress;
+    QMenu *cacheManager;
+    QMenu *hotManager;
+    QMenu *hstManager;
     HotlinkData *hdata;
     //current webpage
     QWebPage *currentPage;
@@ -150,15 +159,16 @@ private:
     QAction *add2hot;
     QAction *pixel;
     QToolBar *hotBar;
+    QMenu *hotlists;
     int curIndex;
     protected:
     void closeEvent(QCloseEvent *e);
     void changeEvent(QEvent *e);
     void loadPlugins();
-
-    void folderCreated (QMenu*);
-void hotlinkCreated (QAction*, QString, QString, QDateTime);
-
+    QStringList collectItems (QTreeWidgetItem *parent);
+    QMenu* getMenuByTitle (QMenu *parent,QString title);
+    void makeOneRootMenu(QList<QTreeWidgetItem*> wd);
+    QTreeWidgetItem* gp ();
 
 };
 

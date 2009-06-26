@@ -11,6 +11,7 @@ const int Item = 10;
 const int Create = 20;
 const int Change = 50;
 
+
 namespace Ui {
     class MXHotlinkProperties;
 }

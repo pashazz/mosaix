@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>638</height>
+    <width>735</width>
+    <height>646</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>727</width>
+     <width>735</width>
      <height>19</height>
     </rect>
    </property>
@@ -94,18 +94,6 @@
     <addaction name="actFindNext"/>
     <addaction name="separator"/>
     <addaction name="actSelectAll"/>
-   </widget>
-   <widget class="QMenu" name="mnuHistory">
-    <property name="title">
-     <string>History M&amp;anager</string>
-    </property>
-    <addaction name="actExpandAll"/>
-    <addaction name="actCloseAll"/>
-    <addaction name="separator"/>
-    <addaction name="actLoadSession"/>
-    <addaction name="actSaveSession"/>
-    <addaction name="separator"/>
-    <addaction name="actHMPrefs"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -177,7 +165,6 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
-   <addaction name="mnuHistory"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Navigate"/>
    <addaction name="menu_Tools"/>
@@ -1194,11 +1181,17 @@
    </property>
   </action>
   <action name="actHotStart">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Open on Startu&amp;p</string>
    </property>
   </action>
   <action name="actHotMenu">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>On &amp;Menu Bar</string>
    </property>
@@ -1233,7 +1226,7 @@
     <string>Open all hotlist folders</string>
    </property>
   </action>
-  <action name="action_Close_All_Folders">
+  <action name="actHotCloseFolders">
    <property name="text">
     <string>&amp;Close All Folders</string>
    </property>
@@ -1278,7 +1271,7 @@
     <string>&amp;Folder</string>
    </property>
   </action>
-  <action name="actTImeAll">
+  <action name="actTimeAll">
    <property name="text">
     <string>&amp;All</string>
    </property>
@@ -1320,12 +1313,33 @@
     <string>&amp;Remove Items That Don`t Exist</string>
    </property>
   </action>
-  <action name="actNewHotlist">
+  <action name="actHotNew">
    <property name="text">
     <string>&amp;New</string>
    </property>
    <property name="whatsThis">
     <string>Creates a Emty Hotlist.</string>
+   </property>
+  </action>
+  <action name="actHotOpen">
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+   <property name="statusTip">
+    <string>Opens a existing Hotllist file.</string>
+   </property>
+  </action>
+  <action name="actHotSave">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the current hotlist to a hotfile</string>
+   </property>
+  </action>
+  <action name="actHotSaveAs">
+   <property name="text">
+    <string>Save &amp;As...</string>
    </property>
   </action>
  </widget>

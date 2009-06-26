@@ -6,7 +6,11 @@ MXHotlinkProperties::MXHotlinkProperties(QWidget *parent, bool isFolder, bool cr
     m_ui(new Ui::MXHotlinkProperties), folder (isFolder), isCreate(create)
 {
     m_ui->setupUi(this);
+    if (!create)
     m_ui->txtTitle->setText(data.at(0));
+    else {
+        m_ui->txtDate->setText(QDateTime::currentDateTime().toString(DATE_FORMAT));
+    }
     if (isFolder) {
     m_ui->lblURL->setEnabled(false);
     m_ui->txtURL->setVisible(false);
@@ -15,8 +19,9 @@ MXHotlinkProperties::MXHotlinkProperties(QWidget *parent, bool isFolder, bool cr
     m_ui->btnTimestamp->setVisible(false);
     }
     else {
+        if (!create) {
      m_ui->txtURL->setText(data.at(1));
-     m_ui->txtDate->setText(data.at(2));
+     m_ui->txtDate->setText(data.at(2));}
     }
     oldname = m_ui->txtTitle->text();
 }
@@ -51,13 +56,14 @@ int st;
        m_ui->txtTitle->setText(  m_ui->txtTitle->text().replace(" ", "_"));
        m_ui->txtTitle->setText(m_ui->txtTitle->text().replace(QRegExp("_TOP$"), ""));
 st += Folder;
+}
 if (isCreate) {st += Create;} else {st+=Change;}
 
    emit onSavingProperties( m_ui->txtTitle->text(), m_ui->txtURL->text(), d, st);
 
    close();
 }
-}
+
 
 
 

@@ -14,23 +14,33 @@ MainWindow::MainWindow(QWidget *parent)
     createMenus();
     createToolbars();
     createHotlinkBar();
+    createManager();
     connectAll();
     initMgr();
     createOtherMenus();
     statusBar()->showMessage(tr("For help, press F1"));
+tabs << tr("Session History") << tr("Global History") << "src" << tr("Hotlist View") << tr("Cache View") << tr("News View") << tr("Help View") ;
 
 if (qApp->arguments().count() == 1)
     openUrl(op.homePage);
 else
     openUrl(qApp->arguments().at(1));
 //managerviews
-tabs << tr("Session History") << tr("Global History") << "src" << tr("Hotlist View") << tr("Cache View") << tr("News View") << tr("Help View") ;
-ui->tabLeft->setTabText(0, tabs.at(0));
+if (op.hOnStartup) {ui->tabLeft->setCurrentIndex(3);
+ui->menuBar->addMenu(getMenuForItem(3));
+}
+else
+{ui->tabLeft->setCurrentIndex(0);
+    ui->menuBar->addMenu(getMenuForItem(0));}
+
+
+ui->tabLeft->setTabText(ui->tabLeft->currentIndex(), tabs.at(ui->tabLeft->currentIndex()));
 curIndex = 0;
 
 }
 
-MainWindow::~MainWindow()
+MainWindow::~MainWindow()    //coming soon
+
 {
     delete ui;
 }
@@ -289,9 +299,11 @@ void MainWindow::makeHotlistsMenu() {
 QList<QTreeWidgetItem*> main;
 
 main = hdata->treeData();
-QMenu *hotlists = menuData(main);
+if(op.hOnMenu) {
+hotlists = menuData(main);
 connect (hotlists, SIGNAL(triggered(QAction*)), this, SLOT(onCustomMenuClicked(QAction*)));
 menuBar()->insertMenu(ui->menu_Tools->menuAction(), hotlists);
+}
 ui->twHotlinks->addTopLevelItems(main);
 
 ui->txtHotlist->setText(op.hotlinkList);
@@ -456,12 +468,19 @@ out << tr("mosaix: reading main.ini config\n");
    stg->beginGroup("Cache");
    op.cacheDir = stg->value("Directory").toString();
    op.cacheLimit = stg->value("Limit").toInt();
+   stg->endGroup();
    stg->beginGroup("Mail");
   op.mailName = stg->value("Name").toString();
   op.mailPassword = stg->value("Password").toString();
   op.mailHost = stg->value("Host").toString();
   op.mailAddress = stg->value("Address").toString();
   op.mailPort = stg->value("Port").toInt();
+  stg->endGroup();
+  stg->beginGroup("HotlistManager");
+  op.hOneRoot = stg->value("OneRoot").toBool();
+  op.hOnStartup = stg->value("OnStartup").toBool();
+  op.hOnMenu = stg->value ("OnMenu").toBool();
+  op.hFont = stg->value("Font").value<QFont>();
   stg->endGroup();
   stg->beginGroup("Files");
   op.tbConfig = stg->value("ToolBarConfig", conf_dir + "/toolbars.ini").toString();
@@ -736,8 +755,9 @@ QUrl MainWindow::guessUrlFromString(const QString &string)
 
 void MainWindow::on_twHotlinks_itemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-   if (!item->text(1).isEmpty())
+   if (item->columnCount() == 3)
        openUrl(item->text(1));
+
 
 }
 
@@ -839,6 +859,7 @@ hdata->sort(list, it->text(0));
 void MainWindow::on_twHotlinks_customContextMenuRequested(QPoint pos)
 {
     QWidget *w = dynamic_cast<QWidget*>(sender());
+    if(ui->twHotlinks->itemAt(pos) !=0)
    cmHotTree->exec(w->mapToGlobal(pos));
 }
 
@@ -1019,11 +1040,11 @@ ui->webView->page()->setNetworkAccessManager(netmgr);
 QMenu* MainWindow::getMenuForItem (int index) {
 switch (index) {
         case 0:
-        return ui->mnuHistory;
+        return hstManager;
         case 2:
         return srcManager;
         case 3:
-        return /*hotlistManager;*/ 0;
+        return hotManager;
         case 4:
         return cacheManager;
         default:
@@ -1032,6 +1053,16 @@ switch (index) {
 }
 
 void MainWindow::createOtherMenus() {
+    hstManager = new QMenu (tr("History M&anager"), this);
+ui->actCloseAll->setEnabled(false);
+ui->actExpandAll->setEnabled(false);
+    hstManager->addAction(ui->actCloseAll);
+    hstManager->addAction(ui->actExpandAll);
+    hstManager->addSeparator();
+    hstManager->addAction(ui->actLoadSession);
+    hstManager->addAction(ui->actSaveSession);
+    hstManager->addSeparator();
+    hstManager->addAction (ui->actHistory);
     srcManager = new QMenu (tr("Source M&anager"),this);
     srcManager->addAction(ui->actSrcFont);
 
@@ -1041,8 +1072,71 @@ void MainWindow::createOtherMenus() {
     cacheManager->addAction(ui->actCacheDelete);
     cacheManager->addSeparator();
     cacheManager->addAction(ui->actCacheOptions);
-    //hotlist manager coming soon
 
+    hotManager = new QMenu(tr("Hotlist M&anager"), this);
+    QMenu *file = new QMenu(tr("&File"));
+    file->addAction(ui->actHotOpen);
+    file->addAction(ui->actHotSave);
+    file->addAction(ui->actHotSaveAs);
+    hotManager->addMenu(file);
+    QMenu *edit = new QMenu(tr("&Edit"), this);
+    ui->actHotlinkPropreties->setEnabled(false);
+    edit->addAction(ui->actHotlinkPropreties);
+    ui->actHotDelete->setEnabled(false);
+    edit->addAction(ui->actHotDelete);
+    ui->actInsItem->setEnabled(false);
+    edit->addAction(ui->actInsItem);
+    ui->actInsFld->setEnabled(false);
+    edit->addAction(ui->actInsFld);
+    edit->addSeparator();
+    hotManager->addMenu(edit);
+    QMenu *opt = new QMenu(tr("&Options"), this);
+    ui->actHotStart->setChecked(op.hOnStartup);
+    opt->addAction(ui->actHotStart);
+    ui->actHotMenu->setChecked(op.hOnMenu);
+    opt->addAction(ui->actHotMenu);
+    ui->actOneRoot->setChecked(op.hOneRoot);
+    opt->addAction(ui->actOneRoot);
+    opt->addSeparator();
+    opt->addAction(ui->actHotFont);
+    opt->addSeparator();
+    opt->addAction(ui->actOpenFolders);
+    opt->addAction(ui->actHotCloseFolders);
+    opt->addSeparator();
+
+    QMenu *alph = new QMenu (tr("&Alphabetize"), this);
+    ui->actAlphFolder->setEnabled(false);
+    alph->addAction(ui->actAlphFolder);
+    alph->addAction(ui->actAlphAll);
+    opt->addMenu(alph);
+
+    QMenu *autoSurf = new QMenu (tr("Auto&Surf"), this);
+    ui->actASFolder->setEnabled(false);
+    autoSurf->addAction(ui->actASFolder);
+    autoSurf->addAction(ui->actASAll);
+    opt->addMenu(autoSurf);
+
+    QMenu *upTime = new QMenu (tr("&Update Time Stamps"), this);
+   ui->actTimeFolder->setEnabled(false);
+   upTime->addAction(ui->actTimeFolder);
+   upTime->addAction(ui->actTimeAll);
+   opt->addMenu(upTime);
+
+   QMenu *wNew = new QMenu(tr("&What`s New?"), this);
+   ui->actWNewFolder->setEnabled(false);
+   wNew->addAction(ui->actWNewFolder);
+   wNew->addAction(ui->actWNewAll);
+   opt->addMenu(wNew);
+
+   QMenu *wNewSince = new QMenu (tr("What`s &New Since...?"), this);
+   ui->actNewSinceFolder->setEnabled(false);
+   wNew->addAction(ui->actNewSinceFolder);
+   wNew->addAction(ui->actNewSinceAll);
+   opt->addMenu(wNewSince);
+
+   opt->addSeparator();
+   opt->addAction(ui->actRemoveEmpty);
+   hotManager->addMenu(opt);
 }
 
 void MainWindow::on_actSrcFont_triggered()
@@ -1056,9 +1150,15 @@ void MainWindow::on_actSrcFont_triggered()
 
     }
 }
+
+
 void MainWindow::createManager() {
     //set a font for source manager
     ui->txtSource->setFont(op.srcFont);
+    //set Hotlink manager
+    ui->twHotlinks->setFont(op.hFont);
+
+
 }
 
 void MainWindow::on_actAbout_triggered()
@@ -1075,6 +1175,7 @@ QMenu* MainWindow::menuData(QList<QTreeWidgetItem*> wd) {
 
     QMenu *menu = new QMenu (tr("Hotl&ists"), this);
    wd = hdata->treeData();
+   if (!op.hOneRoot) {
    foreach (QTreeWidgetItem *w, wd) {
     //set TOP-LEVEL menu
     QMenu *toplevel = new QMenu (w->text(0),this);
@@ -1097,8 +1198,12 @@ QMenu* MainWindow::menuData(QList<QTreeWidgetItem*> wd) {
 
 }
    return menu;
+}
+   else {
+       //игнорирую папки
+       makeOneRootMenu(wd);
     }
-
+}
 
 void MainWindow::makeMenu(QMenu* menu, QTreeWidgetItem *item) {
 
@@ -1121,28 +1226,54 @@ void MainWindow::makeMenu(QMenu* menu, QTreeWidgetItem *item) {
 
 }
 void MainWindow::onHLProperties(QString title, QString url, QDateTime  date, int status) {
-if (ui->twHotlinks->currentItem() == 0) {
+QTreeWidgetItem *parent;
+    if (ui->twHotlinks->currentItem() == 0) {
     //создаем корневой элементЪ
-    return;
+        if (status == Folder +Create) {
+    hdata->addFolder("", title);
+    QTreeWidgetItem *it = new QTreeWidgetItem (ui->twHotlinks);
+    it->setIcon(0,QIcon(FOLDER));
+    it->setText(0, title);
+    ui->twHotlinks->insertTopLevelItem(0,it);
+    return;}
+
 }
+    if (ui->twHotlinks->currentItem()->columnCount() ==1)
+        parent = ui->twHotlinks->currentItem();
+    else
+        parent = ui->twHotlinks->currentItem()->parent();
+
+
     QString oldname = ui->twHotlinks->currentItem()->text(0);
         if (status == Folder + Change) {
 if(oldname != title) {
     hdata->renameTable(oldname, title);
     ui->twHotlinks->currentItem()->setText(0, title);
 }
-else if (status == Folder + Create){
-
-   /*QMenu *menu = hdata->addFolder(title);
- folderCreated(menu);*/
-
 }
-    }
+else if (status == Folder + Create){
+QMenu menu;
 
+    QTreeWidgetItem *it = new QTreeWidgetItem (parent);
+    it->setIcon(0,QIcon(FOLDER));
+    it->setText(0, title);
+    if (parent == ui->twHotlinks->currentItem()->parent() ){ //если юзер щелкнул на линке
+        parent->insertChild(parent->indexOfChild( ui->twHotlinks->currentItem()) +1 , it);
+    } else{   //если на папке щелкнул
+        parent->insertChild(0 , it);
+    }
+  QMenu *add =  hdata->insertFolder(parent->text(0), collectItems(parent), title);
+  if (op.hOnMenu) {
+QMenu *mnu = getMenuByTitle(0, parent->text(0));
+if (mnu != 0)
+mnu->addMenu(add);
+else
+    qDebug() << tr("mosaix: pointer error.");
+}
+}
 else {
     if (status == Item+ Change) {
         //parent
-        QTreeWidgetItem *parent = ui->twHotlinks->currentItem()->parent();
       bool res=   hdata->updateHotlink(parent->text(0),oldname, title, url, date);
       if(res) {
         ui->twHotlinks->currentItem()->setText(0, title);
@@ -1150,44 +1281,150 @@ else {
         ui->twHotlinks->currentItem()->setText(2, date.toString(DATE_FORMAT));
     }
     }
-    if (status == Item + Create)
-    {
+    if (status == Item + Create){
+        QTreeWidgetItem *it = new QTreeWidgetItem(parent);
+        it->setText(0, title);
+        it->setText(1, url);
+        it->setText(2, date.toString(DATE_FORMAT));
+        it->setIcon(0, QIcon(ITEM));
+
+      if (parent == ui->twHotlinks->currentItem()->parent() ){ //если юзер щелкнул на линке
+        parent->insertChild(parent->indexOfChild( ui->twHotlinks->currentItem()) +1 , it);
+    } else{   //если на папке щелкнул
+        parent->insertChild(0 , it);
+    }
+QStringList links = collectItems(parent);
+
+
 QStringList list;
 list << title << url << date.toString(DATE_FORMAT);
-QTreeWidgetItem *parent;
-if (ui->twHotlinks->currentItem()->columnCount() == 1)
-    parent = ui->twHotlinks->currentItem();
+
+QAction *act =hdata->insertHotlink(parent->text(0),links,list);
+if (op.hOnMenu) {
+QMenu *mnu = getMenuByTitle(0, parent->text(0));
+if (mnu != 0)
+/*mnu->addAction(act);*/;
 else
-    parent = ui->twHotlinks->currentItem()->parent();
-QAction *act =hdata->addHotlink(parent->text(0), list);
- hotlinkCreated(act, title, url, date);
-
-    }
-
+    qDebug() << tr("mosaix: pointer error.");
+}
+}
 }
 }
 
 
-void MainWindow::folderCreated(QMenu *menu) {
-    if (menu) {
-        bool np;
-        QTreeWidgetItem *parent;
-        if(ui->twHotlinks->currentItem() == 0){
-            //add a first-level item
 
+
+QStringList MainWindow::collectItems(QTreeWidgetItem *parent) {
+   QStringList items;
+    for (int i = 0; i < parent->childCount(); ++i) {
+        items << parent->child(i)->text(0);
+        if (parent->child(i)->columnCount() ==1 && parent->child(i)->childCount() > 0) {
+            items.append(collectItems(parent->child(i)));
         }
-if (ui->twHotlinks->currentItem()->columnCount() == 1){
-    parent = ui->twHotlinks->currentItem();
+    }
+    return items;
 }
-else {
-    parent = ui->twHotlinks->currentItem()->parent();
+
+QMenu* MainWindow::getMenuByTitle(QMenu* parent,QString title) {
+    if (op.hOneRoot) {return hotlists;}
+    if (parent ==0) {parent = hotlists;}
+    foreach (QAction *act, parent->actions()) {
+        if(act->menu() != 0){
+            if (act->menu()->title() == title)
+                return act->menu();
+            else
+                getMenuByTitle(act->menu(), title);
+        }
     }
 
-QTreeWidgetItem *current = new QTreeWidgetItem(parent);
-if (np) { //если родитель нативен
+}
+
+void MainWindow::on_actHotStart_triggered(bool checked)
+{
+    core->writeSetting("OnStartup", "HotlistManager", checked, QDir::homePath() + CONFFILE);
+}
+
+void MainWindow::on_actHotMenu_triggered(bool checked)
+{
+    core->writeSetting("OnMenu", "HotlistManager", checked, QDir::homePath() + CONFFILE);
+    //reloading menu
+}
+
+void MainWindow::on_actOneRoot_triggered(bool checked)
+{
+    core->writeSetting("OneRoot", "HotlistManager", checked, QDir::homePath() + CONFFILE);
+    //reloading menu
+}
+
+void MainWindow::makeOneRootMenu(QList<QTreeWidgetItem*> wd) {
+
+foreach (QTreeWidgetItem *w, wd) {
+           for (int i = 0; i < w->childCount(); ++i) {
+               if (w->child(i)->columnCount() ==1) {
+                   QList<QTreeWidgetItem*> list;
+                   list.append(w->child(i));
+               makeOneRootMenu(list);
+               continue;
+               }
+
+               QAction *act = new QAction(this);
+           act->setText(w->child(i)->text(0));
+           act->setStatusTip(w->child(i)->text(1));
+           hotlists->addAction(act);
+           }
+       }
 
 }
+
+
+
+void MainWindow::on_twHotlinks_itemActivated(QTreeWidgetItem* item, int column)
+{
+
+    }
+
+QTreeWidgetItem* MainWindow::gp () {
+    QTreeWidgetItem *parent;
+        if (ui->twHotlinks->currentItem()->columnCount() ==1)
+        parent = ui->twHotlinks->currentItem();
+    else
+        parent = ui->twHotlinks->currentItem()->parent();
+    return parent;
+}
+
+void MainWindow::on_twHotlinks_itemSelectionChanged()
+{
+    ui->actAlphFolder->setEnabled(true);
+    ui->actASFolder->setEnabled(true);
+    ui->actWNewFolder->setEnabled(true);
+    ui->actNewSinceFolder->setEnabled(true);
+    ui->actTimeFolder->setEnabled(true);
+
+    ui->actHotlinkPropreties->setEnabled(true);
+    ui->actHotDelete->setEnabled(true);
+    ui->actInsFld->setEnabled(true);
+    ui->actInsItem->setEnabled(true);
+}
+
+void MainWindow::on_actInsItem_triggered()
+{
+
+    MXHotlinkProperties *pr =  new MXHotlinkProperties(this, false, true, QStringList());
+    connect (pr, SIGNAL(onSavingProperties(QString,QString,QDateTime,int)), this, SLOT(onHLProperties(QString,QString,QDateTime,int)));
+    pr->exec();
+}
+
+void MainWindow::on_actHotFont_triggered()
+{
+
+
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, op.hFont, this);
+    if (ok) {
+        ui->twHotlinks->setFont(font);
+
+            core->writeSetting("Font", "HotlistManager", font, QDir::homePath() + CONFFILE);
+
+
     }
 }
-void MainWindow::hotlinkCreated(QAction *act, QString title, QString url, QDateTime date) {}
-

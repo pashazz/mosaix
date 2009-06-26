@@ -227,3 +227,7 @@ void HotlinkData::sort(QStringList links, QString parentName, bool recursive) {
     }
 
 }
+QMenu* HotlinkData::insertFolder(QString parentName, QStringList links, QString title) {
+    addFolder(parentName, title);
+    sort(links, parentName, false);
+}

@@ -60,6 +60,7 @@ void MXLoader::createConfig() {
     main->beginGroup("Cache");
     main->setValue("Directory", QDir::homePath() + CONFDIR + "/cache");
     main->setValue("Limit", 50);
+    main->endGroup();
     main->beginGroup("Mail");
 
     main->setValue("Name", "");
@@ -67,6 +68,12 @@ void MXLoader::createConfig() {
     main->setValue("Host", "");
     main->setValue("Address", "");
     main->setValue("Port", "");
+    main->endGroup();
+    main->beginGroup("HotlistManager");
+    main->setValue("OneRoot", false);
+    main->setValue("OnMenu", true);
+    main->setValue("OnStartup", false);
+    main->setValue("Font", QFont("Arial"));
     main->endGroup();
     main->beginGroup("Files");
     main->setValue("ToolBarConfig", conf_dir + "/toolbars.ini");
@@ -106,12 +113,10 @@ void MXLoader::createConfig() {
     tbar->setValue("Add2Hot", true);
     tbar->setValue("CurHotlist", true); // Current HotList
     tbar->endGroup();
-    tbar->beginGroup("HotlinkBar");
-    tbar->setValue("NumberButtions", 1);
 
-    tbar->endGroup();
     tbar->beginGroup("Options");
     tbar->setValue("ButtonText", false);
+    tbar->setValue("SrcFont", QFont("Arial"));
     tbar->endGroup();
     tbar->sync();
 

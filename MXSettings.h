@@ -76,11 +76,17 @@ bool news;
 bool email;
 bool add2hot;
 bool curhotlist;
-
+//hotlist manager
+bool hOneRoot;
+bool hOnMenu;
+bool hOnStartup;
+QFont hFont;
 //options
 bool buttontext;
 QFont srcFont;
 //locations
+
+
 Location webBrowser;
 Location managerLocation;
 Location window;
