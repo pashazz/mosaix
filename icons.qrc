@@ -29,5 +29,6 @@
         <file>icons/minilogo.png</file>
         <file>icons/document-new.png</file>
         <file>icons/images.png</file>
+        <file>icons/not-found.png</file>
     </qresource>
 </RCC>

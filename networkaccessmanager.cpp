@@ -2,6 +2,7 @@
 #include "networkdiskcache.h"
 #include "networkcookiejar.h"
 #include "MXSettings.h"
+#include "webpage.h"
 NetworkCookieJar * NetworkAccessManager::pNetworkCookieJar = 0;
 NetworkDiskCache * NetworkAccessManager::pNetworkDiskCache = 0;
 int NetworkAccessManager::pRefCount = 0;
@@ -9,13 +10,13 @@ int NetworkAccessManager::pRefCount = 0;
 NetworkAccessManager::NetworkAccessManager(QObject * parent)
         : QNetworkAccessManager(parent)
 {
-	pErrorPage = tr("<center><table width='100%' height='100%'>"
+        pErrorPage = tr("<head><title>Error</title></head> <center><table width='100%' height='100%'>"
 					"<tr align='center' valign='middle'><td>"
-					"<table><tr align='left'><td><img src=':/errors/not-found.png'>"
-					"<big><b>Page %1 not found.</b></big><ul>"
+                                        "<table><tr align='left'>"
+                                        "<big><b>Page  not found.</b></big><ul>"
 					"<li> Please check typed adress, it can be invalid."
 					"<li> Please check your connection.</ul>"
-					"</td></tr></table></td></tr></table></center>");
+                                        "</td></tr></table></td></tr></table></center>");
 
 	if(pRefCount == 0)
     {
@@ -82,11 +83,12 @@ void NetworkAccessManager::checkNetworkReply(QNetworkReply * reply)
 		out << "FI: " << reply->url().toString() << " - " << reply->error() << endl;
 	}
 
-/*	if(reply->error() != QNetworkReply::NoError &&
-	   myTab->url() == reply->url())
+        if(reply->error() != QNetworkReply::NoError)
 	{
-		myTab->setHtml(pErrorPage.arg(reply->url().toString()));
-        }*/
+           WebPage *p = qobject_cast<WebPage*>(parent());
+           p->mainFrame()->setHtml(pErrorPage);
+
+        }
 
 	if(reply->url().scheme() == "mailto" ||
 	   reply->url().scheme() == "ftp")

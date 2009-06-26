@@ -129,7 +129,17 @@ bool HotlinkData::deleteFolder(QString title) {
 }
 
 void HotlinkData::renameTable(QString oldname, QString newname) {
-
+    oldname = workstr(oldname);
+    newname = workstr(newname);
+    QString ptable = patable(oldname);
+    if (ptable.endsWith("_TOP")) {newname.append("_TOP");}
+    QSqlQuery sq ;
+    sq.prepare("ALTER TABLE "+ptable+" RENAME TO "+newname);
+    if (!sq.exec()) {
+        qDebug()<<"SQL Error " + sq.lastError().text();
+}
+    else {
+        qDebug() <<"mosaix: Query done, " +oldname+" renamed to "+newname;}
 }
 
 QString HotlinkData::patable(QString parentname) {
@@ -146,8 +156,14 @@ bool HotlinkData::updateHotlink(QString parentname,QString oldname, QString name
     parentname = workstr(parentname);
     QString ptable = patable(parentname);
     QString sq = "UPDATE "+ptable+" SET name = :name,url = :url,date = :date WHERE name = :oldname";
-
-
+    QSqlQuery q;
+    q.prepare(sq);
+    q.bindValue(":name", name);
+    q.bindValue(":url", url);
+    q.bindValue(":date", date.toString(DATE_FORMAT));
+    q.bindValue(":oldname", oldname);
+    if (!q.exec()) {qDebug()<<"SQL error: "+ q.lastError().text();}
+    else {qDebug() << "Mosaix: query done, no errors" + name;}
 }
 QMenu* HotlinkData::addFolder(QString parentname, QString title) {
 
@@ -206,7 +222,9 @@ void HotlinkData::sort(QStringList links, QString parentName, bool recursive) {
         q.bindValue(":name", link);
         if(!q.exec()) {
             qDebug() << "SQL error: " + q.lastError().text() << q.executedQuery();
+
         }
+        else{qDebug() << "mosaix: Query done, no errors, " + parentName + "sorted";
         //использование good
         i++;
         //это таблица?
@@ -226,6 +244,7 @@ void HotlinkData::sort(QStringList links, QString parentName, bool recursive) {
     }
     }
 
+}
 }
 QMenu* HotlinkData::insertFolder(QString parentName, QStringList links, QString title) {
     addFolder(parentName, title);

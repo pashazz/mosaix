@@ -27,11 +27,11 @@ else
     openUrl(qApp->arguments().at(1));
 //managerviews
 if (op.hOnStartup) {ui->tabLeft->setCurrentIndex(3);
-ui->menuBar->addMenu(getMenuForItem(3));
+ui->menuBar->insertMenu(ui->menu_View->menuAction(),getMenuForItem(3));
 }
 else
 {ui->tabLeft->setCurrentIndex(0);
-    ui->menuBar->addMenu(getMenuForItem(0));}
+    ui->menuBar->insertMenu(ui->menu_View->menuAction(),getMenuForItem(0));}
 
 
 ui->tabLeft->setTabText(ui->tabLeft->currentIndex(), tabs.at(ui->tabLeft->currentIndex()));
@@ -974,7 +974,7 @@ if  (toDelete != 0) {
    curIndex = i;
    QMenu *menu = getMenuForItem(i);
    if (menu != 0) {
-       menuBar()->insertMenu(ui->menu_Edit->menuAction(),menu );}
+       menuBar()->insertMenu(ui->menu_View->menuAction(),menu );}
 
 
 
@@ -1241,10 +1241,12 @@ QTreeWidgetItem *parent;
     QString oldname = ui->twHotlinks->currentItem()->text(0);
         if (status == Folder + Change) {
 if(oldname != title) {
+
+    }
     hdata->renameTable(oldname, title);
     ui->twHotlinks->currentItem()->setText(0, title);
 }
-}
+
 else if (status == Folder + Create){
 QMenu menu;
 
