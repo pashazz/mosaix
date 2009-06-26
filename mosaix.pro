@@ -6,7 +6,6 @@ QT += webkit \
 TARGET = mosaix
 TEMPLATE = app
 SOURCES += main.cpp \
-    mainwindow.cpp \
     mxloader.cpp \
     mxcoremethods.cpp \
     mxbuttonconf.cpp \
@@ -23,9 +22,10 @@ SOURCES += main.cpp \
     webpage.cpp \
     webhistoryitem.cpp \
     webhistory.cpp \
+    mainwindow.cpp
 
-HEADERS += mainwindow.h \
-    mxloader.h \
+HEADERS += mxloader.h \
+    mainwindow.h \
     config.h \
     MXSettings.h \
     mxcoremethods.h \
@@ -42,11 +42,12 @@ HEADERS += mainwindow.h \
     authenticationdialog.h \
     webpage.h \
     webhistoryitem.h \
-    webhistory.h \
-FORMS += mainwindow.ui \
-    mxbuttonconf.ui \
-    mxhtlprop.ui \
-    mxinput.ui \
-    aboutdialog.ui \
-    authenticationdialog.ui
+    webhistory.h
+    FORMS += mainwindow.ui mxhtlprop.ui mxbuttonconf.ui mxinput.ui aboutdialog.ui authenticationdialog.ui
+  #  mainwindow.ui \
+   # mxbuttonconf.ui \
+   # mxhtlprop.ui \
+   # mxinput.ui \
+    #aboutdialog.ui \
+    #authenticationdialog.ui
 RESOURCES += icons.qrc
