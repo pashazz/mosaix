@@ -1172,7 +1172,7 @@ QMenu* MainWindow::menuData(QList<QTreeWidgetItem*> wd) {
        */
 
     QMenu *menu = new QMenu (tr("Hotl&ists"), this);
-   wd = hdata->treeData();
+ //  wd = hdata->treeData();
    if (!op.hOneRoot) {
    foreach (QTreeWidgetItem *w, wd) {
     //set TOP-LEVEL menu

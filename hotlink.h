@@ -36,7 +36,7 @@ public:
     void sort(QStringList links, QString parentName, bool recursive = true);
     private:
     QString dbfile;
-    void makeTable(QTreeWidgetItem *parent, QString tableName);
+    void makeTable(QTreeWidgetItem *parent,  QString tableName);
     QString workstr (QString s) {s = s.replace(" ", "_");return s;}
     QString printable(QString s) {s = s.replace("_", " ");return s;}
     QString patable (QString parentname);

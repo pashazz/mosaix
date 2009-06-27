@@ -9,7 +9,7 @@ HotlinkData::HotlinkData(QString fileName, QWidget *parent)
        if (!QSqlDatabase::drivers().contains("QSQLITE")){
         QMessageBox::warning(0, QObject::tr("Critical error"), QObject::tr("Unable to load database SQLITE driver. You need to compile qt-sql with sqlite database support"));
         return;
-QDir::mkpath(".mosaix/hotlinks");
+//QDir::mkpath(".mosaix/hotlinks");
    }
        //init parent
        QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
@@ -36,7 +36,7 @@ QStringList tables = db.tables();
 //берем таблицу TOP
 QStringList top;
 foreach (QString table, tables) {
-    if (table.endsWith("_TOP")){top  << table;;}
+    if (table.endsWith("_TOP")){top  << table;}
 
 }
 foreach (QString table, top) {
@@ -49,7 +49,6 @@ parent->setIcon(0,QIcon(":/icons/icons/open-folder.png"));
 //working with top table
   makeTable(parent, table);
   par.append(parent);
-  qDebug() << "Adding " + parent->text(0) + "  to root, table" << table ;
 
 }
 return par;
@@ -60,6 +59,7 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
       const QString paper = ":/icons/icons/document-new.png";
       tableName = workstr(tableName);
       QString ptable = patable(tableName);
+
     QString sq = "SELECT * FROM " +ptable +" ORDER BY sort_id";
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery query;
@@ -67,7 +67,6 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
     if (!query.exec()) {
         qDebug() << "SQL error: " << query.lastError().text() << query.executedQuery();
     }
-    else {qDebug() << "Query done: "  +query.executedQuery() ;}
     int iname = query.record().indexOf("name");
     int iurl = query.record().indexOf("url");
     int idate = query.record().indexOf("date");
@@ -76,7 +75,6 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
         QTreeWidgetItem *myItem = new QTreeWidgetItem(parent);
         QString name = query.value(iname).toString();
         QString url = query.value(iurl).toString();
-        qDebug() << "adding "<< name << " , " << url << " to table " + ptable;
          myItem->setText(0, name);
         myItem->setText(1, url);
         if (url != "MENU"){
@@ -153,11 +151,13 @@ void HotlinkData::renameTable(QString oldname, QString newname) {
 
 QString HotlinkData::patable(QString parentname) {
       QSqlDatabase db = QSqlDatabase::database();
+      static QStringList tablesDetected;
    QString ptable;
 foreach (QString table, db.tables())
    {
-        if (table == parentname) {ptable=table; break;}
-        else if (table.startsWith(parentname) || table.endsWith("_TOP")) {ptable=table; break;}
+    if (tablesDetected.contains(parentname)) {continue;}
+        if (parentname == table) {ptable=table; break;}
+        else if (table.startsWith(parentname) && table.endsWith("_TOP")) {ptable=table; break;}
     }
     return ptable;
 }
@@ -181,17 +181,18 @@ parentname = workstr(parentname);
    QString ptable = patable(parentname);
 
      if (parentname.isEmpty()) {title.append("_TOP");}
-   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER)", db);
+   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PRIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER)", db);
  qDebug() << "Errors: "+ q.lastError().text();
    if (!parentname.isEmpty()) {
       QSqlQuery query;
       title = workstr(title);
-         query.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (:name, :url, :date, (SELECT sort_id FROM "+ptable+" ))");
-q.bindValue(":name", title);
-q.bindValue(":url", "MENU");
-q.bindValue(":date", "N/A");
+         query.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (name, url, date, (SELECT sort_id FROM "+ptable+" ))");
+q.bindValue("name", title);
+q.bindValue("url", "MENU");
+q.bindValue("bdate", "N/A");
 
 if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + q.executedQuery();}
+else {qDebug() << "Mosaix: query done, " + title + "added with parent "+parentname;}
    }
    QMenu *menu = new QMenu (printable(title),p );
    return menu;
