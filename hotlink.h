@@ -27,7 +27,7 @@ public:
     QMenu* addFolder(QString parentname,QString title);
     QAction* addHotlink (QString parentName, const QStringList &htl); //добавляем hotlink в конец списка
     bool deleteHotlink (QString parentname, QString title);
-    bool deleteFolder(QString title);
+    bool deleteFolder(QString title, QString parentname = "");
     QList<QTreeWidgetItem*> treeData();
     QString fileName();
     void setFileName(QString file);

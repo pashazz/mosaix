@@ -9,7 +9,7 @@ HotlinkData::HotlinkData(QString fileName, QWidget *parent)
        if (!QSqlDatabase::drivers().contains("QSQLITE")){
         QMessageBox::warning(0, QObject::tr("Critical error"), QObject::tr("Unable to load database SQLITE driver. You need to compile qt-sql with sqlite database support"));
         return;
-
+QDir::mkpath(".mosaix/hotlinks");
    }
        //init parent
        QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
@@ -49,6 +49,7 @@ parent->setIcon(0,QIcon(":/icons/icons/open-folder.png"));
 //working with top table
   makeTable(parent, table);
   par.append(parent);
+  qDebug() << "Adding " + parent->text(0) + "  to root, table" << table ;
 
 }
 return par;
@@ -66,6 +67,7 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
     if (!query.exec()) {
         qDebug() << "SQL error: " << query.lastError().text() << query.executedQuery();
     }
+    else {qDebug() << "Query done: "  +query.executedQuery() ;}
     int iname = query.record().indexOf("name");
     int iurl = query.record().indexOf("url");
     int idate = query.record().indexOf("date");
@@ -74,7 +76,8 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
         QTreeWidgetItem *myItem = new QTreeWidgetItem(parent);
         QString name = query.value(iname).toString();
         QString url = query.value(iurl).toString();
-        myItem->setText(0, name);
+        qDebug() << "adding "<< name << " , " << url << " to table " + ptable;
+         myItem->setText(0, name);
         myItem->setText(1, url);
         if (url != "MENU"){
         QString date = query.value(idate).toString();
@@ -122,11 +125,15 @@ QAction* HotlinkData::addHotlink(QString parentName, const QStringList  &htl) {
    return 0;
 }
 
-bool HotlinkData::deleteFolder(QString title) {
+bool HotlinkData::deleteFolder(QString title, QString parentname) {
+
      title = workstr(title);
     QSqlDatabase db = QSqlDatabase::database();
     QString ptable = patable(title);
     QSqlQuery q ("DROP TABLE IF EXISTS " + ptable);
+    if (!parentname.isEmpty()) {
+        deleteHotlink(parentname, title);
+    }
     return true;
 }
 

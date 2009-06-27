@@ -872,7 +872,11 @@ void MainWindow::on_actHotDelete_triggered()
     bool res;
 QTreeWidgetItem *w = ui->twHotlinks->currentItem();
 if (w->columnCount() == 1) {
- res =   hdata->deleteFolder(w->text (0));
+    for (int i =0; i < ui->twHotlinks->topLevelItemCount(); ++i){
+        if (ui->twHotlinks->topLevelItem(i) == w)
+            res = hdata->deleteFolder(w->text(0));
+    }
+ res =   hdata->deleteFolder(w->text (0), w->parent()->text(0));
 }
 else {
   res =  hdata->deleteHotlink(w->parent()->text(0), w->text(0));
