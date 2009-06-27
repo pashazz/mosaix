@@ -181,17 +181,17 @@ parentname = workstr(parentname);
    QString ptable = patable(parentname);
 
      if (parentname.isEmpty()) {title.append("_TOP");}
-   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PRIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER)", db);
+   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PRIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER);");
  qDebug() << "Errors: "+ q.lastError().text();
    if (!parentname.isEmpty()) {
       QSqlQuery query;
       title = workstr(title);
-         query.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (name, url, date, (SELECT sort_id FROM "+ptable+" ))");
-q.bindValue("name", title);
-q.bindValue("url", "MENU");
-q.bindValue("bdate", "N/A");
+         query.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (:name, :url, :date, (SELECT sort_id FROM "+ptable+" ))");
+q.bindValue(":name", title);
+q.bindValue(":url", "MENU");
+q.bindValue(":date", "N/A");
 
-if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + q.executedQuery();}
+if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + q.lastQuery();}
 else {qDebug() << "Mosaix: query done, " + title + "added with parent "+parentname;}
    }
    QMenu *menu = new QMenu (printable(title),p );
