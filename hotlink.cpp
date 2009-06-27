@@ -9,8 +9,10 @@ HotlinkData::HotlinkData(QString fileName, QWidget *parent)
        if (!QSqlDatabase::drivers().contains("QSQLITE")){
         QMessageBox::warning(0, QObject::tr("Critical error"), QObject::tr("Unable to load database SQLITE driver. You need to compile qt-sql with sqlite database support"));
         return;
-//QDir::mkpath(".mosaix/hotlinks");
-   }
+
+    }
+       QFile file (fileName);
+       if (!file.exists()) {file.open(QIODevice::Truncate); file.close();}
        //init parent
        QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
        db.setDatabaseName(fileName);
@@ -70,11 +72,14 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
     int iname = query.record().indexOf("name");
     int iurl = query.record().indexOf("url");
     int idate = query.record().indexOf("date");
-
+static QStringList addedFolders;
     while (query.next()) {
+
         QTreeWidgetItem *myItem = new QTreeWidgetItem(parent);
         QString name = query.value(iname).toString();
         QString url = query.value(iurl).toString();
+      if (addedFolders.contains(name)) {continue;}
+        qDebug() << "Query values: " << name << url;
          myItem->setText(0, name);
         myItem->setText(1, url);
         if (url != "MENU"){
@@ -86,10 +91,11 @@ void HotlinkData::makeTable(QTreeWidgetItem *parent, QString tableName) {
     }
         else {
           //menu
-
+qDebug() << "Folder added " + name;
             myItem->setIcon(0, QIcon(folder));
             parent->addChild(myItem);
             makeTable(myItem, name);
+            addedFolders.append(name);
         }
     }
 
@@ -181,17 +187,18 @@ parentname = workstr(parentname);
    QString ptable = patable(parentname);
 
      if (parentname.isEmpty()) {title.append("_TOP");}
-   QSqlQuery q ("CREATE TABLE " + title +" (id INTEGER PRIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER);");
- qDebug() << "Errors: "+ q.lastError().text();
+   QSqlQuery query ("CREATE TABLE " + title +" (id INTEGER PRIMARY KEY, name TEXT, url TEXT, date TEXT, sort_id INTEGER);");
+ qDebug() << "Errors: "+ query.lastError().text();
    if (!parentname.isEmpty()) {
-      QSqlQuery query;
-      title = workstr(title);
-         query.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (:name, :url, :date, (SELECT sort_id FROM "+ptable+" ))");
-q.bindValue(":name", title);
-q.bindValue(":url", "MENU");
-q.bindValue(":date", "N/A");
+        QSqlQuery q;
+    q.prepare("INSERT INTO "+ ptable+" (name, url, date, sort_id) VALUES (:name, :url, :date, (SELECT sort_id FROM "+ptable+" ))");
 
-if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + q.lastQuery();}
+    q.bindValue(":name", title);
+    q.bindValue(":url", "MENU");
+    q.bindValue(":date", "N/A");
+
+
+if (!q.exec()) {qDebug() << "SQL error: " + q.lastError().text() + ", query " + query.lastQuery();}
 else {qDebug() << "Mosaix: query done, " + title + "added with parent "+parentname;}
    }
    QMenu *menu = new QMenu (printable(title),p );

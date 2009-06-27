@@ -14,7 +14,7 @@ void MXLoader::start()     //start load mosaix - if no configuration - create it
    if (!QFile::exists(conf_file)) //first run Mosaix
     {
        QDir cdir (conf_dir);
-       if (cdir.exists()) {
+       if (!cdir.exists()) {
        cdir.mkpath(conf_dir);
        cdir.mkpath(conf_dir + "/hotlinks");
    }

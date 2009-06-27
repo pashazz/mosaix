@@ -877,6 +877,7 @@ if (w->columnCount() == 1) {
             res = hdata->deleteFolder(w->text(0));
     }
  res =   hdata->deleteFolder(w->text (0), w->parent()->text(0));
+ w->parent()->removeChild(w);
 }
 else {
   res =  hdata->deleteHotlink(w->parent()->text(0), w->text(0));
